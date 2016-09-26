@@ -38,6 +38,16 @@ mk20 expert lab
 * 1 log node
 
 
+Available resources
+===================
+
+* Mk20::Lab::BaseNetwork: template/_network.yaml
+* Mk20::Lab::SaltMaster: template/_salt_master.yaml
+* Mk20::Lab::OpenStackControl": template/_openstack_control_cluster.yaml
+* Mk20::Lab::OpenStackCompute": template/_openstack_compute_(single|multi).yaml
+* Mk20::Lab::OpenStackSupport": template/_openstack_support_(single|multi).yaml
+
+
 Quick usage
 ===========
 
