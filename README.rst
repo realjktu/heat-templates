@@ -1,7 +1,7 @@
 
-===================
-mk20 heat templates
-===================
+====================
+Mk.20 heat templates
+====================
 
 OpenStack Heat templates for training and development labs
 
