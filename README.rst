@@ -13,29 +13,30 @@ Available stacks
 mk20 basic lab
 --------------
 
-1 config node
-3 control nodes
-1 compute node
+* 1 config node
+* 3 control nodes
+* 1 compute node
 
 
 mk20 advanced lab
 -----------------
 
-1 config node
-3 control nodes
-1 compute node
-1 monitor node
+* 1 config node
+* 3 control nodes
+* 1 compute node
+* 1 monitor node
 
 
 mk20 expert lab
 ---------------
 
-1 config node
-3 control nodes
-2 compute nodes
-1 monitor node
-1 meter node
-1 log node
+* 1 config node
+* 3 control nodes
+* 2 compute nodes
+* 1 monitor node
+* 1 meter node
+* 1 log node
+
 
 Quick usage
 ===========

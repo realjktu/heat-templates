@@ -60,6 +60,12 @@ parameters:
   mon01_name:
     type: string
     default: mon01.workshop.cloudlab.cz
+  mtr01_name:
+    type: string
+    default: mtr01.workshop.cloudlab.cz
+  log01_name:
+    type: string
+    default: log01.workshop.cloudlab.cz
 
 resources:
   lab_network:
@@ -119,3 +125,5 @@ resources:
       instance_image: { get_param: instance_image }
       instance_zone:  { get_param: instance_zone }
       mon01_name: { get_param: mon01_name }
+      mtr01_name: { get_param: mtr01_name }
+      log01_name: { get_param: log01_name }
