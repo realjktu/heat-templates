@@ -1,0 +1,121 @@
+heat_template_version: 2015-04-30
+
+parameters:
+
+  key_name:
+    type: string
+    default: lab-key
+  key_value:
+    type: string
+    default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3odU+3V2uDA2ptAFL9hrJRPNEEdAyztWOZFQ5Oyd9oerTGOU3p4xmrgWWjfKFKbYGhiiIUcYAol5PkTfKukGEkkjCHYA1t023soCaaAj85wCZCnw2zQNAziwxTYmAzTqgxiSvtZNMMrtJvFHRIRDzJ3M1lV0prWNWkMM1/3FAd4W49y6VT3fkMCo8uqG7CfGdgR2DgBCxf9KaNPfW5eDEPOgmE5lK8tVSEI6T+Cg7hbcTf4lFYnlFBnlQgp/0JstsM4Vbwb4B34LOpOsf2S8rrWk2xQMjwaMHXkc2s/E8iW3F5nVFuyEXYISFQIiAHw8dzC6CHgLcyHUVWwznKawZ
+
+  public_net:
+    type: string
+    description: ID or name of public network for which floating IP addresses will be allocated
+
+  reclass_address:
+    type: string
+    default: https://github.com/tcpcloud/workshop-salt-model.git
+  reclass_branch:
+    type: string
+    default: master
+
+  instance_zone:
+    type: string
+    default: nova
+  instance_image:
+    type: string
+    description: Image name to use for the servers.
+  instance_flavor_control:
+    type: string
+    description: Instance type for controllers.
+    default: m1.large
+  instance_flavor_compute:
+    type: string
+    description: Instance type for compute nodes
+    default: m1.medium
+  instance_flavor_support:
+    type: string
+    description: Instance type for support nodes (web, monitoring, etc.)
+    default: m1.medium
+
+  cfg01_name:
+    type: string
+    default: cfg01.workshop.cloudlab.cz
+  ctl01_name:
+    type: string
+    default: ctl01.workshop.cloudlab.cz
+  ctl02_name:
+    type: string
+    default: ctl02.workshop.cloudlab.cz
+  ctl03_name:
+    type: string
+    default: ctl03.workshop.cloudlab.cz
+  cmp01_name:
+    type: string
+    default: cmp01.workshop.cloudlab.cz
+  cmp02_name:
+    type: string
+    default: cmp02.workshop.cloudlab.cz
+  mon01_name:
+    type: string
+    default: mon01.workshop.cloudlab.cz
+
+resources:
+  lab_network:
+    type: _network.yaml
+    properties:
+      key_name: { get_param: key_name }
+      key_value: { get_param: key_value }
+      public_net: { get_param: public_net }
+  lab_salt_master:
+    type: _salt_master.yaml
+    depends_on: lab_network
+    properties:
+      public_net: { get_param: public_net }
+      private_net: { get_attr: [lab_network, private_net_name] }
+      key_pair: { get_param: key_name }
+      security_group: { get_attr: [lab_network, security_group] }
+      cfg01_name: { get_param: cfg01_name }
+      instance_flavor: { get_param: instance_flavor_support }
+      instance_image: { get_param: instance_image }
+      instance_zone:  { get_param: instance_zone }
+  lab_openstack_control:
+    type: _openstack_control_cluster.yaml
+    depends_on: lab_salt_master
+    properties:
+      private_net: { get_attr: [lab_network, private_net_name] }
+      key_pair: { get_param: key_name }
+      security_group: { get_attr: [lab_network, security_group] }
+      config_host: { get_attr: [lab_salt_master, config_host] }
+      instance_flavor: { get_param: instance_flavor_control }
+      instance_image: { get_param: instance_image }
+      instance_zone:  { get_param: instance_zone }
+      ctl01_name: { get_param: ctl01_name }
+      ctl02_name: { get_param: ctl02_name }
+      ctl03_name: { get_param: ctl03_name }
+  lab_openstack_compute:
+    type: _openstack_compute_multi.yaml
+    depends_on: lab_salt_master
+    properties:
+      private_net: { get_attr: [lab_network, private_net_name] }
+      key_pair: { get_param: key_name }
+      security_group: { get_attr: [lab_network, security_group] }
+      config_host: { get_attr: [lab_salt_master, config_host] }
+      instance_flavor: { get_param: instance_flavor_compute }
+      instance_image: { get_param: instance_image }
+      instance_zone:  { get_param: instance_zone }
+      cmp01_name: { get_param: cmp01_name }
+      cmp02_name: { get_param: cmp02_name }
+  lab_openstack_support:
+    type: _openstack_support_multi.yaml
+    depends_on: lab_salt_master
+    properties:
+      private_net: { get_attr: [lab_network, private_net_name] }
+      key_pair: { get_param: key_name }
+      security_group: { get_attr: [lab_network, security_group] }
+      config_host: { get_attr: [lab_salt_master, config_host] }
+      instance_flavor: { get_param: instance_flavor_support }
+      instance_image: { get_param: instance_image }
+      instance_zone:  { get_param: instance_zone }
+      mon01_name: { get_param: mon01_name }

@@ -1,0 +1,81 @@
+heat_template_version: 2015-04-30
+
+description: Private network fragment
+
+parameters:
+  key_name:
+    type: string
+  key_value:
+    type: string
+  public_net:
+    type: string
+    description: ID or name of public network for which floating IP addresses will be allocated
+  router_name:
+    type: string
+    description: Name of router to be created
+    default: lab-router
+  private_net_name:
+    type: string
+    description: Name of private network to be created
+    default: lab-net
+  private_net_cidr:
+    type: string
+    description: Private network address (CIDR notation)
+    default: 172.16.10.0/24
+  private_net_pool_start:
+    type: string
+    description: Start of private network IP address allocation pool
+    default: 172.16.10.100
+  private_net_pool_end:
+    type: string
+    description: End of private network IP address allocation pool
+    default: 172.16.10.200
+
+resources:
+  key_pair:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: key_name }
+      public_key: { get_param: key_value }
+      save_private_key: false
+  private_net:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: private_net_name }
+  private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: private_net_name }
+      network_id: { get_resource: private_net }
+      cidr: { get_param: private_net_cidr }
+      allocation_pools:
+        - start: { get_param: private_net_pool_start }
+          end: { get_param: private_net_pool_end }
+  router:
+    type: OS::Neutron::Router
+    properties:
+      name: { get_param: router_name }
+      external_gateway_info:
+        network: { get_param: public_net }
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet_id: { get_resource: private_subnet }
+  security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: lab-security-group
+      description: Lab security group
+      rules:
+        - protocol: tcp
+          remote_ip_prefix: 0.0.0.0/0
+        - protocol: icmp
+          remote_ip_prefix: 0.0.0.0/0
+
+outputs:
+  private_net_name:
+    value: { get_attr: [private_net, name] }
+  security_group:
+    value: lab-security-group
+
