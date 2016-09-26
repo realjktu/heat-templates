@@ -13,6 +13,10 @@ parameters:
   config_host:
     type: string
 
+  cluster_vip_address:
+    type: string
+    default: 172.16.10.254
+
   instance_flavor:
     type: string
   instance_image:

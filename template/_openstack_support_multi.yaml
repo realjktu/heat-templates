@@ -35,8 +35,6 @@ resources:
       network_id: { get_param: private_net }
       fixed_ips:
         - ip_address: 172.16.10.107
-      allowed_address_pairs:
-        - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
@@ -82,8 +80,6 @@ resources:
       network_id: { get_param: private_net }
       fixed_ips:
         - ip_address: 172.16.10.108
-      allowed_address_pairs:
-        - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
@@ -129,8 +125,6 @@ resources:
       network_id: { get_param: private_net }
       fixed_ips:
         - ip_address: 172.16.10.109
-      allowed_address_pairs:
-        - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
