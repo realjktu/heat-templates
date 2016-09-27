@@ -26,19 +26,18 @@ parameters:
   instance_image:
     type: string
     description: Image name to use for the servers.
-    default: ubuntu-14-04-x64-1455869035
   instance_flavor_control:
     type: string
     description: Instance type for controllers
-    default: m1.large
+    default: m1.xlarge
   instance_flavor_compute:
     type: string
     description: Instance type for compute nodes
-    default: m1.medium
+    default: m1.large
   instance_flavor_support:
     type: string
     description: Instance type for support nodes (web, monitoring, etc.)
-    default: m1.medium
+    default: m1.large
 
   cfg01_name:
     type: string
