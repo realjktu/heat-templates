@@ -132,7 +132,7 @@ resources:
 
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt.minion
-            salt-call --no-color state.sls salt.master
+            salt-call --no-color state.sls salt.master,reclass
             service salt-minion restart
             #salt-call --no-color state.highstate
           params:
