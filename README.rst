@@ -41,6 +41,8 @@ mk20 expert lab
 Available resources
 ===================
 
+Resource definion is part of environment file and the path to HOT fragment is relative to the location of this file!
+
 * Mk20::Lab::BaseNetwork: template/_network.yaml
 * Mk20::Lab::SaltMaster: template/_salt_master.yaml
 * Mk20::Lab::OpenStackControl: template/_openstack_control_cluster.yaml
@@ -57,12 +59,18 @@ Install necessary libraries
 
    apt-get install python-novaclient python-heatclient
 
-To create heat stack
+To create heat stack:
 
 .. code-block:: bash
 
     source ./keystonerc 
     ./create_stack.sh template_name env_name
+
+For example to deploy advanced lab to tcpisek cloud:
+
+.. code-block:: bash
+
+    ./create_stack.sh mk20_lab_advanced tcpisek
 
 To delete heat stack
 
