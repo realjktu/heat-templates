@@ -132,13 +132,14 @@ resources:
             echo "Showing system info and metadata ..."
             salt-call --no-color grains.items
             salt-call --no-color pillar.data
-            reclass -n $node_name
 
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt.minion
             salt-call --no-color state.sls salt.master,reclass
             service salt-minion restart
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+
+            reclass-salt --top
             salt-call --no-color state.highstate
           params:
             $node_name: { get_param: cfg01_name }
