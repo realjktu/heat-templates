@@ -31,6 +31,12 @@ parameters:
     type: string
 
 resources:
+  cfg01_wait_handle:
+    type: OS::Heat::WaitConditionHandle
+  cfg01_wait_condition:
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: {get_resource: cfg01_wait_handle}
   cfg01_floating_ip:
     type: OS::Nova::FloatingIP
     properties:
@@ -132,11 +138,13 @@ resources:
             salt-call --no-color state.sls linux,openssh,salt.minion
             salt-call --no-color state.sls salt.master,reclass
             service salt-minion restart
-            #salt-call --no-color state.highstate
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            salt-call --no-color state.highstate
           params:
             $node_name: { get_param: cfg01_name }
             $reclass_address: { get_param: reclass_address }
             $reclass_branch: { get_param: reclass_branch }
+            $wait_condition_notify: { get_attr: [cfg01_wait_handle, curl_cli] }
             $config_host: localhost
 
 outputs:
