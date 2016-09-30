@@ -36,7 +36,7 @@ resources:
     type: OS::Heat::WaitCondition
     properties:
       handle: {get_resource: cfg01_wait_handle}
-      timeout: 300
+      timeout: 3600
   cfg01_floating_ip:
     type: OS::Nova::FloatingIP
     properties:
