@@ -24,10 +24,8 @@ parameters:
 
   reclass_address:
     type: string
-    default: https://github.com/tcpcloud/workshop-salt-model.git
   reclass_branch:
     type: string
-    default: master
 
   cfg01_name:
     type: string
