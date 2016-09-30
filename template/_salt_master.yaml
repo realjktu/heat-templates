@@ -21,7 +21,6 @@ parameters:
   instance_zone:
     type: string
 
-
   reclass_address:
     type: string
   reclass_branch:
@@ -37,6 +36,7 @@ resources:
     type: OS::Heat::WaitCondition
     properties:
       handle: {get_resource: cfg01_wait_handle}
+      timeout: 300
   cfg01_floating_ip:
     type: OS::Nova::FloatingIP
     properties:
