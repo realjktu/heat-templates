@@ -81,9 +81,9 @@ resources:
 
             echo "Configuring salt master ..."
             apt-get install -y salt-master reclass
-            apt-get install -y salt-formula-linux salt-formula-reclass salt-formula-salt salt-formula-openssh salt-formula-ntp salt-formula-git salt-formula-graphite salt-formula-collectd salt-formula-sensu
+            apt-get install -y salt-formula-linux salt-formula-reclass salt-formula-salt salt-formula-openssh salt-formula-ntp salt-formula-git salt-formula-graphite salt-formula-collectd salt-formula-sensu salt-formula-heka
             # Temporary until multi-site horizon is deployed on salt master
-            apt-get install -y salt-formula-horizon salt-formula-nginx salt-formula-memcached salt-formula-python salt-formula-supervisor salt-formula-heka salt-formula-collectd salt-formula-sensu
+            apt-get install -y salt-formula-horizon salt-formula-nginx salt-formula-memcached salt-formula-python salt-formula-supervisor salt-formula-sphinx
 
             cat << 'EOF' >> /etc/salt/master.d/master.conf
             file_roots:
@@ -134,13 +134,13 @@ resources:
             salt-call --no-color pillar.data
 
             echo "Running complete state ..."
-            salt-call --no-color state.sls linux,openssh,salt.minion
-            salt-call --no-color state.sls salt.master,reclass
+            salt-call --no-color state.sls linux,openssh,salt.master.service
+            salt-call --no-color state.sls salt.master,reclass,salt.minion.ca
             service salt-minion restart
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
 
             reclass-salt --top
-            salt-call --no-color state.highstate
+            #salt-call --no-color state.highstate
           params:
             $node_name: { get_param: cfg01_name }
             $reclass_address: { get_param: reclass_address }
