@@ -12,6 +12,18 @@ for ((i=0; i<10; i++)); do
   echo ""
   echo "Lab #0$i:"
 
-  ./create_stack.sh mk20_lab_advanced tcpisek;
+  ./create_stack.sh mk20_lab_advanced tcpisek
+
+done
+
+for ((i=10; i<21; i++)); do
+
+  export OS_USERNAME=TCP_WORKSHOP_USER$i
+  export OS_TENANT_NAME=TCP_WORKSHOP_USER$i
+
+  echo ""
+  echo "Lab #$i:"
+
+  ./create_stack.sh mk20_lab_advanced tcpisek
 
 done

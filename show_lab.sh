@@ -15,3 +15,15 @@ for ((i=0; i<10; i++)); do
   nova list
 
 done
+
+for ((i=10; i<21; i++)); do
+
+  export OS_USERNAME=TCP_WORKSHOP_USER$i
+  export OS_TENANT_NAME=TCP_WORKSHOP_USER$i
+
+  echo ""
+  echo "Lab #$i:"
+
+  nova list
+
+done
