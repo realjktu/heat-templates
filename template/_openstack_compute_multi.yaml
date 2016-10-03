@@ -58,7 +58,7 @@ resources:
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main"" > /etc/apt/sources.list.d/saltstack.list
+            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
@@ -72,7 +72,7 @@ resources:
             echo "Showing node metadata..."
             salt-call --no-color pillar.data
             echo "Running complete state ..."
-            salt-call --no-color state.sls linux,openssh,salt
+            salt-call --no-color state.sls linux,openssh,salt -l info
           params:
             $node_name: { get_param: cmp01_name }
             $config_host: { get_param: config_host }
@@ -107,7 +107,7 @@ resources:
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main"" > /etc/apt/sources.list.d/saltstack.list
+            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
@@ -121,7 +121,7 @@ resources:
             echo "Showing node metadata..."
             salt-call --no-color pillar.data
             echo "Running complete state ..."
-            salt-call --no-color state.sls linux,openssh,salt
+            salt-call --no-color state.sls linux,openssh,salt -l info
           params:
             $node_name: { get_param: cmp02_name }
             $config_host: { get_param: config_host }
