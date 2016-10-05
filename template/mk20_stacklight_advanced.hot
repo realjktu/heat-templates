@@ -4,7 +4,7 @@ parameters:
 
   key_name:
     type: string
-    default: mk20-stacklight-basic
+    default: mk20-stacklight-advanced
   key_value:
     type: string
     default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp0evjOaK8c8SKYK4r2+0BN7g+8YSvQ2n8nFgOURCyvkJqOHi1qPGZmuN0CclYVdVuZiXbWw3VxRbSW3EH736VzgY1U0JmoTiSamzLHaWsXvEIW8VCi7boli539QJP0ikJiBaNAgZILyCrVPN+A6mfqtacs1KXdZ0zlMq1BPtFciR1JTCRcVs5vP2Wwz5QtY2jMIh3aiwkePjMTQPcfmh1TkOlxYu5IbQyZ3G1ahA0mNKI9a0dtF282av/F6pwB/N1R1nEZ/9VtcN2I1mf1NW/tTHEEcTzXYo1R/8K9vlqAN8QvvGLZtZduGviNVNoNWvoxaXxDt8CPv2B2NCdQFZp
@@ -54,22 +54,22 @@ parameters:
 
   cfg01_name:
     type: string
-    default: cfg01.mk20-stacklight-basic.local
+    default: cfg01.mk20-stacklight-advanced.local
   ctl01_name:
     type: string
-    default: ctl01.mk20-stacklight-basic.local
+    default: ctl01.mk20-stacklight-advanced.local
   ctl02_name:
     type: string
-    default: ctl02.mk20-stacklight-basic.local
+    default: ctl02.mk20-stacklight-advanced.local
   ctl03_name:
     type: string
-    default: ctl03.mk20-stacklight-basic.local
+    default: ctl03.mk20-stacklight-advanced.local
   cmp01_name:
     type: string
-    default: cmp01.mk20-stacklight-basic.local
+    default: cmp01.mk20-stacklight-advanced.local
   mon01_name:
     type: string
-    default: mon01.mk20-stacklight-basic.local
+    default: mon01.mk20-stacklight-advanced.local
 
 resources:
   lab_network:

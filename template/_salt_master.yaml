@@ -131,8 +131,17 @@ resources:
             EOF
 
             echo "Restarting services ..."
-            service salt-master restart
-            service salt-minion restart
+            service salt-master stop
+            service salt-minion stop
+            ps aux | grep salt
+
+            pkill -9 salt-master
+            pkill -9 salt-minion
+            ps aux | grep salt
+            sleep 2
+
+            service salt-master start
+            service salt-minion start
 
             echo "Showing system info and metadata ..."
             salt-call --no-color grains.items
