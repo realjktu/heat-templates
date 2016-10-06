@@ -15,7 +15,7 @@ parameters:
 
   reclass_address:
     type: string
-    default: "https://github.com/tcpcloud/mk20-lab-salt-model.git"
+    default: "git@github.com:Mirantis/mk-lab-salt-model.git"
   reclass_branch:
     type: string
     default: master
