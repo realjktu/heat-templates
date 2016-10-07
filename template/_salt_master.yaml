@@ -206,3 +206,7 @@ resources:
 outputs:
   config_host:
     value: { get_attr: [cfg01_instance, first_address] }
+    description: "Private IP address of the Salt master node"
+  config_public:
+    value: { get_attr: [cfg01_floating_ip, ip] }
+    description: "Public IP address of the Salt master node"
