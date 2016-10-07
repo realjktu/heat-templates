@@ -4,6 +4,8 @@ description: StackLight cluster fragment
 
 parameters:
 
+  admin_net:
+    type: string
   private_net:
     type: string
   security_group:
