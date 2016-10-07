@@ -62,9 +62,6 @@ resources:
             #!/bin/bash
             echo "Preparing base OS ..."
 
-            echo -e "auto eth1\niface eth1 inet dhcp" >> /etc/network/interfaces
-            ifup eth1
-
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
@@ -117,9 +114,6 @@ resources:
             #!/bin/bash
             echo "Preparing base OS ..."
 
-            echo -e "auto eth1\niface eth1 inet dhcp" >> /etc/network/interfaces
-            ifup eth1
-
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
@@ -171,9 +165,6 @@ resources:
           template: |
             #!/bin/bash
             echo "Preparing base OS ..."
-
-            echo -e "auto eth1\niface eth1 inet dhcp" >> /etc/network/interfaces
-            ifup eth1
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
