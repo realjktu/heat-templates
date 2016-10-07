@@ -1,3 +1,3 @@
 #!/bin/sh
 
-heat stack-show $1_$2
+heat stack-show $1

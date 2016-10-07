@@ -139,6 +139,7 @@ resources:
             EOF
 
             echo "Configuring reclass ..."
+            ssh-keyscan -H github.com >> ~/.ssh/known_hosts
             git clone $reclass_address /srv/salt/reclass -b $reclass_branch
             mkdir -p /srv/salt/reclass/classes/service
 
@@ -165,14 +166,15 @@ resources:
             echo "Restarting services ..."
             service salt-master stop
             service salt-minion stop
+            sleep 2
             ps aux | grep salt
-
             pkill -9 salt-master
             pkill -9 salt-minion
             ps aux | grep salt
             sleep 2
 
             service salt-master start
+            sleep 2
             service salt-minion start
 
             echo "Showing system info and metadata ..."

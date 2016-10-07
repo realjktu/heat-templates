@@ -1,25 +1,25 @@
 
 ====================
-Mk.20 heat templates
+Mk.XX Heat templates
 ====================
 
-OpenStack Heat templates for training and development labs
+OpenStack Heat templates for Mk-based cloud for training and development.
 
 
 Available stacks
 ================
 
 
-mk20 basic lab
---------------
+Mk.20 basic testing lab
+-----------------------
 
 * 1 config node
 * 3 control nodes
 * 1 compute node
 
 
-mk20 advanced lab
------------------
+Mk.20 advanced testing lab
+--------------------------
 
 * 1 config node
 * 3 control nodes
@@ -27,8 +27,8 @@ mk20 advanced lab
 * 1 monitor node
 
 
-mk20 expert lab
----------------
+Mk.20 expert testing lab
+------------------------
 
 * 1 config node
 * 3 control nodes
@@ -38,43 +38,121 @@ mk20 expert lab
 * 1 log node
 
 
+Mk.20 basic StackLight lab
+--------------------------
+
+* 1 config node
+* 3 control nodes
+* 1 compute node
+* 1 monitor node
+
+
+Mk.20 advanced StackLight lab
+-----------------------------
+
+* 1 config node
+* 3 control nodes
+* 1 compute node
+* 3 monitor nodes
+
+
 Available resources
 ===================
 
-Resource definion is part of environment file and the path to HOT fragment is relative to the location of this file!
+Custom resources are defined as part of environment variable file and the path
+to Heat template fragment is relative to the location of that environmental
+file! This file contains values for image names, flavors, ip pool name that
+fit given the cloud setup.
 
-* Mk20::Lab::BaseNetwork: template/_network.yaml
-* Mk20::Lab::SaltMaster: template/_salt_master.yaml
-* Mk20::Lab::OpenStackControl: template/_openstack_control_cluster.yaml
-* Mk20::Lab::OpenStackCompute: template/_openstack_compute_(single|multi).yaml
-* Mk20::Lab::OpenStackSupport: template/_openstack_support_(single|multi).yaml
+.. list-table:: Testing lab resources
+   :widths: 10 15 30
+   :header-rows: 1
+
+   * - Resource name
+     - Template file
+     - Description
+   * - Mk20::Lab::BaseNetwork
+     - template/_network.yaml
+     - Base network setup
+   * - Mk20::Lab::SaltMaster
+     - template/_salt_master.yaml
+     - Configuration and control node
+   * - Mk20::Lab::OpenStackControl
+     - template/_openstack_control_cluster.yaml
+     - OpenStack and OpenContrail control plane cluster
+   * - Mk20::Lab::OpenStackCompute
+     - template/_openstack_compute_(single|multi).yaml
+     - OpenStack compute nodes
+   * - Mk20::Lab::OpenStackSupport
+     - template/_openstack_support_(single|multi).yaml
+     - Mk.20 monitoring suite
+   * - Mk20::Lab::OpenStackSupport
+     - template/_openstack_support_(single|multi).yaml
+     - Mk.20 original monitoring suite
 
 
-Quick usage
-===========
+.. list-table:: StackLight lab resources
+   :widths: 10 15 30
+   :header-rows: 1
 
-Install necessary libraries
+   * - Resource name
+     - Template file
+     - Description
+   * - Mk20::StackLight::BaseNetwork
+     - template/_network.yaml
+     - Base network setup
+   * - Mk20::StackLight::SaltMaster
+     - template/_salt_master.yaml
+     - Configuration and control node
+   * - Mk20::StackLight::OpenStackControl
+     - template/_openstack_control_cluster.yaml
+     - OpenStack and OpenContrail control plane cluster
+   * - Mk20::StackLight::OpenStackCompute
+     - template/_openstack_compute_(single|multi).yaml
+     - OpenStack compute node
+   * - Mk20::StackLight::StackLightSupport
+     - template/_stacklight_support_(single|cluster).yaml
+     - StackLight monitoring suite
+
+
+Usage
+=====
+
+Install necessary libraries.
 
 .. code-block:: bash
 
    apt-get install python-novaclient python-heatclient
 
-To create heat stack:
+Create `keystonerc` file for your OpenStack endpoint, for example use
+following for DC in Czech Republic. Just fill in the username, password and
+tenant name.
+
+.. code-block:: bash
+
+    export OS_USERNAME=
+    export OS_PASSWORD=
+    export OS_TENANT_NAME=
+    export OS_AUTH_URL=https://vpc.tcpisek.cz:5000/v2.0
+    export OS_AUTH_STRATEGY=keystone
+
+Souce rc file and create heat stack.
 
 .. code-block:: bash
 
     source ./keystonerc 
-    ./create_stack.sh template_name env_name
+    ./create_stack.sh template_name env_name stack_name
 
-For example to deploy advanced lab to tcpisek cloud:
+For example to deploy advanced lab to tcpisek environment with name `lab01` use
+following code.
 
 .. code-block:: bash
 
-    ./create_stack.sh mk20_lab_advanced tcpisek
+    ./create_stack.sh mk20_lab_advanced tcpisek lab01
 
-To delete heat stack
+To delete heat stack `lab01`.
 
 .. code-block:: bash
 
     source ./keystonerc
-    ./delete_stack.sh template_name env_name
+    ./delete_stack.sh lab01
