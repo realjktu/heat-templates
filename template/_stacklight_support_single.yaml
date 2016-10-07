@@ -43,6 +43,7 @@ resources:
       name: { get_param: mon01_name }
       availability_zone: { get_param: instance_zone }
       networks:
+      - network: { get_param: private_net }
       - port: { get_resource: mon01_port }
       user_data_format: RAW
       user_data:

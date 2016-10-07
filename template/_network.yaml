@@ -1,6 +1,6 @@
 heat_template_version: 2015-04-30
 
-description: Private network fragment
+description: Networks fragment
 
 parameters:
   stack_name:
@@ -10,23 +10,27 @@ parameters:
   public_net:
     type: string
     description: ID or name of public network for which floating IP addresses will be allocated
-  router_name:
-    type: string
-    description: Name of router to be created
-    default: lab-router
-  private_net_name:
-    type: string
-    description: Name of private network to be created
-    default: lab-net
   private_net_cidr:
     type: string
     description: Private network address (CIDR notation)
-    default: 172.16.10.0/24
+    default: 192.168.10.0/24
   private_net_pool_start:
     type: string
     description: Start of private network IP address allocation pool
-    default: 172.16.10.90
+    default: 192.168.10.90
   private_net_pool_end:
+    type: string
+    description: End of private network IP address allocation pool
+    default: 192.168.10.200
+  admin_net_cidr:
+    type: string
+    description: Private network address (CIDR notation)
+    default: 172.16.10.0/24
+  admin_net_pool_start:
+    type: string
+    description: Start of private network IP address allocation pool
+    default: 172.16.10.90
+  admin_net_pool_end:
     type: string
     description: End of private network IP address allocation pool
     default: 172.16.10.200
@@ -41,11 +45,11 @@ resources:
   private_net:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: stack_name }
+      name: { list_join: ['-', [get_param: stack_name, 'private']] }
   private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: stack_name }
+      name: { list_join: ['-', [get_param: stack_name, 'private']] }
       network: { get_resource: private_net }
       cidr: { get_param: private_net_cidr }
       dns_nameservers:
@@ -57,7 +61,7 @@ resources:
   router:
     type: OS::Neutron::Router
     properties:
-      name: { get_param: stack_name }
+      name: { list_join: ['-', [get_param: stack_name, 'router']] }
       external_gateway_info:
         network: { get_param: public_net }
   router_interface:
@@ -69,16 +73,31 @@ resources:
     type: OS::Neutron::SecurityGroup
     properties:
       name: { get_param: stack_name }
-      description: Lab security group
+      description: Security group
       rules:
         - protocol: tcp
           remote_ip_prefix: 0.0.0.0/0
         - protocol: icmp
           remote_ip_prefix: 0.0.0.0/0
+  admin_net:
+    type: OS::Neutron::Net
+    properties:
+      name: { list_join: ['-', [get_param: stack_name, 'admin']] }
+  admin_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { list_join: ['-', [get_param: stack_name, 'admin']] }
+      network: { get_resource: admin_net }
+      cidr: { get_param: admin_net_cidr }
+      allocation_pools:
+        - start: { get_param: admin_net_pool_start }
+          end: { get_param: admin_net_pool_end }
 
 outputs:
   private_net_name:
     value: { get_attr: [private_net, name] }
+  admin_net_name:
+    value: { get_attr: [admin_net, name] }
   security_group:
     value: { get_param: stack_name }
 

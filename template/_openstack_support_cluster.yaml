@@ -4,6 +4,8 @@ description: OpenStack support fragment
 
 parameters:
 
+  admin_net:
+    type: string
   private_net:
     type: string
   security_group:
@@ -12,6 +14,10 @@ parameters:
     type: string
   config_host:
     type: string
+
+  cluster_vip_address:
+    type: string
+    default: 172.16.10.253
 
   instance_flavor:
     type: string
@@ -22,9 +28,9 @@ parameters:
 
   mon01_name:
     type: string
-  mtr01_name:
+  mon02_name:
     type: string
-  log01_name:
+  mon03_name:
     type: string
 
 resources:
@@ -32,9 +38,11 @@ resources:
   mon01_port:
     type: OS::Neutron::Port
     properties:
-      network_id: { get_param: private_net }
+      network_id: { get_param: admin_net }
       fixed_ips:
         - ip_address: 172.16.10.107
+      allowed_address_pairs:
+        - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
@@ -47,6 +55,7 @@ resources:
       name: { get_param: mon01_name }
       availability_zone: { get_param: instance_zone }
       networks:
+      - network: { get_param: private_net }
       - port: { get_resource: mon01_port }
       user_data_format: RAW
       user_data:
@@ -77,25 +86,28 @@ resources:
           params:
             $node_name: { get_param: mon01_name }
             $config_host: { get_param: config_host }
-  mtr01_port:
+  mon02_port:
     type: OS::Neutron::Port
     properties:
-      network_id: { get_param: private_net }
+      network_id: { get_param: admin_net }
       fixed_ips:
         - ip_address: 172.16.10.108
+      allowed_address_pairs:
+        - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
-  mtr01_instance:
+  mon02_instance:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: mtr01_name }
+      name: { get_param: mon02_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: mtr01_port }
+      - network: { get_param: private_net }
+      - port: { get_resource: mon02_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -123,27 +135,30 @@ resources:
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
           params:
-            $node_name: { get_param: mtr01_name }
+            $node_name: { get_param: mon02_name }
             $config_host: { get_param: config_host }
-  log01_port:
+  mon03_port:
     type: OS::Neutron::Port
     properties:
-      network_id: { get_param: private_net }
+      network_id: { get_param: admin_net }
       fixed_ips:
         - ip_address: 172.16.10.109
+      allowed_address_pairs:
+        - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
-  log01_instance:
+  mon03_instance:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: log01_name }
+      name: { get_param: mon03_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: log01_port }
+      - network: { get_param: private_net }
+      - port: { get_resource: mon03_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -172,5 +187,5 @@ resources:
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt
           params:
-            $node_name: { get_param: log01_name }
+            $node_name: { get_param: mon03_name }
             $config_host: { get_param: config_host }

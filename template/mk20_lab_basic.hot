@@ -71,6 +71,7 @@ resources:
     properties:
       public_net: { get_param: public_net }
       private_net: { get_attr: [lab_network, private_net_name] }
+      admin_net: { get_attr: [lab_network, admin_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [lab_network, security_group] }
       cfg01_name: { get_param: cfg01_name }
@@ -84,6 +85,7 @@ resources:
     depends_on: lab_salt_master
     properties:
       private_net: { get_attr: [lab_network, private_net_name] }
+      admin_net: { get_attr: [lab_network, admin_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [lab_network, security_group] }
       config_host: { get_attr: [lab_salt_master, config_host] }
@@ -98,6 +100,7 @@ resources:
     depends_on: lab_salt_master
     properties:
       private_net: { get_attr: [lab_network, private_net_name] }
+      admin_net: { get_attr: [lab_network, admin_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [lab_network, security_group] }
       config_host: { get_attr: [lab_salt_master, config_host] }
