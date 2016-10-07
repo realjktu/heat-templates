@@ -131,3 +131,8 @@ resources:
       instance_image: { get_param: instance_image_support }
       instance_zone:  { get_param: instance_zone }
       mon01_name: { get_param: mon01_name }
+
+outputs:
+  salt_master_ip:
+    value: { get_attr: [lab_salt_master, config_public] }
+    description: "Public IP address of the Salt master node"
