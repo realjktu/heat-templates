@@ -72,22 +72,22 @@ fit given the cloud setup.
      - Template file
      - Description
    * - Mk20::Lab::BaseNetwork
-     - template/_network.yaml
+     - _network.yaml
      - Base network setup
    * - Mk20::Lab::SaltMaster
-     - template/_salt_master.yaml
+     - _salt_master.yaml
      - Configuration and control node
    * - Mk20::Lab::OpenStackControl
-     - template/_openstack_control_cluster.yaml
+     - _openstack_control_cluster.yaml
      - OpenStack and OpenContrail control plane cluster
    * - Mk20::Lab::OpenStackCompute
-     - template/_openstack_compute_(single|multi).yaml
+     - _openstack_compute_(single|multi).yaml
      - OpenStack compute nodes
    * - Mk20::Lab::OpenStackSupport
-     - template/_openstack_support_(single|multi).yaml
+     - _openstack_support_(single|multi).yaml
      - Mk.20 monitoring suite
    * - Mk20::Lab::OpenStackSupport
-     - template/_openstack_support_(single|multi).yaml
+     - _openstack_support_(single|multi).yaml
      - Mk.20 original monitoring suite
 
 
@@ -99,19 +99,19 @@ fit given the cloud setup.
      - Template file
      - Description
    * - Mk20::StackLight::BaseNetwork
-     - template/_network.yaml
+     - _network.yaml
      - Base network setup
    * - Mk20::StackLight::SaltMaster
-     - template/_salt_master.yaml
+     - _salt_master.yaml
      - Configuration and control node
    * - Mk20::StackLight::OpenStackControl
-     - template/_openstack_control_cluster.yaml
+     - _openstack_control_cluster.yaml
      - OpenStack and OpenContrail control plane cluster
    * - Mk20::StackLight::OpenStackCompute
-     - template/_openstack_compute_(single|multi).yaml
+     - _openstack_compute_(single|multi).yaml
      - OpenStack compute node
    * - Mk20::StackLight::StackLightSupport
-     - template/_stacklight_support_(single|cluster).yaml
+     - _stacklight_support_(single|cluster).yaml
      - StackLight monitoring suite
 
 
