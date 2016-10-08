@@ -29,7 +29,16 @@ parameters:
 
 resources:
 
-  cmp01_port:
+  cmp01_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: 192.168.10.105
+      security_groups:
+        - default
+        - { get_param: security_group }
+  cmp01_admin_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
@@ -47,8 +56,8 @@ resources:
       name: { get_param: cmp01_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - network: { get_param: private_net }
-      - port: { get_resource: cmp01_port }
+      - port: { get_resource: cmp01_private_port }
+      - port: { get_resource: cmp01_admin_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -79,7 +88,16 @@ resources:
           params:
             $node_name: { get_param: cmp01_name }
             $config_host: { get_param: config_host }
-  cmp02_port:
+  cmp02_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: 192.168.10.106
+      security_groups:
+        - default
+        - { get_param: security_group }
+  cmp02_admin_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
@@ -97,8 +115,8 @@ resources:
       name: { get_param: cmp02_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - network: { get_param: private_net }
-      - port: { get_resource: cmp02_port }
+      - port: { get_resource: cmp02_private_port }
+      - port: { get_resource: cmp02_admin_port }
       user_data_format: RAW
       user_data:
         str_replace:

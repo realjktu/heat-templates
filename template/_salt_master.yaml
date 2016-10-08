@@ -195,8 +195,10 @@ resources:
             salt-call --no-color pillar.data
 
             echo "Running complete state ..."
-            salt-call --no-color state.sls linux,openssh,salt.master.service -l info
-            salt-call --no-color state.sls salt.master,reclass,salt.minion.ca -l info
+            salt-call --no-color state.sls linux,openssh -l info
+            salt-call --no-color state.sls reclass -l info
+            salt-call --no-color state.sls salt.master.service -l info
+            salt-call --no-color state.sls salt.master,salt.minion.ca -l info
             service salt-minion restart
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
 

@@ -35,7 +35,16 @@ parameters:
 
 resources:
 
-  ctl01_port:
+  ctl01_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: 192.168.10.101
+      security_groups:
+        - default
+        - { get_param: security_group }
+  ctl01_admin_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
@@ -55,8 +64,8 @@ resources:
       name: { get_param: ctl01_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - network: { get_param: private_net }
-      - port: { get_resource: ctl01_port }
+      - port: { get_resource: ctl01_private_port }
+      - port: { get_resource: ctl01_admin_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -87,7 +96,16 @@ resources:
           params:
             $node_name: { get_param: ctl01_name }
             $config_host: { get_param: config_host }
-  ctl02_port:
+  ctl02_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: 192.168.10.102
+      security_groups:
+        - default
+        - { get_param: security_group }
+  ctl02_admin_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
@@ -107,8 +125,8 @@ resources:
       name: { get_param: ctl02_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - network: { get_param: private_net }
-      - port: { get_resource: ctl02_port }
+      - port: { get_resource: ctl02_private_port }
+      - port: { get_resource: ctl02_admin_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -139,7 +157,16 @@ resources:
           params:
             $node_name: { get_param: ctl02_name }
             $config_host: { get_param: config_host }
-  ctl03_port:
+  ctl03_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: 192.168.10.103
+      security_groups:
+        - default
+        - { get_param: security_group }
+  ctl03_admin_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
@@ -159,8 +186,8 @@ resources:
       name: { get_param: ctl03_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - network: { get_param: private_net }
-      - port: { get_resource: ctl03_port }
+      - port: { get_resource: ctl03_private_port }
+      - port: { get_resource: ctl03_admin_port }
       user_data_format: RAW
       user_data:
         str_replace:
