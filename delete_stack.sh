@@ -1,3 +1,3 @@
 #!/bin/sh
 
-heat stack-delete $1
+heat stack-delete $1_$2
