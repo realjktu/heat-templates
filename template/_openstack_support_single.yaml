@@ -36,7 +36,7 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
-  mon01_admin.port:
+  mon01_admin_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
