@@ -64,6 +64,9 @@ parameters:
   cmp01_name:
     type: string
     default: cmp01.mk20-lab-advanced.local
+  cmp02_name:
+    type: string
+    default: cmp02.mk20-lab-advanced.local
   mon01_name:
     type: string
     default: mon01.mk20-lab-advanced.local
@@ -118,6 +121,7 @@ resources:
       instance_image: { get_param: instance_image_compute }
       instance_zone:  { get_param: instance_zone }
       cmp01_name: { get_param: cmp01_name }
+      cmp02_name: { get_param: cmp02_name }
   lab_openstack_support:
     type: Mk20::Lab::OpenStackSupport
     depends_on: lab_salt_master
@@ -131,3 +135,8 @@ resources:
       instance_image: { get_param: instance_image_support }
       instance_zone:  { get_param: instance_zone }
       mon01_name: { get_param: mon01_name }
+
+outputs:
+  salt_master_ip:
+    value: { get_attr: [lab_salt_master, config_public] }
+    description: "Public IP address of the Salt master node"
