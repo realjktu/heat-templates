@@ -49,6 +49,9 @@ parameters:
     description: Instance type for support nodes (web, monitoring, etc.)
     default: m1.large
 
+  formula_branch:
+    type: string
+
   cfg01_name:
     type: string
     default: cfg01.mk20-stacklight-basic.local
@@ -90,6 +93,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       reclass_address : { get_param: reclass_address }
       reclass_branch : { get_param: reclass_branch }
+      formula_branch : { get_param: formula_branch }
   lab_openstack_control:
     type: Mk20::StackLight::OpenStackControl
     depends_on: lab_salt_master

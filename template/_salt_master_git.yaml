@@ -28,6 +28,9 @@ parameters:
   reclass_branch:
     type: string
 
+  formula_branch:
+    type: string
+
   cfg01_name:
     type: string
 
@@ -41,7 +44,7 @@ resources:
       timeout: 3600
   cfg01_floating_ip:
     type: OS::Nova::FloatingIP
-    properties:
+    properties: 
       pool: { get_param: public_net }
   cfg01_floating_ip_association:
     type: OS::Nova::FloatingIPAssociation
@@ -86,7 +89,7 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
             echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
@@ -95,11 +98,9 @@ resources:
             apt-get clean
             apt-get update
 
-            echo "Configuring salt master ..."
-            apt-get install -y salt-master reclass
-            apt-get install -y salt-formula-linux salt-formula-reclass salt-formula-salt salt-formula-openssh salt-formula-ntp salt-formula-git salt-formula-graphite salt-formula-collectd salt-formula-sensu salt-formula-heka
-            # Temporary until multi-site horizon is deployed on salt master
-            apt-get install -y salt-formula-horizon salt-formula-nginx salt-formula-memcached salt-formula-python salt-formula-supervisor salt-formula-sphinx
+            echo "Installing salt master ..."
+            apt-get install -y reclass
+            apt-get install -y salt-master
 
             [ ! -d /root/.ssh ] && mkdir -p /root/.ssh
             cat << 'EOF' > /root/.ssh/id_rsa
@@ -133,9 +134,6 @@ resources:
             EOF
             chmod 400 /root/.ssh/id_rsa
 
-            mkdir -p /srv/salt/env
-            ln -s /usr/share/salt-formulas/env /srv/salt/env/prd
-
             cat << 'EOF' >> /etc/salt/master.d/master.conf
             file_roots:
               base:
@@ -156,6 +154,28 @@ resources:
             git clone $reclass_address /srv/salt/reclass -b $reclass_branch
             mkdir -p /srv/salt/reclass/classes/service
 
+            FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
+            FORMULA_BRANCH=${FORMULA_BRANCH:-$formula_branch}
+
+            echo "Configuring salt master formulas ..."
+
+            [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
+
+            declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx")
+
+            for formula_service in "${formula_services[@]}"; do
+                echo -e "\nConfiguring salt formula ${formula_service} ...\n"
+                [ ! -d "${FORMULA_PATH}/env/_formulas/${formula_service}" ] && \
+                    git clone https://github.com/tcpcloud/salt-formula-${formula_service}.git ${FORMULA_PATH}/env/_formulas/${formula_service} -b ${FORMULA_BRANCH}
+                [ ! -L "/usr/share/salt-formulas/env/${formula_service}" ] && \
+                    ln -s ${FORMULA_PATH}/env/_formulas/${formula_service}/${formula_service} /usr/share/salt-formulas/env/${formula_service}
+                [ ! -L "/srv/salt/reclass/classes/service/${formula_service}" ] && \
+                    ln -s ${FORMULA_PATH}/env/_formulas/${formula_service}/metadata/service /srv/salt/reclass/classes/service/${formula_service}
+            done
+
+            [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env
+            [ ! -L /srv/salt/env/dev ] && ln -s /usr/share/salt-formulas/env /srv/salt/env/dev
+
             for i in /usr/share/salt-formulas/reclass/service/*; do
               ln -s $i /srv/salt/reclass/classes/service/
             done
@@ -169,12 +189,12 @@ resources:
             EOF
 
             echo "Configuring salt minion ..."
-            apt-get install -y salt-minion
             [ ! -d /etc/salt/minion.d ] && mkdir -p /etc/salt/minion.d
             cat << "EOF" >> /etc/salt/minion.d/minion.conf
             id: $node_name
             master: 127.0.0.1
             EOF
+            apt-get install -y salt-minion
 
             echo "Restarting services ..."
             service salt-master stop
@@ -208,6 +228,7 @@ resources:
             $node_name: { get_param: cfg01_name }
             $reclass_address: { get_param: reclass_address }
             $reclass_branch: { get_param: reclass_branch }
+            $formula_branch: { get_param: formula_branch }
             $wait_condition_notify: { get_attr: [cfg01_wait_handle, curl_cli] }
             $config_host: localhost
 

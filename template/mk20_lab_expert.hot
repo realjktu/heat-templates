@@ -143,3 +143,8 @@ resources:
       mon01_name: { get_param: mon01_name }
       mon02_name: { get_param: mon02_name }
       mon03_name: { get_param: mon03_name }
+
+outputs:
+  salt_master_ip:
+    value: { get_attr: [lab_salt_master, config_public] }
+    description: "Public IP address of the Salt master node"

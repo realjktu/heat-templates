@@ -17,6 +17,10 @@ parameters:
     type: string
     default: master
 
+  formula_branch:
+    type: string
+    default: master
+
   instance_zone:
     type: string
     default: nova
@@ -48,6 +52,9 @@ parameters:
     type: string
     description: Instance type for support nodes (web, monitoring, etc.)
     default: m1.large
+
+  formula_branch:
+    type: string
 
   cfg01_name:
     type: string
@@ -96,6 +103,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       reclass_address : { get_param: reclass_address }
       reclass_branch : { get_param: reclass_branch }
+      formula_branch : { get_param: formula_branch }
   lab_openstack_control:
     type: Mk20::StackLight::OpenStackControl
     depends_on: lab_salt_master
@@ -104,6 +112,7 @@ resources:
       admin_net: { get_attr: [lab_network, admin_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [lab_network, security_group] }
+      config_host: { get_attr: [lab_salt_master, config_host] }
       config_host: { get_attr: [lab_salt_master, config_host] }
       instance_flavor: { get_param: instance_flavor_control }
       instance_image: { get_param: instance_image_control }
@@ -139,3 +148,8 @@ resources:
       mon01_name: { get_param: mon01_name }
       mon02_name: { get_param: mon02_name }
       mon03_name: { get_param: mon03_name }
+
+outputs:
+  salt_master_ip:
+    value: { get_attr: [lab_salt_master, config_public] }
+    description: "Public IP address of the Salt master node"

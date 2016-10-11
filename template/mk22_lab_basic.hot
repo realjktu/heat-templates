@@ -38,44 +38,35 @@ parameters:
     default: m1.medium
   instance_flavor_control:
     type: string
-    description: Instance type for controllers
+    description: Instance type for controllers.
     default: m1.xlarge
   instance_flavor_compute:
     type: string
-    description: Instance type for compute nodes
+    description: Instance type for compute nodes.
     default: m1.large
   instance_flavor_support:
     type: string
-    description: Instance type for support nodes (web, monitoring, etc.)
+    description: Instance type for support nodes (web, monitoring, etc.).
     default: m1.large
 
   cfg01_name:
     type: string
-    default: cfg01.mk22-lab-advanced.local
+    default: cfg01.mk22-lab-basic.local
   ctl01_name:
     type: string
-    default: ctl01.mk22-lab-advanced.local
+    default: ctl01.mk22-lab-basic.local
   ctl02_name:
     type: string
-    default: ctl02.mk22-lab-advanced.local
+    default: ctl02.mk22-lab-basic.local
   ctl03_name:
     type: string
-    default: ctl03.mk22-lab-advanced.local
+    default: ctl03.mk22-lab-basic.local
   cmp01_name:
     type: string
-    default: cmp01.mk22-lab-advanced.local
-  cmp02_name:
-    type: string
-    default: cmp02.mk22-lab-advanced.local
+    default: cmp01.mk22-lab-basic.local
   mon01_name:
     type: string
-    default: mon01.mk22-lab-advanced.local
-  mon02_name:
-    type: string
-    default: mon02.mk22-lab-advanced.local
-  mon03_name:
-    type: string
-    default: mon03.mk22-lab-advanced.local
+    default: mon01.mk22-lab-basic.local
 
 resources:
   lab_network:
@@ -127,7 +118,6 @@ resources:
       instance_image: { get_param: instance_image_compute }
       instance_zone:  { get_param: instance_zone }
       cmp01_name: { get_param: cmp01_name }
-      cmp02_name: { get_param: cmp02_name }
   lab_openstack_support:
     type: Mk22::Lab::OpenStackSupport
     depends_on: lab_salt_master
@@ -141,8 +131,6 @@ resources:
       instance_image: { get_param: instance_image_support }
       instance_zone:  { get_param: instance_zone }
       mon01_name: { get_param: mon01_name }
-      mon02_name: { get_param: mon02_name }
-      mon03_name: { get_param: mon03_name }
 
 outputs:
   salt_master_ip:
