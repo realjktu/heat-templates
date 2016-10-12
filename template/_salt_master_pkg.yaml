@@ -82,6 +82,9 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
+            # Redirect all outputs
+            exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
+            set -x
             echo "Preparing base OS ..."
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
@@ -131,7 +134,7 @@ resources:
             EOF
             chmod 400 /root/.ssh/id_rsa
 
-            cat << 'EOF' >> /etc/salt/master.d/master.conf
+            cat << 'EOF' > /etc/salt/master.d/master.conf
             file_roots:
               base:
               - /usr/share/salt-formulas/env
@@ -164,8 +167,6 @@ resources:
             apt-get clean
             apt-get update
 
-            [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
-            
             declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx")
 
             for formula_service in "${formula_services[@]}"; do
@@ -180,7 +181,7 @@ resources:
             [ ! -L /srv/salt/env/prd ] && ln -s ${FORMULA_PATH}/env /srv/salt/env/prd
 
             [ ! -d /etc/reclass ] && mkdir /etc/reclass
-            cat << 'EOF' >> /etc/reclass/reclass-config.yml
+            cat << 'EOF' > /etc/reclass/reclass-config.yml
             storage_type: yaml_fs
             pretty_print: True
             output: yaml
@@ -189,7 +190,7 @@ resources:
 
             echo "Configuring salt minion ..."
             [ ! -d /etc/salt/minion.d ] && mkdir -p /etc/salt/minion.d
-            cat << "EOF" >> /etc/salt/minion.d/minion.conf
+            cat << "EOF" > /etc/salt/minion.d/minion.conf
             id: $node_name
             master: 127.0.0.1
             EOF
@@ -218,7 +219,12 @@ resources:
             salt-call --no-color state.sls reclass -l info
             salt-call --no-color state.sls salt.master.service -l info
             salt-call --no-color state.sls salt.master,salt.minion.ca -l info
-            service salt-minion restart
+
+            service salt-minion stop
+            sleep 2
+            pkill -9 salt-minion
+            service salt-minion start
+
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
 
             reclass-salt --top
