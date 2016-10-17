@@ -92,7 +92,7 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
