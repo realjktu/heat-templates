@@ -89,11 +89,11 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -167,7 +167,9 @@ resources:
             apt-get clean
             apt-get update
 
-            declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx")
+            [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
+            
+            declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql")
 
             for formula_service in "${formula_services[@]}"; do
                 echo -e "\nConfiguring salt formula ${formula_service} ...\n"
@@ -197,18 +199,8 @@ resources:
             apt-get install -y salt-minion
 
             echo "Restarting services ..."
-            service salt-master stop
-            service salt-minion stop
-            sleep 2
-            ps aux | grep salt
-            pkill -9 salt-master
-            pkill -9 salt-minion
-            ps aux | grep salt
-            sleep 2
-
-            service salt-master start
-            sleep 2
-            service salt-minion start
+            systemctl restart salt-master
+            systemctl restart salt-minion
 
             echo "Showing system info and metadata ..."
             salt-call --no-color grains.items
@@ -219,16 +211,12 @@ resources:
             salt-call --no-color state.sls reclass -l info
             salt-call --no-color state.sls salt.master.service -l info
             salt-call --no-color state.sls salt.master,salt.minion.ca -l info
-
-            service salt-minion stop
-            sleep 2
-            pkill -9 salt-minion
-            service salt-minion start
-
+            systemctl restart salt-minion
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
 
             reclass-salt --top
-            salt-call --no-color state.highstate -l info
+            salt-call --no-color state.sls salt.minion.cert -l info
+
           params:
             $node_name: { get_param: cfg01_name }
             $reclass_address: { get_param: reclass_address }
