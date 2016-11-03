@@ -90,7 +90,7 @@ resources:
   log02_port:
     type: OS::Neutron::Port
     properties:
-      network_id: { get_param: private_net }
+      network_id: { get_param: admin_net }
       fixed_ips:
         - ip_address: 172.16.10.192
       allowed_address_pairs:
@@ -142,7 +142,7 @@ resources:
   log03_port:
     type: OS::Neutron::Port
     properties:
-      network_id: { get_param: private_net }
+      network_id: { get_param: admin_net }
       allowed_address_pairs:
         - ip_address: { get_param: cluster_vip_address }
       fixed_ips:

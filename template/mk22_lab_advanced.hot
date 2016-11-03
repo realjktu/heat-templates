@@ -64,6 +64,9 @@ parameters:
   ctl03_name:
     type: string
     default: ctl03.mk22-lab-advanced.local
+  prx01_name:
+    type: string
+    default: prx01.mk22-full-scale.local
   gtw01_name:
     type: string
     default: gtw01.mk22-lab-advanced.local
