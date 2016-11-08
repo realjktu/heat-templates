@@ -33,6 +33,9 @@ parameters:
 
   cfg01_name:
     type: string
+  cfg01_address:
+    type: string
+    default: 172.16.10.100
 
 resources:
   cfg01_wait_handle:
@@ -56,7 +59,7 @@ resources:
     properties:
       network_id: { get_param: admin_net }
       fixed_ips:
-        - ip_address: 172.16.10.100
+        - ip_address: { get_param: cfg01_address }
       security_groups:
         - default
         - { get_param: security_group }
