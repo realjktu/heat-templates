@@ -33,7 +33,7 @@ resources:
       name: { get_param: stack_name }
       public_key: { get_param: key_value }
       save_private_key: false
-  private_net:
+  private_network:
     type: OS::Neutron::Net
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'private']] }
@@ -41,7 +41,7 @@ resources:
     type: OS::Neutron::Subnet
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'private']] }
-      network: { get_resource: private_net }
+      network: { get_resource: private_network }
       cidr: { get_param: private_net_cidr }
       dns_nameservers:
       - 8.8.8.8
@@ -73,7 +73,7 @@ resources:
 
 outputs:
   private_net_name:
-    value: { get_attr: [private_net, name] }
+    value: { get_attr: [private_network, name] }
   admin_net_name:
     value: { get_param: private_net }
   security_group:
