@@ -29,6 +29,9 @@ parameters:
   instance_image_compute:
     type: string
     description: Image name to use for compute nodes.
+  instance_image_dashboard:
+    type: string
+    description: Image name to use for dashboard.
   instance_image_support:
     type: string
     description: Image name to use for support nodes.
