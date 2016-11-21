@@ -1,6 +1,6 @@
 heat_template_version: 2013-05-23
 
-description: OpenStack 3 controllers fragment
+description: StackLight influxdb fragment
 
 parameters:
 
@@ -17,7 +17,7 @@ parameters:
 
   cluster_vip_address:
     type: string
-    default: 172.16.10.254
+    default: 172.16.10.246
 
   instance_flavor:
     type: string
@@ -26,56 +26,37 @@ parameters:
   instance_zone:
     type: string
 
-  ctl01_name:
+  mtr01_name:
     type: string
-  ctl02_name:
+  mtr02_name:
     type: string
-  ctl03_name:
+  mtr03_name:
     type: string
-
-  ctl01_address:
-    type: string
-    default: 172.16.10.101
-  ctl02_address:
-    type: string
-    default: 172.16.10.102
-  ctl03_address:
-    type: string
-    default: 172.16.10.103
 
 resources:
 
-  ctl01_private_port:
-    type: OS::Neutron::Port
-    properties:
-      network_id: { get_param: private_net }
-      fixed_ips:
-        - ip_address: 192.168.10.101
-      security_groups:
-        - default
-        - { get_param: security_group }
-  ctl01_admin_port:
+  mtr01_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
       fixed_ips:
-        - ip_address: { get_param: ctl01_address }
+        - ip_address: 172.16.10.197
       allowed_address_pairs:
         - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
-  ctl01_instance:
+  mtr01_instance:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: ctl01_name }
+      name: { get_param: mtr01_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: ctl01_private_port }
-      - port: { get_resource: ctl01_admin_port }
+      - network: { get_param: private_net }
+      - port: { get_resource: mtr01_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -85,11 +66,11 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -104,39 +85,30 @@ resources:
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
           params:
-            $node_name: { get_param: ctl01_name }
+            $node_name: { get_param: mtr01_name }
             $config_host: { get_param: config_host }
-  ctl02_private_port:
-    type: OS::Neutron::Port
-    properties:
-      network_id: { get_param: private_net }
-      fixed_ips:
-        - ip_address: 192.168.10.102
-      security_groups:
-        - default
-        - { get_param: security_group }
-  ctl02_admin_port:
+  mtr02_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
       fixed_ips:
-        - ip_address: { get_param: ctl02_address }
+        - ip_address: 172.16.10.198
       allowed_address_pairs:
         - ip_address: { get_param: cluster_vip_address }
       security_groups:
         - default
         - { get_param: security_group }
-  ctl02_instance:
+  mtr02_instance:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: ctl02_name }
+      name: { get_param: mtr02_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: ctl02_private_port }
-      - port: { get_resource: ctl02_admin_port }
+      - network: { get_param: private_net }
+      - port: { get_resource: mtr02_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -146,11 +118,11 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -165,39 +137,30 @@ resources:
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
           params:
-            $node_name: { get_param: ctl02_name }
+            $node_name: { get_param: mtr02_name }
             $config_host: { get_param: config_host }
-  ctl03_private_port:
-    type: OS::Neutron::Port
-    properties:
-      network_id: { get_param: private_net }
-      fixed_ips:
-        - ip_address: 192.168.10.103
-      security_groups:
-        - default
-        - { get_param: security_group }
-  ctl03_admin_port:
+  mtr03_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: admin_net }
-      fixed_ips:
-        - ip_address: { get_param: ctl03_address }
       allowed_address_pairs:
         - ip_address: { get_param: cluster_vip_address }
+      fixed_ips:
+        - ip_address: 172.16.10.199
       security_groups:
         - default
         - { get_param: security_group }
-  ctl03_instance:
+  mtr03_instance:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: ctl03_name }
+      name: { get_param: mtr03_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: ctl03_private_port }
-      - port: { get_resource: ctl03_admin_port }
+      - network: { get_param: private_net }
+      - port: { get_resource: mtr03_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -207,14 +170,15 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
+
             apt-get install -y salt-minion
 
             echo "id: $node_name" >> /etc/salt/minion
@@ -224,7 +188,7 @@ resources:
             echo "Showing node metadata..."
             salt-call --no-color pillar.data
             echo "Running complete state ..."
-            salt-call --no-color state.sls linux,openssh,salt -l info
+            salt-call --no-color state.sls linux,openssh,salt
           params:
-            $node_name: { get_param: ctl03_name }
+            $node_name: { get_param: mtr03_name }
             $config_host: { get_param: config_host }
