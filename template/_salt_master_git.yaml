@@ -171,8 +171,15 @@ resources:
 
             for formula_service in "${formula_services[@]}"; do
                 echo -e "\nConfiguring salt formula ${formula_service} ...\n"
-                [ ! -d "${FORMULA_PATH}/env/_formulas/${formula_service}" ] && \
-                    git clone https://github.com/tcpcloud/salt-formula-${formula_service}.git ${FORMULA_PATH}/env/_formulas/${formula_service} -b ${FORMULA_BRANCH}
+                if [[ ! -d "${FORMULA_PATH}/env/_formulas/${formula_service}" ]]; then
+                    _URL=https://github.com/tcpcloud/salt-formula-${formula_service}.git
+                    _BRANCH=$FORMULA_BRANCH
+                    if ! git ls-remote --exit-code --heads $_URL $_BRANCH; then
+                        # Fallback to the master branch if the branch doesn't exist for this repository
+                        _BRANCH=master
+                    fi
+                    git clone $_URL ${FORMULA_PATH}/env/_formulas/${formula_service} -b $_BRANCH
+                fi
                 [ ! -L "/usr/share/salt-formulas/env/${formula_service}" ] && \
                     ln -s ${FORMULA_PATH}/env/_formulas/${formula_service}/${formula_service} /usr/share/salt-formulas/env/${formula_service}
                 [ ! -L "/srv/salt/reclass/classes/service/${formula_service}" ] && \
