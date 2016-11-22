@@ -76,6 +76,8 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
+      # This allows to use heat stack-update
+      image_update_policy: REBUILD
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
       name: { get_param: cfg01_name }
