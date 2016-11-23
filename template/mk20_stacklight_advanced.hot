@@ -69,7 +69,7 @@ parameters:
     default: ctl03.mk20-stacklight-advanced.local
   prx01_name:
     type: string
-    default: prx01.mk20-lab-advanced.local
+    default: prx01.mk20-stacklight-advanced.local
   cmp01_name:
     type: string
     default: cmp01.mk20-stacklight-advanced.local
