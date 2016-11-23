@@ -76,6 +76,8 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
+      # This allows to use heat stack-update
+      image_update_policy: REBUILD
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
       name: { get_param: cfg01_name }
@@ -167,7 +169,7 @@ resources:
 
             [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-            declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql")
+            declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana")
 
             for formula_service in "${formula_services[@]}"; do
                 echo -e "\nConfiguring salt formula ${formula_service} ...\n"
