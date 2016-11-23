@@ -1,0 +1,112 @@
+heat_template_version: 2013-05-23
+
+description: OpenStack 2 computes fragment
+
+parameters:
+
+  admin_net:
+    type: string
+  private_net:
+    type: string
+  tenant_net:
+    type: string
+  external_net:
+    type: string
+  security_group:
+    type: string
+  key_pair:
+    type: string
+  config_host:
+    type: string
+
+  instance_flavor:
+    type: string
+  instance_image:
+    type: string
+  instance_zone:
+    type: string
+
+  gtw01_name:
+    type: string
+
+resources:
+
+  gtw01_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: 192.168.10.110
+      security_groups:
+        - default
+        - { get_param: security_group }
+  gtw01_admin_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: admin_net }
+      fixed_ips:
+        - ip_address: 172.16.10.110
+      security_groups:
+        - default
+        - { get_param: security_group }
+  gtw01_tenant_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: tenant_net }
+      fixed_ips:
+        - ip_address: 10.1.0.110
+      security_groups:
+        - default
+        - { get_param: security_group }
+  gtw01_external_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: external_net }
+      fixed_ips:
+        - ip_address: 100.16.0.110
+      security_groups:
+        - default
+        - { get_param: security_group }
+  gtw01_instance:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: instance_image }
+      flavor: { get_param: instance_flavor }
+      key_name: { get_param: key_pair }
+      name: { get_param: gtw01_name }
+      availability_zone: { get_param: instance_zone }
+      networks:
+      - port: { get_resource: gtw01_private_port }
+      - port: { get_resource: gtw01_admin_port }
+      - port: { get_resource: gtw01_tenant_port }
+      - port: { get_resource: gtw01_external_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash
+            echo "Preparing base OS ..."
+
+            which wget >/dev/null || (apt-get update; apt-get install -y wget)
+
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
+
+            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest trusty main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+
+            apt-get clean
+            apt-get update
+            apt-get install -y salt-minion
+
+            echo "id: $node_name" >> /etc/salt/minion
+            echo "master: $config_host" >> /etc/salt/minion
+            rm -f /etc/salt/pki/minion/minion_master.pub
+            service salt-minion restart
+            echo "Showing node metadata..."
+            salt-call --no-color pillar.data
+            echo "Running complete state ..."
+            salt-call --no-color state.sls linux,openssh,salt -l info
+          params:
+            $node_name: { get_param: gtw01_name }
+            $config_host: { get_param: config_host }
