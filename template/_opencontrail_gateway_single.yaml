@@ -49,5 +49,5 @@ resources:
       name: { get_param: gtw01_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: gtw01_private_port }
       - port: { get_resource: gtw01_admin_port }
+      - port: { get_resource: gtw01_private_port }
