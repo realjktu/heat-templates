@@ -10,6 +10,8 @@ parameters:
     type: string
   security_group:
     type: string
+  key_pair:
+    type: string
 
   instance_flavor:
     type: string
@@ -46,6 +48,7 @@ resources:
     properties:
       image: { get_param: instance_image }
       flavor: { get_param: instance_flavor }
+      key_name: { get_param: key_pair }
       name: { get_param: gtw01_name }
       availability_zone: { get_param: instance_zone }
       networks:
