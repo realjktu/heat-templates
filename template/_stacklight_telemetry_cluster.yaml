@@ -69,8 +69,8 @@ resources:
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -121,8 +121,8 @@ resources:
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -173,8 +173,8 @@ resources:
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
