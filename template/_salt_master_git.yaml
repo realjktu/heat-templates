@@ -220,6 +220,12 @@ resources:
             salt-call --no-color state.sls reclass -l info
             salt-call --no-color state.sls salt.master.service -l info
             salt-call --no-color state.sls salt.master,salt.minion.ca -l info
+            # There is an issue where the PEM is not send to mine. Until we find
+            # why it is not working we can send it manually.
+            CERT_PATH="/etc/pki/ca/mk_lab_ca/ca.crt"
+            [ -f ${CERT_PATH} ] && \
+                salt-call mine.send x509.get_pem_entries "/etc/pki/ca/mk_lab_ca/ca.crt" || \
+                echo "${CERT_PATH} not found"
             systemctl restart salt-minion
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
 
