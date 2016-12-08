@@ -49,15 +49,15 @@ parameters:
   external_net_cidr:
     type: string
     description: External network address (CIDR notation)
-    default: 100.16.0.0/24
+    default: 10.16.0.0/24
   external_net_pool_start:
     type: string
     description: Start of external network IP address allocation pool
-    default: 100.16.0.10
+    default: 10.16.0.10
   external_net_pool_end:
     type: string
     description: End of external network IP address allocation pool
-    default: 100.16.0.200
+    default: 10.16.0.200
 resources:
   key_pair:
     type: OS::Nova::KeyPair
