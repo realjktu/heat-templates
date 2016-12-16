@@ -154,7 +154,7 @@ resources:
 
             echo "Configuring reclass ..."
             ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-            git clone $reclass_address /srv/salt/reclass -b $reclass_branch
+            git clone -b $reclass_branch --recurse-submodules $reclass_address /srv/salt/reclass
             mkdir -p /srv/salt/reclass/classes/service
 
             FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
