@@ -55,6 +55,9 @@ parameters:
     type: string
     description: Instance type for support nodes (web, monitoring, etc.).
     default: m1.large
+  instance_image_dashboard:
+    type: string
+    description: Image name to use for dashboard.
 
   cfg01_name:
     type: string
