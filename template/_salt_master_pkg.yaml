@@ -213,7 +213,7 @@ resources:
             salt-call --no-color state.sls linux,openssh -l info
             salt-call --no-color state.sls reclass -l info
             salt-call --no-color state.sls salt.master.service -l info
-            salt-call --no-color state.sls salt.master,salt.minion.ca -l info
+            salt-call --no-color state.sls salt.master,salt.api,salt.minion.ca -l info
             systemctl restart salt-minion
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
 
