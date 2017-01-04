@@ -45,6 +45,13 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
+  prx01_wait_handle:
+    type: OS::Heat::WaitConditionHandle
+  prx01_wait_condition:
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: {get_resource: prx01_wait_handle}
+      timeout: 3600
   prx01_instance:
     type: OS::Nova::Server
     properties:
@@ -83,6 +90,8 @@ resources:
             salt-call --no-color pillar.data
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
             $node_name: { get_param: prx01_name }
             $config_host: { get_param: config_host }
+            $wait_condition_notify: { get_attr: [prx01_wait_handle, curl_cli] }

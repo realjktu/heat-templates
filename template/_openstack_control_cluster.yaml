@@ -65,6 +65,13 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
+  ctl01_wait_handle:
+    type: OS::Heat::WaitConditionHandle
+  ctl01_wait_condition:
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: {get_resource: ctl01_wait_handle}
+      timeout: 3600
   ctl01_instance:
     type: OS::Nova::Server
     properties:
@@ -103,9 +110,11 @@ resources:
             salt-call --no-color pillar.data
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
             $node_name: { get_param: ctl01_name }
             $config_host: { get_param: config_host }
+            $wait_condition_notify: { get_attr: [ctl01_wait_handle, curl_cli] }
   ctl02_private_port:
     type: OS::Neutron::Port
     properties:
@@ -126,6 +135,13 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
+  ctl02_wait_handle:
+    type: OS::Heat::WaitConditionHandle
+  ctl02_wait_condition:
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: {get_resource: ctl02_wait_handle}
+      timeout: 3600
   ctl02_instance:
     type: OS::Nova::Server
     properties:
@@ -164,9 +180,11 @@ resources:
             salt-call --no-color pillar.data
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
             $node_name: { get_param: ctl02_name }
             $config_host: { get_param: config_host }
+            $wait_condition_notify: { get_attr: [ctl02_wait_handle, curl_cli] }
   ctl03_private_port:
     type: OS::Neutron::Port
     properties:
@@ -187,6 +205,13 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
+  ctl03_wait_handle:
+    type: OS::Heat::WaitConditionHandle
+  ctl03_wait_condition:
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: {get_resource: ctl03_wait_handle}
+      timeout: 3600
   ctl03_instance:
     type: OS::Nova::Server
     properties:
@@ -225,6 +250,8 @@ resources:
             salt-call --no-color pillar.data
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
             $node_name: { get_param: ctl03_name }
             $config_host: { get_param: config_host }
+            $wait_condition_notify: { get_attr: [ctl03_wait_handle, curl_cli] }
