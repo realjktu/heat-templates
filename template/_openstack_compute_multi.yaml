@@ -172,4 +172,4 @@ resources:
           params:
             $node_name: { get_param: cmp02_name }
             $config_host: { get_param: config_host }
-              $wait_condition_notify: { get_attr: [cmp02_wait_handle, curl_cli] }
+            $wait_condition_notify: { get_attr: [cmp02_wait_handle, curl_cli] }
