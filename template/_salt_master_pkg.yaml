@@ -29,6 +29,10 @@ parameters:
     type: string
   reclass_branch:
     type: string
+  reclass_private_key:
+    type: string
+    hidden: true
+    default: ""
 
   cfg01_name:
     type: string
@@ -113,6 +117,19 @@ resources:
             EOF
             chmod 400 /root/.ssh/id_rsa
 
+            # Setup the private key for cloning the reclass model (optional)
+            if [[ "$reclass_private_key" != "" ]]; then
+                cat << 'EOF' > /root/.ssh/reclass_key
+            $reclass_private_key
+            EOF
+                chmod 400 /root/.ssh/reclass_key
+                cat << 'EOF' >> /root/.ssh/config
+            Host github.com
+            IdentityFile /root/.ssh/reclass_key
+            IdentitiesOnly yes
+            EOF
+            fi
+
             cat << 'EOF' > /etc/salt/master.d/master.conf
             file_roots:
               base:
@@ -147,7 +164,7 @@ resources:
             apt-get update
 
             [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
-            
+
             declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog")
 
             for formula_service in "${formula_services[@]}"; do
@@ -201,6 +218,7 @@ resources:
             $node_name: { get_param: cfg01_name }
             $reclass_address: { get_param: reclass_address }
             $reclass_branch: { get_param: reclass_branch }
+            $reclass_private_key: { get_param: reclass_private_key }
             $wait_condition_notify: { get_attr: [cfg01_wait_handle, curl_cli] }
             $config_host: localhost
 
