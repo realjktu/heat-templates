@@ -19,6 +19,11 @@ parameters:
   reclass_branch:
     type: string
     default: master
+  reclass_private_key:
+    type: string
+    hidden: true
+    description: Private key for cloning the reclass model
+    default: ""
 
   instance_zone:
     type: string
@@ -94,6 +99,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       reclass_address : { get_param: reclass_address }
       reclass_branch : { get_param: reclass_branch }
+      reclass_private_key : { get_param: reclass_private_key }
   lab_openstack_control:
     type: Mk22::Lab::OpenStackControl
     depends_on: lab_salt_master
