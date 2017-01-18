@@ -17,6 +17,7 @@ parameters:
     type: string
   key_private:
     type: string
+    hidden: true
 
   instance_flavor:
     type: string
