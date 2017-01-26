@@ -1,7 +1,9 @@
 heat_template_version: 2015-04-30
 
 parameters:
-
+  key_private:
+    type: string
+    hidden: true
   key_value:
     type: string
     default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp0evjOaK8c8SKYK4r2+0BN7g+8YSvQ2n8nFgOURCyvkJqOHi1qPGZmuN0CclYVdVuZiXbWw3VxRbSW3EH736VzgY1U0JmoTiSamzLHaWsXvEIW8VCi7boli539QJP0ikJiBaNAgZILyCrVPN+A6mfqtacs1KXdZ0zlMq1BPtFciR1JTCRcVs5vP2Wwz5QtY2jMIh3aiwkePjMTQPcfmh1TkOlxYu5IbQyZ3G1ahA0mNKI9a0dtF282av/F6pwB/N1R1nEZ/9VtcN2I1mf1NW/tTHEEcTzXYo1R/8K9vlqAN8QvvGLZtZduGviNVNoNWvoxaXxDt8CPv2B2NCdQFZp
@@ -96,6 +98,7 @@ resources:
     type: Mk22::Lab::SaltMaster
     depends_on: lab_network
     properties:
+      key_private: { get_param: key_private }
       public_net: { get_param: public_net }
       private_net: { get_attr: [lab_network, private_net_name] }
       admin_net: { get_attr: [lab_network, admin_net_name] }
