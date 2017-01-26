@@ -25,10 +25,6 @@ parameters:
     description: Private key for cloning the reclass model
     default: ""
 
-  formula_branch:
-    type: string
-    default: master
-
   instance_zone:
     type: string
     default: nova
@@ -125,7 +121,6 @@ resources:
       reclass_address : { get_param: reclass_address }
       reclass_branch : { get_param: reclass_branch }
       reclass_private_key : { get_param: reclass_private_key }
-      formula_branch : { get_param: formula_branch }
   lab_openstack_control:
     type: Mk22::Lab::OpenStackControl
     depends_on: lab_salt_master
