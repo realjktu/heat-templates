@@ -14,7 +14,7 @@ parameters:
 
   reclass_address:
     type: string
-    default: "git@github.com:Mirantis/mk-lab-salt-model.git"
+    default: https://gerrit.mcp.mirantis.net/salt-models/qa
   reclass_branch:
     type: string
     default: master
