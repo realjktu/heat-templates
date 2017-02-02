@@ -150,6 +150,14 @@ following code.
 
     ./create_stack.sh mk20_lab_advanced tcpisek lab01
 
+To validate stack before creating, source rc file and use the following code
+(the first two arguments are the same as for ./create_stack.sh):
+
+.. code-block:: bash
+
+    source ./keystonerc 
+    ./validate_stack.sh mk20_lab_advanced tcpisek
+
 To delete heat stack `lab01`.
 
 .. code-block:: bash
