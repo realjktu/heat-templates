@@ -44,6 +44,7 @@ resources:
       network: { get_resource: private_network }
       cidr: { get_param: private_net_cidr }
       dns_nameservers:
+      - 172.18.208.44
       - 8.8.8.8
       - 8.8.4.4
       allocation_pools:
