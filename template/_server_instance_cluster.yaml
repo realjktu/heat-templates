@@ -1,6 +1,6 @@
 heat_template_version: 2015-10-15
 
-description: Member of a server group (with anti-affinity support)
+description: Member of a server group (with VIP)
 
 parameters:
   admin_net:

@@ -21,6 +21,8 @@ parameters:
     type: string
   instance_os:
     type: string
+  instance_vip_address:
+    type: string
   instance01_name:
     type: string
   instance01_address:
