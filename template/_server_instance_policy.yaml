@@ -1,0 +1,107 @@
+heat_template_version: 2015-10-15
+
+description: Member of a server group (with anti-affinity support)
+
+parameters:
+  admin_net:
+    type: string
+  private_net:
+    type: string
+  security_group:
+    type: string
+  key_pair:
+    type: string
+  config_host:
+    type: string
+  instance_name:
+    type: string
+  instance_os:
+    type: string
+  instance_address:
+    type: string
+  instance_flavor:
+    type: string
+  instance_image:
+    type: string
+  instance_zone:
+    type: string
+  cluster_name:
+    type: string
+
+resources:
+  instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: { get_param: instance_address }
+      security_groups:
+        - default
+        - { get_param: security_group }
+  instance_wait_handle:
+    type: OS::Heat::WaitConditionHandle
+  instance_wait_condition:
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: {get_resource: instance_wait_handle}
+      timeout: 3600
+  instance_instance:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: instance_image }
+      image_update_policy: REBUILD
+      flavor: { get_param: instance_flavor }
+      name: { get_param: instance_name }
+      availability_zone: { get_param: instance_zone }
+      key_name: { get_param: key_pair }
+      scheduler_hints: 
+        group: { get_param: cluster_name }
+      networks:
+      - network: { get_param: admin_net }
+      - port: { get_resource: instance_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash
+            echo "Preparing base OS ..."
+            case "$node_os" in
+                trusty)
+                    which wget > /dev/null || (apt-get update; apt-get install -y wget)
+                    echo "deb [arch=amd64] http://10.167.4.94/ubuntu-trusty nightly tcp salt" > /etc/apt/sources.list
+                    wget -O - http://10.167.4.94/public.gpg | apt-key add -
+                    apt-get clean
+                    apt-get update
+                    apt-get install -y salt-minion
+                    ;;
+                xenial)
+                    which wget > /dev/null || (apt-get update; apt-get install -y wget)
+                    echo "deb [arch=amd64] http://10.167.4.94/ubuntu-xenial nightly tcp salt" > /etc/apt/sources.list
+                    wget -O - http://10.167.4.94/public.gpg | apt-key add -
+                    apt-get clean
+                    apt-get update
+                    apt-get install -y salt-minion
+                    ;;
+                *)
+                    echo "OS not known"
+                    exit 1
+            esac
+            echo "Configuring Salt minion ..."
+            echo "id: $node_name" >> /etc/salt/minion
+            echo "master: $config_host" >> /etc/salt/minion
+            service salt-minion restart
+            echo "Showing node metadata ..."
+            salt-call --no-color pillar.data
+            echo "Running basic states ..."
+            salt-call --no-color state.sls linux,openssh,salt -l info
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+          params:
+            $node_os: { get_param: instance_os }
+            $node_name: { get_param: instance_name }
+            $config_host: { get_param: config_host }
+            $wait_condition_notify: { get_attr: [instance_wait_handle, curl_cli] }
+
+outputs:
+  instance_address:
+    value: { get_attr: [instance_instance, first_address] }
+    description: "Instance's private IP address"

@@ -1,12 +1,10 @@
-heat_template_version: 2013-05-23
+heat_template_version: 2015-10-15
 
-description: Salt master fragment
+description: Salt master (GIT formulas)
 
 parameters:
 
   public_net:
-    type: string
-  admin_net:
     type: string
   private_net:
     type: string
@@ -15,12 +13,7 @@ parameters:
     type: string
   key_pair:
     type: string
-  key_private:
-    type: string
-    hidden: true
 
-  instance_os:
-    type: string
   instance_flavor:
     type: string
   instance_image:
@@ -32,17 +25,18 @@ parameters:
     type: string
   reclass_branch:
     type: string
-  reclass_private_key:
+  private_key:
     type: string
     hidden: true
     default: ""
 
   formula_branch:
     type: string
+    default: master
 
-  instance_name:
+  cfg01_name:
     type: string
-  instance_address:
+  cfg01_address:
     type: string
     default: 172.16.10.100
 
@@ -68,16 +62,7 @@ resources:
     properties:
       network_id: { get_param: private_net }
       fixed_ips:
-        - ip_address: { get_param: instance_address }
-      security_groups:
-        - default
-        - { get_param: security_group }
-  cfg01_admin_port:
-    type: OS::Neutron::Port
-    properties:
-      network_id: { get_param: admin_net }
-      fixed_ips:
-        - ip_address: 192.168.10.100
+        - ip_address: { get_param: cfg01_address }
       security_groups:
         - default
         - { get_param: security_group }
@@ -85,15 +70,13 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: instance_image }
-      # This allows to use heat stack-update
       image_update_policy: REBUILD
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: instance_name }
+      name: { get_param: cfg01_name }
       availability_zone: { get_param: instance_zone }
       networks:
       - port: { get_resource: cfg01_private_port }
-      - port: { get_resource: cfg01_admin_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -106,8 +89,8 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt-mk.mirantis.com/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
-            wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
+            wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
@@ -121,22 +104,9 @@ resources:
 
             [ ! -d /root/.ssh ] && mkdir -p /root/.ssh
             cat << 'EOF' > /root/.ssh/id_rsa
-            $key_private
+            $private_key
             EOF
             chmod 400 /root/.ssh/id_rsa
-
-            # Setup the private key for cloning the reclass model (optional)
-            if [[ "$reclass_private_key" != "" ]]; then
-                cat << 'EOF' > /root/.ssh/reclass_key
-            $reclass_private_key
-            EOF
-                chmod 400 /root/.ssh/reclass_key
-                cat << 'EOF' >> /root/.ssh/config
-            Host github.com
-            IdentityFile /root/.ssh/reclass_key
-            IdentitiesOnly yes
-            EOF
-            fi
 
             cat << 'EOF' > /etc/salt/master.d/master.conf
             file_roots:
@@ -228,13 +198,12 @@ resources:
             reclass-salt --top
             salt-call --no-color state.sls salt.minion.cert -l info
           params:
-            $key_private: { get_param: key_private }
-            $node_name: { get_param: instance_name }
+            $node_name: { get_param: cfg01_name }
             $reclass_address: { get_param: reclass_address }
             $reclass_branch: { get_param: reclass_branch }
-            $reclass_private_key: { get_param: reclass_private_key }
             $formula_branch: { get_param: formula_branch }
             $wait_condition_notify: { get_attr: [cfg01_wait_handle, curl_cli] }
+            $private_key: { get_param: private_key }
             $config_host: localhost
 
 outputs:
@@ -242,5 +211,7 @@ outputs:
     value: { get_attr: [cfg01_instance, first_address] }
     description: "Private IP address of the Salt master node"
   config_public:
-    value: { get_attr: [cfg01_floating_ip, ip] }
+    value: { get_param: instance_public_address }
+#    value: { get_attr: [cfg01_floating_ip, ip] }
     description: "Public IP address of the Salt master node"
+

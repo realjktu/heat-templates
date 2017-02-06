@@ -19,6 +19,8 @@ parameters:
     type: string
     hidden: true
 
+  instance_os:
+    type: string
   instance_flavor:
     type: string
   instance_image:
