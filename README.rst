@@ -118,11 +118,11 @@ fit given the cloud setup.
 Usage
 =====
 
-Install necessary libraries.
+Install `python-openstackclient`:
 
 .. code-block:: bash
 
-   apt-get install python-novaclient python-heatclient
+   apt-get install python-openstackclient
 
 Create `keystonerc` file for your OpenStack endpoint, for example use
 following for DC in Czech Republic. Just fill in the username, password and
@@ -141,14 +141,15 @@ Souce rc file and create heat stack.
 .. code-block:: bash
 
     source ./keystonerc 
-    ./create_stack.sh template_name env_name stack_name
+    ./stack.sh create template_name env_name stack_name
 
 For example to deploy advanced lab to tcpisek environment with name `lab01` use
 following code.
 
 .. code-block:: bash
 
-    ./create_stack.sh mk20_lab_advanced tcpisek lab01
+    source ./keystonerc 
+    ./stack.sh create mk20_lab_advanced tcpisek lab01
 
 To validate stack before creating, source rc file and use the following code
 (the first two arguments are the same as for ./create_stack.sh):
@@ -156,11 +157,11 @@ To validate stack before creating, source rc file and use the following code
 .. code-block:: bash
 
     source ./keystonerc 
-    ./validate_stack.sh mk20_lab_advanced tcpisek
+    ./stack.sh validate mk20_lab_advanced tcpisek lab01
 
 To delete heat stack `lab01`.
 
 .. code-block:: bash
 
     source ./keystonerc
-    ./delete_stack.sh lab01
+    ./stack.sh delete really delete lab01
