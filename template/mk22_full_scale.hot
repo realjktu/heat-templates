@@ -151,6 +151,9 @@ parameters:
   ntw_vip_address:
     type: string
     default: 172.16.10.250
+  ntw01_name:
+    type: string
+    default: ntw01.mk22-full-scale.local
   ntw01_address:
     type: string
     default: 172.16.10.161
@@ -169,6 +172,9 @@ parameters:
   nal_vip_address:
     type: string
     default: 172.16.10.249
+  nal01_name:
+    type: string
+    default: nal01.mk22-full-scale.local
   nal01_address:
     type: string
     default: 172.16.10.171
@@ -187,6 +193,9 @@ parameters:
   dbs_vip_address:
     type: string
     default: 172.16.10.252
+  dbs01_name:
+    type: string
+    default: dbs01.mk22-full-scale.local
   dbs01_address:
     type: string
     default: 172.16.10.181
@@ -205,6 +214,9 @@ parameters:
   msg_vip_address:
     type: string
     default: 172.16.10.251
+  msg01_name:
+    type: string
+    default: msg01.mk22-full-scale.local
   msg01_address:
     type: string
     default: 172.16.10.151
@@ -232,12 +244,12 @@ parameters:
   gtw01_address:
     type: string
     default: 172.16.10.110
-  mon01_name:
-    type: string
-    default: mon01.mk22-full-scale.local
   mon_vip_address:
     type: string
     default: 172.16.10.253
+  mon01_name:
+    type: string
+    default: mon01.mk22-full-scale.local
   mon01_address:
     type: string
     default: 172.16.10.107
@@ -256,6 +268,9 @@ parameters:
   log_vip_address:
     type: string
     default: 172.16.10.245
+  log01_name:
+    type: string
+    default: log01.mk22-full-scale.local
   log01_address:
     type: string
     default: 172.16.10.191
@@ -274,6 +289,9 @@ parameters:
   mtr_vip_address:
     type: string
     default: 172.16.10.246
+  mtr01_name:
+    type: string
+    default: mtr01.mk22-full-scale.local
   mtr01_address:
     type: string
     default: 172.16.10.197
