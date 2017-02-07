@@ -101,7 +101,7 @@ resources:
             echo "172.18.248.114    jenkins.mcp.mirantis.net  gerrit.mcp.mirantis.net" >> /etc/hosts
             echo "185.135.196.10    apt-mk.mirantis.com" >> /etc/hosts
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
-            echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial/ nightly" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt salt-latest extra" > /etc/apt/sources.list
             wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
