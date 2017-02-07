@@ -69,6 +69,8 @@ resources:
           template: |
             #!/bin/bash
             echo "Preparing base OS ..."
+            echo "172.18.248.114    jenkins.mcp.mirantis.net  gerrit.mcp.mirantis.net" >> /etc/hosts
+            echo "185.135.196.10    apt-mk.mirantis.com" >> /etc/hosts
             case "$node_os" in
                 trusty)
                     which wget > /dev/null || (apt-get update; apt-get install -y wget)
