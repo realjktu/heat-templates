@@ -72,16 +72,16 @@ resources:
             case "$node_os" in
                 trusty)
                     which wget > /dev/null || (apt-get update; apt-get install -y wget)
-                    echo "deb [arch=amd64] http://10.167.4.94/ubuntu-trusty nightly tcp salt" > /etc/apt/sources.list
-                    wget -O - http://10.167.4.94/public.gpg | apt-key add -
+                    echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty/ nightly" > /etc/apt/sources.list
+                    wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
                     apt-get clean
                     apt-get update
                     apt-get install -y salt-minion
                     ;;
                 xenial)
                     which wget > /dev/null || (apt-get update; apt-get install -y wget)
-                    echo "deb [arch=amd64] http://10.167.4.94/ubuntu-xenial nightly tcp salt" > /etc/apt/sources.list
-                    wget -O - http://10.167.4.94/public.gpg | apt-key add -
+                    echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial/ nightly" > /etc/apt/sources.list
+                    wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
                     apt-get clean
                     apt-get update
                     apt-get install -y salt-minion
