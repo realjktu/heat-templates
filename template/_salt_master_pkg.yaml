@@ -37,6 +37,9 @@ parameters:
     hidden: true
     default: ""
 
+  formula_branch:
+    type: string
+
   instance_name:
     type: string
   instance_address:
