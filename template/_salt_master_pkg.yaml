@@ -99,8 +99,8 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt-mk.mirantis.com/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
-            wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
+            wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
@@ -152,8 +152,8 @@ resources:
             mkdir -p /srv/salt/reclass/classes/service
 
             FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
-            FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt-mk.mirantis.com/nightly/ trusty salt}
-            FORMULA_GPG=${FORMULA_GPG:-http://apt-mk.mirantis.com/public.gpg}
+            FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty tcp-salt}
+            FORMULA_GPG=${FORMULA_GPG:-http://apt.tcpcloud.eu/public.gpg}
 
             echo "Configuring salt master formulas ..."
             which wget > /dev/null || (apt-get update; apt-get install -y wget)
