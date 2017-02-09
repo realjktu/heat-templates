@@ -61,6 +61,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       instance_name: { get_param: instance01_name }
       cluster_name: { get_param: cluster_name }
+      instance_vip_address: { get_param: instance_vip_address }
   instance02:
     type: MCP::PolicyClusterMember
     properties:
@@ -75,6 +76,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       instance_name: { get_param: instance02_name }
       cluster_name: { get_param: cluster_name }
+      instance_vip_address: { get_param: instance_vip_address }
   instance03:
     type: MCP::PolicyClusterMember
     properties:
@@ -89,3 +91,4 @@ resources:
       instance_zone:  { get_param: instance_zone }
       instance_name: { get_param: instance03_name }
       cluster_name: { get_param: cluster_name }
+      instance_vip_address: { get_param: instance_vip_address }

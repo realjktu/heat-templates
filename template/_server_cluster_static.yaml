@@ -51,6 +51,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       instance_name: { get_param: instance01_name }
       instance_address: { get_param: instance01_address }
+      instance_vip_address: { get_param: instance_vip_address }
   instance02:
     type: MCP::StaticClusterMember
     properties:
@@ -65,7 +66,7 @@ resources:
       instance_zone:  { get_param: instance_zone }
       instance_name: { get_param: instance02_name }
       instance_address: { get_param: instance02_address }
-
+      instance_vip_address: { get_param: instance_vip_address }
   instance03:
     type: MCP::StaticClusterMember
     properties:
@@ -80,4 +81,5 @@ resources:
       instance_zone:  { get_param: instance_zone }
       instance_name: { get_param: instance03_name }
       instance_address: { get_param: instance03_address }
+      instance_vip_address: { get_param: instance_vip_address }
 
