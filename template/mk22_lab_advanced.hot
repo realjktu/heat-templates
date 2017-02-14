@@ -124,13 +124,13 @@ parameters:
     default: cmp01.mk22-lab-advanced.local
   cmp01_address:
     type: string
-    default: 172.16.10.104
+    default: 172.16.10.105
   cmp02_name:
     type: string
     default: cmp02.mk22-lab-advanced.local
   cmp02_address:
     type: string
-    default: 172.16.10.105
+    default: 172.16.10.106
 
 resources:
   mcp_network:
