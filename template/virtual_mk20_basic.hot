@@ -75,7 +75,7 @@ parameters:
 
   cfg01_name:
     type: string
-    default: cfg01.virtual-mk20-basic.local
+    default: cfg01.mk20-lab-basic.local
   cfg01_address:
     type: string
     default: 172.16.10.100
@@ -84,43 +84,43 @@ parameters:
     default: 172.16.10.254
   ctl01_name:
     type: string
-    default: ctl01.virtual-mk20-basic.local
+    default: ctl01.mk20-lab-basic.local
   ctl01_address:
     type: string
     default: 172.16.10.101
   ctl02_name:
     type: string
-    default: ctl02.virtual-mk20-basic.local
+    default: ctl02.mk20-lab-basic.local
   ctl02_address:
     type: string
     default: 172.16.10.102
   ctl03_name:
     type: string
-    default: ctl03.virtual-mk20-basic.local
+    default: ctl03.mk20-lab-basic.local
   ctl03_address:
     type: string
     default: 172.16.10.103
   gtw01_name:
     type: string
-    default: gtw01.virtual-mk20-basic.local
+    default: gtw01.mk20-lab-basic.local
   gtw01_address:
     type: string
     default: 172.16.10.110
   prx01_name:
     type: string
-    default: prx01.virtual-mk20-basic.local
+    default: prx01.mk20-lab-basic.local
   prx01_address:
     type: string
     default: 172.16.10.121
   mon01_name:
     type: string
-    default: mon01.virtual-mk20-basic.local
+    default: mon01.mk20-lab-basic.local
   mon01_address:
     type: string
     default: 172.16.10.107
   cmp01_name:
     type: string
-    default: cmp01.virtual-mk20-basic.local
+    default: cmp01.mk20-lab-basic.local
   cmp01_address:
     type: string
     default: 172.16.10.105

@@ -7,10 +7,6 @@ parameters:
     type: string
   private_net:
     type: string
-  tenant_net:
-    type: string
-  external_net:
-    type: string
   security_group:
     type: string
   key_pair:
