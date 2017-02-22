@@ -21,7 +21,11 @@ parameters:
     type: string
   instance_os:
     type: string
-  instance_address:
+  private_instance_address:
+    type: string
+  tenant_instance_address:
+    type: string
+  external_instance_address:
     type: string
   instance_flavor:
     type: string
@@ -31,15 +35,27 @@ parameters:
     type: string
 
 resources:
-  instance_port:
+  private_instance_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: private_net }
       fixed_ips:
-        - ip_address: { get_param: instance_address }
+        - ip_address: { get_param: private_instance_address }
       security_groups:
         - default
         - { get_param: security_group }
+  tenant_instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: tenant_net }
+      fixed_ips:
+        - ip_address: { get_param: tenant_instance_address }
+  external_instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: external_net }
+      fixed_ips:
+        - ip_address: { get_param: external_instance_address }
   instance_wait_handle:
     type: OS::Heat::WaitConditionHandle
   instance_wait_condition:
@@ -58,7 +74,9 @@ resources:
       key_name: { get_param: key_pair }
       networks:
       - network: { get_param: admin_net }
-      - port: { get_resource: instance_port }
+      - port: { get_resource: private_instance_port }
+      - port: { get_resource: tenant_instance_port }
+      - port: { get_resource: external_instance_port }
       user_data_format: RAW
       user_data:
         str_replace:
