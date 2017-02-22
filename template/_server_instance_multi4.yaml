@@ -7,6 +7,10 @@ parameters:
     type: string
   private_net:
     type: string
+  external_net:
+    type: string
+  tenant_net:
+    type: string
   security_group:
     type: string
   key_pair:
@@ -40,10 +44,12 @@ parameters:
 
 resources:
   instance01:
-    type: MCP::ServerInstance
+    type: MCP::ServerInstance4
     properties:
       admin_net: { get_param: admin_net }
       private_net: { get_param: private_net }
+      external_net: { get_param: external_net }
+      tenant_net: { get_param: tenant_net }
       key_pair: { get_param: key_pair }
       security_group: { get_param: security_group }
       config_host: { get_param: config_host }
@@ -56,10 +62,12 @@ resources:
       tenant_instance_address: { get_param: tenant_instance01_address }
       external_instance_address: { get_param: external_instance01_address }
   instance02:
-    type: MCP::ServerInstance
+    type: MCP::ServerInstance4
     properties:
       admin_net: { get_param: admin_net }
       private_net: { get_param: private_net }
+      external_net: { get_param: external_net }
+      tenant_net: { get_param: tenant_net }
       key_pair: { get_param: key_pair }
       security_group: { get_param: security_group }
       config_host: { get_param: config_host }

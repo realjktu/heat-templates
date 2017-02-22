@@ -227,11 +227,13 @@ resources:
       instance_name: { get_param: prx01_name }
       instance_address: { get_param: prx01_address }
   mcp_openstack_compute_multi:
-    type: MCP::MultipleInstances
+    type: MCP::MultipleInstances4
     depends_on: mcp_salt_master
     properties:
       private_net: { get_attr: [mcp_network, private_net_name] }
       admin_net: { get_attr: [mcp_network, admin_net_name] }
+      external_net: { get_attr: [mcp_network, external_net_name] }
+      tenant_net: { get_attr: [mcp_network, tenant_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
@@ -268,11 +270,13 @@ resources:
       instance02_address: { get_param: mon02_address }
       instance03_address: { get_param: mon03_address }
   mcp_openstack_gateway_single:
-    type: MCP::ServerInstance
+    type: MCP::ServerInstance4
     depends_on: mcp_salt_master
     properties:
       private_net: { get_attr: [mcp_network, private_net_name] }
       admin_net: { get_attr: [mcp_network, admin_net_name] }
+      external_net: { get_attr: [mcp_network, external_net_name] }
+      tenant_net: { get_attr: [mcp_network, tenant_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
