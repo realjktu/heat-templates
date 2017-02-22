@@ -123,7 +123,7 @@ parameters:
     default: cmp01.mk20-lab-basic.local
   cmp01_address:
     type: string
-    default: 172.16.10.104
+    default: 172.16.10.105
 
 resources:
   mcp_network:
