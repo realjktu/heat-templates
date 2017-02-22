@@ -125,7 +125,7 @@ resources:
     type: OS::Neutron::Net
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'tenant']] }
-  private_subnet:
+  tenant_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'tenant']] }
@@ -139,7 +139,7 @@ resources:
     type: OS::Neutron::Net
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'external']] }
-  private_subnet:
+  external_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'external']] }
