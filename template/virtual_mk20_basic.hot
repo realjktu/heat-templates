@@ -48,14 +48,6 @@ parameters:
   prx_flavor:
     type: string
     default: m1.large
-  mon_image:
-    type: string
-  mon_os:
-    type: string
-    default: xenial
-  mon_flavor:
-    type: string
-    default: m1.large
   cmp_image:
     type: string
   cmp_os:
@@ -112,12 +104,6 @@ parameters:
   prx01_address:
     type: string
     default: 172.16.10.121
-  mon01_name:
-    type: string
-    default: mon01.mk20-lab-basic.local
-  mon01_address:
-    type: string
-    default: 172.16.10.107
   cmp01_name:
     type: string
     default: cmp01.mk20-lab-basic.local
@@ -201,21 +187,6 @@ resources:
       instance_image: { get_param: cmp_image }
       instance_name: { get_param: cmp01_name }
       instance_address: { get_param: cmp01_address }
-  mcp_stacklight_monitor_single:
-    type: MCP::ServerInstance
-    depends_on: mcp_salt_master
-    properties:
-      private_net: { get_attr: [mcp_network, private_net_name] }
-      admin_net: { get_attr: [mcp_network, admin_net_name] }
-      key_pair: { get_param: "OS::stack_name" }
-      security_group: { get_attr: [mcp_network, security_group] }
-      config_host: { get_attr: [mcp_salt_master, config_host] }
-      instance_zone:  { get_param: instance_zone }
-      instance_os: { get_param: mon_os }
-      instance_flavor: { get_param: mon_flavor }
-      instance_image: { get_param: mon_image }
-      instance_name: { get_param: mon01_name }
-      instance_address: { get_param: mon01_address }
   mcp_openstack_gateway_single:
     type: MCP::ServerInstance
     depends_on: mcp_salt_master
