@@ -100,7 +100,7 @@ resources:
             salt-call --no-color pillar.data
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
           params:
             $node_name: { get_param: cmp01_name }
             $config_host: { get_param: config_host }
@@ -168,7 +168,7 @@ resources:
             salt-call --no-color pillar.data
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
           params:
             $node_name: { get_param: cmp02_name }
             $config_host: { get_param: config_host }
