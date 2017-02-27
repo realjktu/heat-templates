@@ -345,3 +345,11 @@ resources:
             $node_name: { get_param: ci03_name }
             $config_host: { get_param: ci01_address }
             $wait_condition_notify: { get_attr: [ci03_wait_handle, curl_cli] }
+
+outputs:
+  config_host:
+    value: { get_attr: [ci01_instance, first_address] }
+    description: "Private IP address of the Salt master node"
+  config_public:
+    value: { get_attr: [ci01_floating_ip, ip] }
+    description: "Public IP address of the Salt master node"

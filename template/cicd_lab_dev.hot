@@ -63,3 +63,8 @@ resources:
       ci01_name: { get_param: ci01_name }
       ci02_name: { get_param: ci02_name }
       ci03_name: { get_param: ci03_name }
+
+outputs:
+  salt_master_ip:
+    value: { get_attr: [lab_cicd_control, config_public] }
+    description: "Public IP address of the Salt master node"
