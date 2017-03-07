@@ -221,7 +221,7 @@ resources:
                 salt-call mine.send x509.get_pem_entries "/etc/pki/ca/mk_lab_ca/ca.crt" || \
                 echo "${CERT_PATH} not found"
             systemctl restart salt-minion
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
 
             reclass-salt --top
             salt-call --no-color state.sls salt.minion.cert -l info

@@ -209,7 +209,7 @@ resources:
             salt-call --no-color state.sls salt.master.service -l info
             salt-call --no-color state.sls salt.master,salt.api,salt.minion.ca -l info
             systemctl restart salt-minion
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
 
             reclass-salt --top
             salt-call --no-color state.sls salt.minion.cert -l info
