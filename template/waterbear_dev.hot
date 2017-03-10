@@ -28,16 +28,16 @@ parameters:
     type: string
   instance_flavor_proxy:
     type: string
-    default: m1.medium
+    default: m1.medium20
   instance_flavor_application:
     type: string
-    default: m1.large
+    default: m1.large40
   instance_flavor_database:
     type: string
-    default: m1.large
+    default: m1.large40
   instance_flavor_search:
     type: string
-    default: m1.medium
+    default: m1.medium20
   prx01_name:
     type: string
     default: prx01.waterbear-dev.os.st.sk

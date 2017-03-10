@@ -31,7 +31,7 @@ parameters:
     default: xenial
   cfg_flavor:
     type: string
-    default: m1.medium
+    default: m1.medium20
   ctl_image:
     type: string
   ctl_os:
@@ -39,7 +39,7 @@ parameters:
     default: trusty
   ctl_flavor:
     type: string
-    default: m1.xlarge
+    default: m1.xlarge20
   prx_image:
     type: string
   prx_os:
@@ -47,7 +47,7 @@ parameters:
     default: trusty
   prx_flavor:
     type: string
-    default: m1.large
+    default: m1.large40
   mon_image:
     type: string
   mon_os:
@@ -55,7 +55,7 @@ parameters:
     default: xenial
   mon_flavor:
     type: string
-    default: m1.large
+    default: m1.large40
   cmp_image:
     type: string
   cmp_os:
@@ -63,7 +63,7 @@ parameters:
     default: xenial
   cmp_flavor:
     type: string
-    default: m1.large
+    default: m1.large40
 
   cfg01_name:
     type: string
