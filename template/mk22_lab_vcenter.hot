@@ -40,19 +40,19 @@ parameters:
   instance_flavor_config:
     type: string
     description: Instance type for configuration node
-    default: m1.medium
+    default: m1.medium20
   instance_flavor_control:
     type: string
     description: Instance type for controllers.
-    default: m1.xlarge
+    default: m1.xlarge20
   instance_flavor_compute:
     type: string
     description: Instance type for compute nodes.
-    default: m1.large
+    default: m1.large40
   instance_flavor_support:
     type: string
     description: Instance type for support nodes (web, monitoring, etc.).
-    default: m1.large
+    default: m1.large40
 
   cfg01_name:
     type: string
