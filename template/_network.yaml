@@ -35,6 +35,12 @@ parameters:
     description: End of private network IP address allocation pool
     default: 172.16.10.200
 
+  dns_nameservers:
+    type: comma_delimited_list
+    description: DNS nameservers to be assigned to nodes
+    default: 172.18.208.44,8.8.8.8,8.8.4.4
+
+
 resources:
   key_pair:
     type: OS::Nova::KeyPair
@@ -52,10 +58,7 @@ resources:
       name: { list_join: ['-', [get_param: stack_name, 'private']] }
       network: { get_resource: private_net }
       cidr: { get_param: private_net_cidr }
-      dns_nameservers:
-      - 172.18.208.44
-      - 8.8.8.8
-      - 8.8.4.4
+      dns_nameservers: { get_param: dns_nameservers }
       allocation_pools:
         - start: { get_param: private_net_pool_start }
           end: { get_param: private_net_pool_end }

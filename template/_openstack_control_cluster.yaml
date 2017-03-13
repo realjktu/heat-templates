@@ -23,6 +23,12 @@ parameters:
     type: string
   instance_image:
     type: string
+  ubuntu_codename:
+    type: string
+    default: trusty
+  ubuntu_version:
+    type: string
+    default: "14.04"
   instance_zone:
     type: string
 
@@ -92,11 +98,11 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ $codename main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/$version/amd64/2016.3 $codename main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/$version/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -115,6 +121,8 @@ resources:
             $node_name: { get_param: ctl01_name }
             $config_host: { get_param: config_host }
             $wait_condition_notify: { get_attr: [ctl01_wait_handle, curl_cli] }
+            $codename: { get_param: ubuntu_codename }
+            $version: { get_param: ubuntu_version }
   ctl02_private_port:
     type: OS::Neutron::Port
     properties:
@@ -162,11 +170,11 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ $codename main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/$version/amd64/2016.3 $codename main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/$version/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -185,6 +193,8 @@ resources:
             $node_name: { get_param: ctl02_name }
             $config_host: { get_param: config_host }
             $wait_condition_notify: { get_attr: [ctl02_wait_handle, curl_cli] }
+            $codename: { get_param: ubuntu_codename }
+            $version: { get_param: ubuntu_version }
   ctl03_private_port:
     type: OS::Neutron::Port
     properties:
@@ -232,11 +242,11 @@ resources:
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty main security extra tcp tcp-salt" > /etc/apt/sources.list
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ $codename main security extra tcp tcp-salt" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
-            echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main" > /etc/apt/sources.list.d/saltstack.list
-            wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
+            echo "deb http://repo.saltstack.com/apt/ubuntu/$version/amd64/2016.3 $codename main" > /etc/apt/sources.list.d/saltstack.list
+            wget -O - https://repo.saltstack.com/apt/ubuntu/$version/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
             apt-get clean
             apt-get update
@@ -255,3 +265,5 @@ resources:
             $node_name: { get_param: ctl03_name }
             $config_host: { get_param: config_host }
             $wait_condition_notify: { get_attr: [ctl03_wait_handle, curl_cli] }
+            $codename: { get_param: ubuntu_codename }
+            $version: { get_param: ubuntu_version }
