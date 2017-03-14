@@ -13,7 +13,6 @@ parameters:
   key_private:
     type: string
     hidden: true
-
   cfg_reclass_address:
     type: string
     default: https://gerrit.mcp.mirantis.net/salt-models/mcp-virtual-lab
@@ -110,9 +109,15 @@ parameters:
   gtw01_name:
     type: string
     default: gtw01.virtual-mcp10-ovs.local
-  gtw01_address:
+  gtw01_address_private:
     type: string
     default: 172.16.10.110
+  gtw01_address_tenant:
+    type: string
+    default: 10.1.0.110
+  gtw01_address_external:
+    type: string
+    default: 10.16.0.110
   mon01_name:
     type: string
     default: mon01.virtual-mcp10-ovs.local
@@ -137,15 +142,27 @@ parameters:
   cmp01_name:
     type: string
     default: cmp01.virtual-mcp10-ovs.local
-  cmp01_address:
+  cmp01_address_private:
     type: string
     default: 172.16.10.105
+  cmp01_address_tenant:
+    type: string
+    default: 10.1.0.105
+  cmp01_address_external:
+    type: string
+    default: 10.16.0.105
   cmp02_name:
     type: string
     default: cmp02.virtual-mcp10-ovs.local
-  cmp02_address:
+  cmp02_address_private:
     type: string
     default: 172.16.10.106
+  cmp02_address_tenant:
+    type: string
+    default: 10.1.0.106
+  cmp02_address_external:
+    type: string
+    default: 10.16.0.106
 
 resources:
   mcp_network:
@@ -209,11 +226,13 @@ resources:
       instance_name: { get_param: prx01_name }
       instance_address: { get_param: prx01_address }
   mcp_openstack_compute_multi:
-    type: MCP::MultipleInstances
+    type: MCP::MultipleInstances4
     depends_on: mcp_salt_master
     properties:
       private_net: { get_attr: [mcp_network, private_net_name] }
       admin_net: { get_attr: [mcp_network, admin_net_name] }
+      external_net: { get_attr: [mcp_network, external_net_name] }
+      tenant_net: { get_attr: [mcp_network, tenant_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
@@ -222,9 +241,13 @@ resources:
       instance_flavor: { get_param: cmp_flavor }
       instance_image: { get_param: cmp_image }
       instance01_name: { get_param: cmp01_name }
-      instance01_address: { get_param: cmp01_address }
+      private_instance01_address: { get_param: cmp01_address_private }
+      tenant_instance01_address: { get_param: cmp01_address_tenant }
+      external_instance01_address: { get_param: cmp01_address_external }
       instance02_name: { get_param: cmp02_name }
-      instance02_address: { get_param: cmp02_address }
+      private_instance02_address: { get_param: cmp02_address_private }
+      tenant_instance02_address: { get_param: cmp02_address_tenant }
+      external_instance02_address: { get_param: cmp02_address_external }
   mcp_stacklight_monitor_cluster:
     type: MCP::StaticCluster
     depends_on: mcp_salt_master
@@ -246,11 +269,13 @@ resources:
       instance02_address: { get_param: mon02_address }
       instance03_address: { get_param: mon03_address }
   mcp_openstack_gateway_single:
-    type: MCP::ServerInstance
+    type: MCP::ServerInstance4
     depends_on: mcp_salt_master
     properties:
       private_net: { get_attr: [mcp_network, private_net_name] }
       admin_net: { get_attr: [mcp_network, admin_net_name] }
+      external_net: { get_attr: [mcp_network, external_net_name] }
+      tenant_net: { get_attr: [mcp_network, tenant_net_name] }
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
@@ -259,7 +284,9 @@ resources:
       instance_flavor: { get_param: gtw_flavor }
       instance_image: { get_param: gtw_image }
       instance_name: { get_param: gtw01_name }
-      instance_address: { get_param: gtw01_address }
+      private_instance_address: { get_param: gtw01_address_private }
+      tenant_instance_address: { get_param: gtw01_address_tenant }
+      external_instance_address: { get_param: gtw01_address_external }
 
 outputs:
   salt_master_ip:
