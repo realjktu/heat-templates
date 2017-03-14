@@ -38,7 +38,10 @@ parameters:
   dns_nameservers:
     type: comma_delimited_list
     description: DNS nameservers to be assigned to nodes
-    default: 172.18.208.44,8.8.8.8,8.8.4.4
+    default:
+    - 172.18.208.44
+    - 8.8.8.8
+    - 8.8.4.4
 
 
 resources:
