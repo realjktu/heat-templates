@@ -47,7 +47,7 @@ parameters:
     default: trusty
   prx_flavor:
     type: string
-    default: m1.large40
+    default: m1.large20
   mon_image:
     type: string
   mon_os:
@@ -55,7 +55,7 @@ parameters:
     default: xenial
   mon_flavor:
     type: string
-    default: m1.large40
+    default: m1.large20
   cmp_image:
     type: string
   cmp_os:
@@ -63,7 +63,7 @@ parameters:
     default: trusty
   cmp_flavor:
     type: string
-    default: m1.large40
+    default: m1.large20
 
   cfg01_name:
     type: string
