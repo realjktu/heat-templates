@@ -115,7 +115,7 @@ resources:
             apt-get update
 
             echo "Installing salt master ..."
-            apt-get install -y reclass
+            apt-get install -y reclass git
             apt-get install -y salt-master
 
             [ ! -d /root/.ssh ] && mkdir -p /root/.ssh
