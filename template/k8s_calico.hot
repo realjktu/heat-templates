@@ -18,6 +18,10 @@ parameters:
     type: string
     description: ID or name of public network for which floating IP addresses will be allocated
 
+  cluster_vip_address:
+    type: string
+    default: 172.16.10.253
+
   reclass_address:
     type: string
     default: "https://github.com/Mirantis/stacklight-salt-model.git"
@@ -135,6 +139,8 @@ resources:
       ctl01_name: { get_param: ctl01_name }
       ctl02_name: { get_param: ctl02_name }
       ctl03_name: { get_param: ctl03_name }
+      cluster_vip_address: {get_param: cluster_vip_address }
+
   lab_compute:
     type: MCP::Lab::Compute
     depends_on: lab_salt_master
