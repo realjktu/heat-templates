@@ -68,7 +68,7 @@ parameters:
     type: string
   vsrx_os:
     type: string
-    default: vsrx_qcow2
+    default: vsrx-12.1X46-D20.5
   vsrx_flavor:
     type: string
     default: m1.large100
