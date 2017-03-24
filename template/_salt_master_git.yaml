@@ -19,6 +19,8 @@ parameters:
     type: string
     hidden: true
 
+  instance_os:
+    type: string
   instance_flavor:
     type: string
   instance_image:
@@ -38,9 +40,9 @@ parameters:
   formula_branch:
     type: string
 
-  cfg01_name:
+  instance_name:
     type: string
-  cfg01_address:
+  instance_address:
     type: string
     default: 172.16.10.100
 
@@ -61,19 +63,19 @@ resources:
     properties:
       floating_ip: { get_resource: cfg01_floating_ip }
       server_id: { get_resource: cfg01_instance }
-  cfg01_admin_port:
-    type: OS::Neutron::Port
-    properties:
-      network_id: { get_param: admin_net }
-      fixed_ips:
-        - ip_address: { get_param: cfg01_address }
-      security_groups:
-        - default
-        - { get_param: security_group }
   cfg01_private_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_param: private_net }
+      fixed_ips:
+        - ip_address: { get_param: instance_address }
+      security_groups:
+        - default
+        - { get_param: security_group }
+  cfg01_admin_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: admin_net }
       fixed_ips:
         - ip_address: 192.168.10.100
       security_groups:
@@ -87,11 +89,11 @@ resources:
       image_update_policy: REBUILD
       flavor: { get_param: instance_flavor }
       key_name: { get_param: key_pair }
-      name: { get_param: cfg01_name }
+      name: { get_param: instance_name }
       availability_zone: { get_param: instance_zone }
       networks:
-      - port: { get_resource: cfg01_private_port }
       - port: { get_resource: cfg01_admin_port }
+      - port: { get_resource: cfg01_private_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -101,14 +103,23 @@ resources:
             exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
             set -x
             echo "Preparing base OS ..."
-
+            echo "nameserver 172.18.208.44" >> /etc/resolv.conf
+            echo "nameserver 8.8.8.8" >> /etc/resolv.conf
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
+<<<<<<< HEAD
 
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
 
+=======
+            # echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" >>/etc/apt/sources.list.d/apt-mk.list
+            # wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
+            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly xenial tcp-salt tcp extra main" > /etc/apt/sources.list
+            wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
+>>>>>>> composite
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
+
 
             apt-get clean
             apt-get update
@@ -227,7 +238,7 @@ resources:
             salt-call --no-color state.sls salt.minion.cert -l info
           params:
             $key_private: { get_param: key_private }
-            $node_name: { get_param: cfg01_name }
+            $node_name: { get_param: instance_name }
             $reclass_address: { get_param: reclass_address }
             $reclass_branch: { get_param: reclass_branch }
             $reclass_private_key: { get_param: reclass_private_key }

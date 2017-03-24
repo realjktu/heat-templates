@@ -1,6 +1,6 @@
-heat_template_version: 2015-04-30
+heat_template_version: 2015-10-15
 
-description: Networks fragment
+description: Network (Creates new)
 
 parameters:
   stack_name:
@@ -10,27 +10,27 @@ parameters:
   public_net:
     type: string
     description: ID or name of public network for which floating IP addresses will be allocated
-  private_net_cidr:
-    type: string
-    description: Private network address (CIDR notation)
-    default: 192.168.10.0/24
-  private_net_pool_start:
-    type: string
-    description: Start of private network IP address allocation pool
-    default: 192.168.10.90
-  private_net_pool_end:
-    type: string
-    description: End of private network IP address allocation pool
-    default: 192.168.10.200
   admin_net_cidr:
     type: string
     description: Private network address (CIDR notation)
-    default: 172.16.10.0/24
+    default: 192.168.10.0/24
   admin_net_pool_start:
     type: string
     description: Start of private network IP address allocation pool
-    default: 172.16.10.90
+    default: 192.168.10.90
   admin_net_pool_end:
+    type: string
+    description: End of private network IP address allocation pool
+    default: 192.168.10.200
+  private_net_cidr:
+    type: string
+    description: Private network address (CIDR notation)
+    default: 172.16.10.0/24
+  private_net_pool_start:
+    type: string
+    description: Start of private network IP address allocation pool
+    default: 172.16.10.90
+  private_net_pool_end:
     type: string
     description: End of private network IP address allocation pool
     default: 172.16.10.200
@@ -51,20 +51,23 @@ resources:
       name: { get_param: stack_name }
       public_key: { get_param: key_value }
       save_private_key: false
-  private_net:
+  admin_net:
     type: OS::Neutron::Net
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'private']] }
-  private_subnet:
+  admin_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'private']] }
-      network: { get_resource: private_net }
-      cidr: { get_param: private_net_cidr }
-      dns_nameservers: { get_param: dns_nameservers }
+      network: { get_resource: admin_net }
+      cidr: { get_param: admin_net_cidr }
+      dns_nameservers:
+      - 172.18.208.44
+      - 8.8.8.8
+      - 8.8.4.4
       allocation_pools:
-        - start: { get_param: private_net_pool_start }
-          end: { get_param: private_net_pool_end }
+        - start: { get_param: admin_net_pool_start }
+          end: { get_param: admin_net_pool_end }
   router:
     type: OS::Neutron::Router
     properties:
@@ -75,7 +78,7 @@ resources:
     type: OS::Neutron::RouterInterface
     properties:
       router: { get_resource: router }
-      subnet: { get_resource: private_subnet }
+      subnet: { get_resource: admin_subnet }
   security_group:
     type: OS::Neutron::SecurityGroup
     properties:
@@ -86,25 +89,24 @@ resources:
           remote_ip_prefix: 0.0.0.0/0
         - protocol: icmp
           remote_ip_prefix: 0.0.0.0/0
-  admin_net:
+  private_net:
     type: OS::Neutron::Net
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'admin']] }
-  admin_subnet:
+  private_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { list_join: ['-', [get_param: stack_name, 'admin']] }
-      network: { get_resource: admin_net }
-      cidr: { get_param: admin_net_cidr }
+      network: { get_resource: private_net }
+      cidr: { get_param: private_net_cidr }
       allocation_pools:
-        - start: { get_param: admin_net_pool_start }
-          end: { get_param: admin_net_pool_end }
+        - start: { get_param: private_net_pool_start }
+          end: { get_param: private_net_pool_end }
 
 outputs:
-  private_net_name:
-    value: { get_attr: [private_net, name] }
   admin_net_name:
     value: { get_attr: [admin_net, name] }
+  private_net_name:
+    value: { get_attr: [private_net, name] }
   security_group:
     value: { get_param: stack_name }
-
