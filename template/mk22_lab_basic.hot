@@ -50,16 +50,7 @@ parameters:
     default: m1.large40
   mon_image:
     type: string
-<<<<<<< HEAD
-    description: Image name to use for support nodes.
-  instance_image_dashboard:
-    type: string
-    description: Image name to use for dashboard.
-
-  instance_flavor_config:
-=======
   mon_os:
->>>>>>> composite
     type: string
     default: xenial
   mon_flavor:
@@ -69,14 +60,6 @@ parameters:
     type: string
   cmp_os:
     type: string
-<<<<<<< HEAD
-    description: Instance type for support nodes (web, monitoring, etc.).
-    default: m1.large
-  instance_flavor_dashboard:
-    type: string
-    description: Instance type for dashboard nodes (nginx, horizon)
-    default: m1.medium
-=======
     default: trusty
   cmp_flavor:
     type: string
@@ -89,7 +72,6 @@ parameters:
   gtw_flavor:
     type: string
     default: m1.large40
->>>>>>> composite
 
   cfg01_name:
     type: string
@@ -133,11 +115,6 @@ parameters:
   mon01_name:
     type: string
     default: mon01.mk22-lab-basic.local
-<<<<<<< HEAD
-  prx01_name:
-    type: string
-    default: prx01.mk22-lab-basic.local
-=======
   mon_vip_address:
     type: string
     default: 172.16.10.253
@@ -150,7 +127,6 @@ parameters:
   cmp01_address:
     type: string
     default: 172.16.10.105
->>>>>>> composite
 
 resources:
   mcp_network:

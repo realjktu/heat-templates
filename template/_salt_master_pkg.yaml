@@ -106,17 +106,13 @@ resources:
             echo "nameserver 172.18.208.44 >> /etc/resolv.conf
             echo "nameserver 8.8.8.8 >> /etc/resolv.conf
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
-<<<<<<< HEAD
 
-            echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ xenial main security extra tcp" > /etc/apt/sources.list
-            wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
-
-=======
             # echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" >>/etc/apt/sources.list.d/apt-mk.list
             # wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
+
             echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly xenial tcp-salt tcp extra main" > /etc/apt/sources.list
             wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
->>>>>>> composite
+
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
@@ -167,11 +163,7 @@ resources:
             mkdir -p /srv/salt/reclass/classes/service
 
             FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
-<<<<<<< HEAD
-            FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ trusty tcp-salt}
-=======
             FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt.tcpcloud.eu/nightly xenial tcp-salt}
->>>>>>> composite
             FORMULA_GPG=${FORMULA_GPG:-http://apt.tcpcloud.eu/public.gpg}
 
             echo "Configuring salt master formulas ..."
