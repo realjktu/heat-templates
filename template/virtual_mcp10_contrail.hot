@@ -1,0 +1,265 @@
+heat_template_version: 2015-10-15
+
+parameters:
+
+  key_value:
+    type: string
+    default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp0evjOaK8c8SKYK4r2+0BN7g+8YSvQ2n8nFgOURCyvkJqOHi1qPGZmuN0CclYVdVuZiXbWw3VxRbSW3EH736VzgY1U0JmoTiSamzLHaWsXvEIW8VCi7boli539QJP0ikJiBaNAgZILyCrVPN+A6mfqtacs1KXdZ0zlMq1BPtFciR1JTCRcVs5vP2Wwz5QtY2jMIh3aiwkePjMTQPcfmh1TkOlxYu5IbQyZ3G1ahA0mNKI9a0dtF282av/F6pwB/N1R1nEZ/9VtcN2I1mf1NW/tTHEEcTzXYo1R/8K9vlqAN8QvvGLZtZduGviNVNoNWvoxaXxDt8CPv2B2NCdQFZp
+  public_net:
+    type: string
+  instance_zone:
+    type: string
+    default: nova
+  key_private:
+    type: string
+    hidden: true
+
+  cfg_reclass_address:
+    type: string
+    default: https://gerrit.mcp.mirantis.net/salt-models/mcp-virtual-lab
+  cfg_reclass_branch:
+    type: string
+    default: master
+  cfg_formula_branch:
+    type: string
+    default: master
+
+  cfg_image:
+    type: string
+  cfg_os:
+    type: string
+    default: xenial
+  cfg_flavor:
+    type: string
+    default: m1.medium20
+  ctl_image:
+    type: string
+  ctl_os:
+    type: string
+    default: trusty
+  ctl_flavor:
+    type: string
+    default: m1.xlarge20
+  prx_image:
+    type: string
+  prx_os:
+    type: string
+    default: trusty
+  prx_flavor:
+    type: string
+    default: m1.large20
+  mon_image:
+    type: string
+  mon_os:
+    type: string
+    default: xenial
+  mon_flavor:
+    type: string
+    default: m1.large20
+  cmp_image:
+    type: string
+  cmp_os:
+    type: string
+    default: xenial
+  cmp_flavor:
+    type: string
+    default: m1.large20
+  gtw_image:
+    type: string
+  gtw_os:
+    type: string
+    default: trusty
+  gtw_flavor:
+    type: string
+    default: m1.large40
+
+  cfg01_name:
+    type: string
+    default: cfg01.virtual-mcp10-contrail.local
+  cfg01_address:
+    type: string
+    default: 172.16.10.100
+  ctl01_name:
+    type: string
+    default: ctl01.virtual-mcp10-contrail.local
+  ctl_vip_address:
+    type: string
+    default: 172.16.10.254
+  ctl01_address:
+    type: string
+    default: 172.16.10.101
+  ctl02_name:
+    type: string
+    default: ctl02.virtual-mcp10-contrail.local
+  ctl02_address:
+    type: string
+    default: 172.16.10.102
+  ctl03_name:
+    type: string
+    default: ctl03.virtual-mcp10-contrail.local
+  ctl03_address:
+    type: string
+    default: 172.16.10.103
+  prx01_name:
+    type: string
+    default: prx01.virtual-mcp10-contrail.local
+  prx01_address:
+    type: string
+    default: 172.16.10.121
+  mon01_name:
+    type: string
+    default: mon01.virtual-mcp10-contrail.local
+  mon_vip_address:
+    type: string
+    default: 172.16.10.253
+  mon01_address:
+    type: string
+    default: 172.16.10.107
+  mon02_name:
+    type: string
+    default: mon02.virtual-mcp10-contrail.local
+  mon02_address:
+    type: string
+    default: 172.16.10.108
+  mon03_name:
+    type: string
+    default: mon03.virtual-mcp10-contrail.local
+  mon03_address:
+    type: string
+    default: 172.16.10.109
+  cmp01_name:
+    type: string
+    default: cmp01.virtual-mcp10-contrail.local
+  cmp01_address:
+    type: string
+    default: 172.16.10.105
+  cmp02_name:
+    type: string
+    default: cmp02.virtual-mcp10-contrail.local
+  cmp02_address:
+    type: string
+    default: 172.16.10.106
+  gtw01_name:
+    type: string
+    default: gtw01.virtual-mcp10-contrail.local
+  gtw01_address:
+    type: string
+    default: 172.16.10.131
+
+resources:
+  mcp_network:
+    type: MCP::BaseNetwork
+    properties:
+      stack_name: { get_param: "OS::stack_name" }
+      key_value: { get_param: key_value }
+      public_net: { get_param: public_net }
+  mcp_salt_master:
+    type: MCP::SaltMaster
+    depends_on: mcp_network
+    properties:
+      public_net: { get_param: public_net }
+      private_net: { get_attr: [mcp_network, private_net_name] }
+      admin_net: { get_attr: [mcp_network, admin_net_name] }
+      key_pair: { get_param: "OS::stack_name" }
+      key_private: { get_param: key_private }
+      security_group: { get_attr: [mcp_network, security_group] }
+      instance_zone:  { get_param: instance_zone }
+      instance_os: { get_param: cfg_os }
+      instance_flavor: { get_param: cfg_flavor }
+      instance_image: { get_param: cfg_image }
+      instance_name: { get_param: cfg01_name }
+      instance_address: { get_param: cfg01_address }
+      reclass_address : { get_param: cfg_reclass_address }
+      reclass_branch : { get_param: cfg_reclass_branch }
+      formula_branch : { get_param: cfg_formula_branch }
+  mcp_openstack_control_cluster:
+    type: MCP::StaticCluster
+    depends_on: mcp_salt_master
+    properties:
+      private_net: { get_attr: [mcp_network, private_net_name] }
+      admin_net: { get_attr: [mcp_network, admin_net_name] }
+      key_pair: { get_param: "OS::stack_name" }
+      security_group: { get_attr: [mcp_network, security_group] }
+      config_host: { get_attr: [mcp_salt_master, config_host] }
+      instance_zone:  { get_param: instance_zone }
+      instance_os: { get_param: ctl_os }
+      instance_flavor: { get_param: ctl_flavor }
+      instance_image: { get_param: ctl_image }
+      instance01_name: { get_param: ctl01_name }
+      instance02_name: { get_param: ctl02_name }
+      instance03_name: { get_param: ctl03_name }
+      instance_vip_address: { get_param: ctl_vip_address }
+      instance01_address: { get_param: ctl01_address }
+      instance02_address: { get_param: ctl02_address }
+      instance03_address: { get_param: ctl03_address }
+  mcp_openstack_dashboard_single:
+    type: MCP::ServerInstance
+    depends_on: mcp_salt_master
+    properties:
+      private_net: { get_attr: [mcp_network, private_net_name] }
+      admin_net: { get_attr: [mcp_network, admin_net_name] }
+      key_pair: { get_param: "OS::stack_name" }
+      security_group: { get_attr: [mcp_network, security_group] }
+      config_host: { get_attr: [mcp_salt_master, config_host] }
+      instance_zone:  { get_param: instance_zone }
+      instance_os: { get_param: prx_os }
+      instance_flavor: { get_param: prx_flavor }
+      instance_image: { get_param: prx_image }
+      instance_name: { get_param: prx01_name }
+      instance_address: { get_param: prx01_address }
+  mcp_openstack_compute_multi:
+    type: MCP::MultipleInstances
+    depends_on: mcp_salt_master
+    properties:
+      private_net: { get_attr: [mcp_network, private_net_name] }
+      admin_net: { get_attr: [mcp_network, admin_net_name] }
+      key_pair: { get_param: "OS::stack_name" }
+      security_group: { get_attr: [mcp_network, security_group] }
+      config_host: { get_attr: [mcp_salt_master, config_host] }
+      instance_zone:  { get_param: instance_zone }
+      instance_os: { get_param: cmp_os }
+      instance_flavor: { get_param: cmp_flavor }
+      instance_image: { get_param: cmp_image }
+      instance01_name: { get_param: cmp01_name }
+      instance01_address: { get_param: cmp01_address }
+      instance02_name: { get_param: cmp02_name }
+      instance02_address: { get_param: cmp02_address }
+  mcp_stacklight_monitor_cluster:
+    type: MCP::StaticCluster
+    depends_on: mcp_salt_master
+    properties:
+      private_net: { get_attr: [mcp_network, private_net_name] }
+      admin_net: { get_attr: [mcp_network, admin_net_name] }
+      key_pair: { get_param: "OS::stack_name" }
+      security_group: { get_attr: [mcp_network, security_group] }
+      config_host: { get_attr: [mcp_salt_master, config_host] }
+      instance_zone:  { get_param: instance_zone }
+      instance_os: { get_param: mon_os }
+      instance_flavor: { get_param: mon_flavor }
+      instance_image: { get_param: mon_image }
+      instance01_name: { get_param: mon01_name }
+      instance02_name: { get_param: mon02_name }
+      instance03_name: { get_param: mon03_name }
+      instance_vip_address: { get_param: mon_vip_address }
+      instance01_address: { get_param: mon01_address }
+      instance02_address: { get_param: mon02_address }
+      instance03_address: { get_param: mon03_address }
+  mcp_opencontrail_gateway:
+    type: MCP::ServiceInstance
+    depends_on: mcp_network
+    properties:
+      private_net: { get_attr: [mcp_network, private_net_name] }
+      admin_net: { get_attr: [mcp_network, admin_net_name] }
+      security_group: { get_attr: [mcp_network, security_group] }
+      key_pair: { get_param: "OS::stack_name" }
+      instance_os: { get_param: gtw_os }
+      instance_flavor: { get_param: gtw_flavor }
+      instance_image: { get_param: gtw_image }
+      instance_zone:  { get_param: instance_zone }
+      instance_name: { get_param: gtw01_name }
+      instance_address: { get_param: gtw01_address }
+
+outputs:
+  salt_master_ip:
+    value: { get_attr: [mcp_salt_master, config_public] }
+    description: "Public IP address of the Salt master node"
