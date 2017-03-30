@@ -20,6 +20,11 @@ parameters:
   cfg_reclass_branch:
     type: string
     default: master
+  cfg_reclass_private_key:
+    type: string
+    hidden: true
+    description: Private key for cloning the reclass model
+    default: ""
   cfg_formula_branch:
     type: string
     default: master
@@ -171,6 +176,7 @@ resources:
       instance_address: { get_param: cfg01_address }
       reclass_address : { get_param: cfg_reclass_address }
       reclass_branch : { get_param: cfg_reclass_branch }
+      reclass_private_key : { get_param: cfg_reclass_private_key }
       formula_branch : { get_param: cfg_formula_branch }
   mcp_openstack_control_cluster:
     type: MCP::StaticCluster
