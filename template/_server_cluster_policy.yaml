@@ -42,9 +42,9 @@ parameters:
     default: 'anti-affinity'
 
 resources:
-  server_cluster_policy: 
+  server_cluster_policy:
     type: OS::Nova::ServerGroup
-    properties: 
+    properties:
       name: { get_param: cluster_name }
       policies: [ { get_param: cluster_policy } ]
   instance01:
