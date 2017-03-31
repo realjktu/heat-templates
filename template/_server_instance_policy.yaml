@@ -58,7 +58,7 @@ resources:
       name: { get_param: instance_name }
       availability_zone: { get_param: instance_zone }
       key_name: { get_param: key_pair }
-      scheduler_hints: 
+      scheduler_hints:
         group: { get_param: cluster_name }
       networks:
       - network: { get_param: admin_net }
@@ -73,24 +73,26 @@ resources:
             case "$node_os" in
                 trusty)
                     which wget > /dev/null || (apt-get update; apt-get install -y wget)
-                    # echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty nightly salt extra" > /etc/apt/sources.list
-                    # wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
-                    echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly trusty tcp-salt tcp extra main" > /etc/apt/sources.list
-                    wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
+
+                    echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
+                    wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
+
                     echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main" > /etc/apt/sources.list.d/saltstack.list
                     wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
+
                     apt-get clean
                     apt-get update
                     apt-get install -y salt-minion
                     ;;
                 xenial)
                     which wget > /dev/null || (apt-get update; apt-get install -y wget)
-                    # echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" >>/etc/apt/sources.list.d/apt-mk.list
-                    # wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
-                    echo "deb [arch=amd64] http://apt.tcpcloud.eu/nightly xenial tcp-salt tcp extra main" > /etc/apt/sources.list
-                    wget -O - http://apt.tcpcloud.eu/public.gpg | apt-key add -
+
+                    echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
+                    wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
+
                     echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
                     wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
+
                     apt-get clean
                     apt-get update
                     apt-get install -y salt-minion
