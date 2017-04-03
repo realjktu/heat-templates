@@ -9,10 +9,10 @@ STACK="$4"
 if [ -z "$ACTION" ] || [ -z "$TEMPLATE" ] || [ -z "$ENV" ] || [ -z "$STACK" ]; then
 	# missing args
 	echo "Usage: stack.sh <ACTION> <TEMPLATE> <ENV> <STACK>"
-	echo "actions: validate, create, show, delete"	
-else 
+	echo "actions: validate, create, show, list, delete"
+else
 	# decide on action
-	case "$ACTION" in 
+	case "$ACTION" in
 	"validate")
 		openstack stack create --dry-run --environment "env/${TEMPLATE}/${ENV}.env" --template "template/${TEMPLATE}.hot" "${STACK}"
 		;;
@@ -21,6 +21,9 @@ else
 		;;
 	"show")
 		openstack stack output show "${STACK}" salt_master_ip
+		;;
+	"show")
+		openstack stack list
 		;;
 	"delete")
 		openstack stack delete "${STACK}"
