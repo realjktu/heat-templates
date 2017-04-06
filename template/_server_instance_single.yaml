@@ -106,7 +106,7 @@ resources:
             salt-call --no-color pillar.data
             echo "Running basic states ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
           params:
             $node_os: { get_param: instance_os }
             $node_name: { get_param: instance_name }
