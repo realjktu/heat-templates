@@ -64,6 +64,9 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
+            # Redirect all outputs
+            exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
+            set -x
             echo "Preparing base OS ..."
             echo "nameserver 172.18.208.44" >> /etc/resolv.conf
             echo "nameserver 8.8.8.8" >> /etc/resolv.conf
