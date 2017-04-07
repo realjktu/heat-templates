@@ -23,6 +23,7 @@ parameters:
     type: string
     hidden: true
     description: Private key for cloning the reclass model
+    default: ""
   cfg_formula_branch:
     type: string
     default: master
