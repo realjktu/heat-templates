@@ -82,6 +82,9 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
+            # Redirect all outputs
+            exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
+            set -x
             echo "Preparing base OS ..."
             echo "nameserver 172.18.208.44" >> /etc/resolv.conf
             echo "nameserver 8.8.8.8" >> /etc/resolv.conf
@@ -97,7 +100,7 @@ resources:
 
                     apt-get clean
                     apt-get update
-                    apt-get install salt-common=2016.3.5+ds-1
+                    apt-get install -y salt-common
                     apt-get install -y salt-minion
                     ;;
                 xenial)
@@ -125,7 +128,7 @@ resources:
             salt-call --no-color pillar.data
             echo "Running basic states ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
           params:
             $node_os: { get_param: instance_os }
             $node_name: { get_param: instance_name }

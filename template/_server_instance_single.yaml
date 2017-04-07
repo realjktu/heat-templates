@@ -60,12 +60,38 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
+            # Redirect all outputs
+            exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
+            set -x
+
+            # Add wrapper to apt-get to avoid race conditions
+            # with cron jobs running 'unattended-upgrades' script
+            aptget_wrapper() {
+              local apt_wrapper_timeout=300
+              local start_time=$(date '+%s')
+              local fin_time=$((start_time + apt_wrapper_timeout))
+              while true; do
+                if (( "$(date '+%s')" > fin_time )); then
+                  echo "aptget_wrapper - ERROR: Timeout exceeded: ${apt_wrapper_timeout} s. Lock files are still not released. Terminating..."
+                  exit 1
+                fi
+                if fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock >/dev/null 2>&1; then
+                  echo "aptget_wrapper - INFO: Waiting while another apt/dpkg process releases locks..."
+                  sleep 30
+                  continue
+                else
+                  apt-get $@
+                  break
+                fi
+              done
+            }
+
             echo "Preparing base OS ..."
             echo "nameserver 172.18.208.44" >> /etc/resolv.conf
             echo "nameserver 8.8.8.8" >> /etc/resolv.conf
             case "$node_os" in
                 trusty)
-                    which wget > /dev/null || (apt-get update; apt-get install -y wget)
+                    which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
 
                     echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
                     wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
@@ -73,13 +99,13 @@ resources:
                     echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main" > /etc/apt/sources.list.d/saltstack.list
                     wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
-                    apt-get clean
-                    apt-get update
-                    apt-get install salt-common=2016.3.5+ds-1
-                    apt-get install -y salt-minion
+                    aptget_wrapper clean
+                    aptget_wrapper update
+                    aptget_wrapper install -y salt-common
+                    aptget_wrapper install -y salt-minion
                     ;;
                 xenial)
-                    which wget > /dev/null || (apt-get update; apt-get install -y wget)
+                    which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
 
                     echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
                     wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
@@ -87,9 +113,9 @@ resources:
                     echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
                     wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
-                    apt-get clean
-                    apt-get update
-                    apt-get install -y salt-minion
+                    aptget_wrapper clean
+                    aptget_wrapper update
+                    aptget_wrapper install -y salt-minion
                     ;;
                 *)
                     echo "OS not known"
@@ -103,7 +129,7 @@ resources:
             salt-call --no-color pillar.data
             echo "Running basic states ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify -k --data-binary '{"status": "SUCCESS"}'
           params:
             $node_os: { get_param: instance_os }
             $node_name: { get_param: instance_name }

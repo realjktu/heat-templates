@@ -97,15 +97,38 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
+
             # Redirect all outputs
             exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
             set -x
+
+            # Add wrapper to apt-get to avoid race conditions
+            # with cron jobs running 'unattended-upgrades' script
+            aptget_wrapper() {
+              local apt_wrapper_timeout=300
+              local start_time=$(date '+%s')
+              local fin_time=$((start_time + apt_wrapper_timeout))
+              while true; do
+                if (( "$(date '+%s')" > fin_time )); then
+                  echo "aptget_wrapper - ERROR: Timeout exceeded: ${apt_wrapper_timeout} s. Lock files are still not released. Terminating..."
+                  exit 1
+                fi
+                if fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock >/dev/null 2>&1; then
+                  echo "aptget_wrapper - INFO: Waiting while another apt/dpkg process releases locks..."
+                  sleep 30
+                  continue
+                else
+                  apt-get $@
+                  break
+                fi
+              done
+            }
             echo "Preparing base OS ..."
             echo "172.18.248.114    jenkins.mcp.mirantis.net  gerrit.mcp.mirantis.net" >> /etc/hosts
             echo "185.135.196.10    apt-mk.mirantis.com" >> /etc/hosts
             echo "nameserver 172.18.208.44 >> /etc/resolv.conf
             echo "nameserver 8.8.8.8 >> /etc/resolv.conf
-            which wget >/dev/null || (apt-get update; apt-get install -y wget)
+            which wget >/dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
 
             echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
             wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add -
@@ -113,12 +136,12 @@ resources:
             echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
             wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add -
 
-            apt-get clean
-            apt-get update
+            aptget_wrapper clean
+            aptget_wrapper update
 
             echo "Installing salt master ..."
-            apt-get install -y reclass git
-            apt-get install -y salt-master
+            aptget_wrapper install -y reclass git
+            aptget_wrapper install -y salt-master
 
             [ ! -d /root/.ssh ] && mkdir -p /root/.ssh
             cat << 'EOF' > /root/.ssh/id_rsa
@@ -164,20 +187,20 @@ resources:
             FORMULA_GPG=${FORMULA_GPG:-http://apt.tcpcloud.eu/public.gpg}
 
             echo "Configuring salt master formulas ..."
-            which wget > /dev/null || (apt-get update; apt-get install -y wget)
+            which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
 
             echo "${FORMULA_REPOSITORY}" > /etc/apt/sources.list.d/tcpcloud_salt.list
             wget -O - "${FORMULA_GPG}" | apt-key add -
 
-            apt-get clean
-            apt-get update
+            aptget_wrapper clean
+            aptget_wrapper update
 
             [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
             declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "horizon")
 
             echo -e "\nInstalling all required salt formulas\n"
-            apt-get install -y "${formula_services[@]/#/salt-formula-}"
+            aptget_wrapper install -y "${formula_services[@]/#/salt-formula-}"
 
             for formula_service in "${formula_services[@]}"; do
                 echo -e "\nLink service metadata for formula ${formula_service} ...\n"
@@ -202,7 +225,7 @@ resources:
             id: $node_name
             master: 127.0.0.1
             EOF
-            apt-get install -y salt-minion
+            aptget_wrapper install -y salt-minion
 
             echo "Restarting services ..."
             systemctl restart salt-master
