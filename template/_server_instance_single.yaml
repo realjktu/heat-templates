@@ -87,8 +87,6 @@ resources:
             }
 
             echo "Preparing base OS ..."
-            echo "nameserver 172.18.208.44" >> /etc/resolv.conf
-            echo "nameserver 8.8.8.8" >> /etc/resolv.conf
             case "$node_os" in
                 trusty)
                     which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
