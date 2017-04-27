@@ -30,7 +30,7 @@ parameters:
 
   cfg_reclass_address:
     type: string
-    default: "https://github.com/mceloud/k8s-salt-model.git"
+    default: "https://gerrit.mcp.mirantis.net/p/salt-models/mcp-virtual-lab.git"
   cfg_reclass_branch:
     type: string
     default: master
