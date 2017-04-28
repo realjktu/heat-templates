@@ -101,7 +101,6 @@ resources:
             exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
             set -x
             echo "Preparing base OS ..."
-            echo -e "nameserver 172.18.176.4\nnameserver 8.8.8.8" >/etc/resolv.conf
 
             # Ensure apt-daily is not running
             while true; do systemctl list-jobs | grep apt-daily || break; sleep 1; done
@@ -259,7 +258,6 @@ resources:
           template: |
             #!/bin/bash
             echo "Preparing base OS ..."
-            echo "nameserver 8.8.8.8" >/etc/resolv.conf
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
@@ -321,7 +319,6 @@ resources:
           template: |
             #!/bin/bash
             echo "Preparing base OS ..."
-            echo "nameserver 8.8.8.8" >/etc/resolv.conf
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
