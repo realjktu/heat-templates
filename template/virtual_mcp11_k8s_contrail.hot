@@ -138,6 +138,21 @@ parameters:
   mon01_address:
     type: string
     default: 172.16.10.107
+  mon02_name:
+    type: string
+    default: mon02
+  mon02_address:
+    type: string
+    default: 172.16.10.108
+  mon03_name:
+    type: string
+    default: mon03
+  mon03_address:
+    type: string
+    default: 172.16.10.109
+  mon_vip_address:
+    type: string
+    default: 172.16.10.251
 
   # proxy nodes
   prx_image:
@@ -287,7 +302,7 @@ resources:
       instance02_address: { get_param: ntw02_address }
       instance03_address: { get_param: ntw03_address }
   mcp_stacklight_monitor_cluster:
-    type: MCP::ServerInstance
+    type: MCP::StaticCluster
     depends_on: mcp_salt_master
     properties:
       private_net: { get_attr: [mcp_network, private_net_name] }
@@ -299,8 +314,13 @@ resources:
       instance_os: { get_param: mon_os }
       instance_flavor: { get_param: mon_flavor }
       instance_image: { get_param: mon_image }
-      instance_name: {list_join: ['.', [{ get_param: mon01_name}, {get_param: domain_name}]]}
-      instance_address: { get_param: mon01_address }
+      instance01_name: {list_join: ['.', [{ get_param: mon01_name}, {get_param: domain_name}]]}
+      instance02_name: {list_join: ['.', [{ get_param: mon02_name}, {get_param: domain_name}]]}
+      instance03_name: {list_join: ['.', [{ get_param: mon03_name}, {get_param: domain_name}]]}
+      instance_vip_address: { get_param: mon_vip_address }
+      instance01_address: { get_param: mon01_address }
+      instance02_address: { get_param: mon02_address }
+      instance03_address: { get_param: mon03_address }
 
 outputs:
   salt_master_ip:
