@@ -214,7 +214,9 @@ resources:
             salt-call --no-color state.sls linux,openssh -l info
             salt-call --no-color state.sls reclass -l info
             salt-call --no-color state.sls salt.master.service -l info
-            salt-call --no-color state.sls salt.master,salt.api,salt.minion.ca -l info
+            salt-call --no-color state.sls salt.master
+            salt-call --no-color saltutil.sync_all
+            salt-call --no-color state.sls salt.api,salt.minion.ca -l info
             # There is an issue where the PEM is not send to mine. Until we find
             # why it is not working we can send it manually.
             CERT_PATH="/etc/pki/ca/mk_lab_ca/ca.crt"
