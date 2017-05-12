@@ -53,6 +53,11 @@ parameters:
   ci03_address:
     type: string
     default: 172.16.10.13
+  # This option allow to spawn VM's only- w\o running salt and etc
+  # Format: bash string(true\false)
+  dryrun_only:
+    type: string
+    default: false
 
 resources:
   ci01_floating_ip:
@@ -101,6 +106,8 @@ resources:
             exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
             set -x
             echo "Preparing base OS ..."
+            # Fix yaml=>bash uppercase
+            export DRYRUN=$(echo $dryrun_only | tr '[:upper:]' '[:lower:]')
 
             # Ensure apt-daily is not running
             while true; do systemctl list-jobs | grep apt-daily || break; sleep 1; done
@@ -164,7 +171,6 @@ resources:
             FORMULA_GPG=${FORMULA_GPG:-http://apt.tcpcloud.eu/public.gpg}
 
             echo "Configuring salt master formulas ..."
-            which wget > /dev/null || (apt-get update; apt-get install -y wget)
 
             echo "${FORMULA_REPOSITORY}" > /etc/apt/sources.list.d/mcp_salt.list
             wget -O - "${FORMULA_GPG}" | apt-key add -
@@ -205,6 +211,11 @@ resources:
             echo "Showing system info and metadata ..."
             salt-call --no-color grains.items
             salt-call --no-color pillar.data
+            if [[ "${DRYRUN}" == "true" ]]; then
+              echo "Dry run mode!"
+              $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+              exit 0
+            fi
 
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh -l info
@@ -217,6 +228,7 @@ resources:
             salt-call --no-color state.sls salt.minion.cert -l info
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
+            $dryrun_only: { get_param: dryrun_only }
             $node_name: { get_param: ci01_name }
             $config_host: localhost
             $wait_condition_notify: { get_attr: [ci01_wait_handle, curl_cli] }
@@ -258,6 +270,8 @@ resources:
           template: |
             #!/bin/bash
             echo "Preparing base OS ..."
+            # Fix yaml=>bash uppercase
+            export DRYRUN=$(echo $dryrun_only | tr '[:upper:]' '[:lower:]')
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
@@ -277,10 +291,16 @@ resources:
             service salt-minion restart
             echo "Showing node metadata..."
             salt-call --no-color pillar.data
+            if [[ "${DRYRUN}" == "true" ]]; then
+              echo "Dry run mode!"
+              $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+              exit 0
+            fi
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
+            $dryrun_only: { get_param: dryrun_only }
             $node_name: { get_param: ci02_name }
             $config_host: { get_param: ci01_address }
             $wait_condition_notify: { get_attr: [ci02_wait_handle, curl_cli] }
@@ -319,6 +339,8 @@ resources:
           template: |
             #!/bin/bash
             echo "Preparing base OS ..."
+            # Fix yaml=>bash uppercase
+            export DRYRUN=$(echo $dryrun_only | tr '[:upper:]' '[:lower:]')
 
             which wget >/dev/null || (apt-get update; apt-get install -y wget)
 
@@ -338,10 +360,16 @@ resources:
             service salt-minion restart
             echo "Showing node metadata..."
             salt-call --no-color pillar.data
+            if [[ "${DRYRUN}" == "true" ]]; then
+              echo "Dry run mode!"
+              $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+              exit 0
+            fi
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
             $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
           params:
+            $dryrun_only: { get_param: dryrun_only }
             $node_name: { get_param: ci03_name }
             $config_host: { get_param: ci01_address }
             $wait_condition_notify: { get_attr: [ci03_wait_handle, curl_cli] }
