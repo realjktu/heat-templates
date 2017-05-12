@@ -1,5 +1,5 @@
 #!/bin/sh
-
+ROOT=$(dirname $(readlink -f $0))
 # get args
 ACTION="$1"
 TEMPLATE="$2"
@@ -14,10 +14,10 @@ else
 	# decide on action
 	case "$ACTION" in
 	"validate")
-		openstack stack create --dry-run --environment "env/${TEMPLATE}/${ENV}.env" --template "template/${TEMPLATE}.hot" "${STACK}"
+		openstack stack create --dry-run --environment "${ROOT}/env/${TEMPLATE}/${ENV}.env" --template "${ROOT}/template/${TEMPLATE}.hot" "${STACK}"
 		;;
 	"create")
-		openstack stack create --environment "env/${TEMPLATE}/${ENV}.env" --template "template/${TEMPLATE}.hot" "$STACK"
+		openstack stack create --environment "${ROOT}/env/${TEMPLATE}/${ENV}.env" --template "${ROOT}/template/${TEMPLATE}.hot" "$STACK"
 		;;
 	"show")
 		openstack stack output show "${STACK}" salt_master_ip
