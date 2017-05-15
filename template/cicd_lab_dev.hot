@@ -38,6 +38,12 @@ parameters:
     type: string
     default: ci03.cicd-lab-dev.local
 
+  # This option allow to spawn VM's only- w\o running salt and etc
+  # Format: bash string(true\false)
+  dryrun_only:
+    type: string
+    default: false
+
 resources:
   lab_network:
     type: Mk22::Lab::SingleNetwork
@@ -63,6 +69,7 @@ resources:
       ci01_name: { get_param: ci01_name }
       ci02_name: { get_param: ci02_name }
       ci03_name: { get_param: ci03_name }
+      dryrun_only: {get_param: dryrun_only}
 
 outputs:
   salt_master_ip:
