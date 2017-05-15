@@ -22,7 +22,7 @@ else
 	"show")
 		openstack stack output show "${STACK}" salt_master_ip
 		;;
-	"show")
+	"list")
 		openstack stack list
 		;;
 	"delete")
