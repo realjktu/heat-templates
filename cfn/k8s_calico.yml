@@ -262,10 +262,10 @@ Resources:
     Properties:
       Subnets:
         - !Ref Subnet
-      #Instances:
-      #  - Ref: Ctl01Instance
-      #  - Ref: Ctl02Instance
-      #  - Ref: Ctl03Instance
+      Instances:
+        - Ref: Ctl01Instance
+        - Ref: Ctl02Instance
+        - Ref: Ctl03Instance
       Listeners:
       - LoadBalancerPort: '443'
         InstancePort: '443'
@@ -731,7 +731,11 @@ Resources:
               - "/tmp/instance_boot.sh"
   ComputesScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
-    DependsOn: SaltMasterInstance
+    DependsOn:
+      - SaltMasterInstance
+      - Ctl01Instance
+      - Ctl02Instance
+      - Ctl03Instance
     Properties:
       VPCZoneIdentifier:
         - !Ref Subnet
