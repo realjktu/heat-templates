@@ -687,7 +687,7 @@ Resources:
               - "chmod +x /tmp/instance_boot.sh"
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
-              - "export aws_resource='SaltMasterInstance'"
+              - "export aws_resource='ComputeInstance'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -737,8 +737,9 @@ Resources:
         - !Ref Subnet
       LaunchConfigurationName:
         Ref: ComputeLaunchConfig
-      MinSize: '1'
+      MinSize: '0'
       MaxSize: '10'
+      DesiredCapacity: '0'
       Tags:
         - Key: Application
           PropagateAtLaunch: 'true'
