@@ -24,8 +24,8 @@ Parameters:
       - t2.small
       - t2.medium
     ConstraintDescription: must be a valid EC2 instance type.
-  NodeInstanceType:
-    Description: Kubernetes node EC2 instance type
+  CtlNodeInstanceType:
+    Description: Kubernetes control node EC2 instance type
     Type: String
     Default: t2.small
     AllowedValues:
@@ -34,6 +34,20 @@ Parameters:
       - t2.small
       - t2.medium
     ConstraintDescription: must be a valid EC2 instance type.
+  CmpNodeInstanceType:
+    Description: Kubernetes compute node EC2 instance type
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+    ConstraintDescription: must be a valid EC2 instance type.
+  CmpNodeCount:
+    Description: Number of Kubernetes compute nodes
+    Type: String
+    Default: 2
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
     Type: 'AWS::EC2::KeyPair::KeyName'
@@ -404,7 +418,7 @@ Resources:
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
         - image
-      InstanceType: !Ref NodeInstanceType
+      InstanceType: !Ref CtlNodeInstanceType
       KeyName: !Ref KeyName
       Tags:
         - Key: Application
@@ -493,7 +507,7 @@ Resources:
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
         - image
-      InstanceType: !Ref NodeInstanceType
+      InstanceType: !Ref CtlNodeInstanceType
       KeyName: !Ref KeyName
       Tags:
         - Key: Application
@@ -582,7 +596,7 @@ Resources:
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
         - image
-      InstanceType: !Ref NodeInstanceType
+      InstanceType: !Ref CtlNodeInstanceType
       KeyName: !Ref KeyName
       Tags:
         - Key: Application
@@ -661,7 +675,7 @@ Resources:
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
         - image
-      InstanceType: !Ref SaltMasterInstanceType
+      InstanceType: !Ref CmpNodeInstanceType
       KeyName: !Ref KeyName
       AssociatePublicIpAddress: 'true'
       SecurityGroups:
@@ -735,8 +749,8 @@ Resources:
       LaunchConfigurationName:
         Ref: ComputeLaunchConfig
       MinSize: '0'
-      MaxSize: '10'
-      DesiredCapacity: '0'
+      MaxSize: '100'
+      DesiredCapacity: !Ref 'CmpNodeCount'
       Tags:
         - Key: Application
           PropagateAtLaunch: 'true'
