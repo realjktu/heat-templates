@@ -776,5 +776,5 @@ Outputs:
       - ControlLoadBalancer
       - DNSName
   ComputesScalingGroup:
-    Value: !Ref: 'ComputesScalingGroup'
+    Value: !Ref 'ComputesScalingGroup'
 
