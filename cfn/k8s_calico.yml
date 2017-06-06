@@ -73,6 +73,8 @@ Resources:
     Type: 'AWS::EC2::VPC'
     Properties:
       CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -777,4 +779,3 @@ Outputs:
       - DNSName
   ComputesScalingGroup:
     Value: !Ref 'ComputesScalingGroup'
-
