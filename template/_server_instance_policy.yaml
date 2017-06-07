@@ -39,6 +39,7 @@ resources:
         - ip_address: { get_param: instance_address }
       allowed_address_pairs:
         - ip_address: { get_param: instance_vip_address }
+        - ip_address: "0.0.0.0/0"
       security_groups:
         - default
         - { get_param: security_group }

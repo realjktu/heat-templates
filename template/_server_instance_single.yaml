@@ -40,7 +40,8 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
-      allowed_address_pairs: { get_param: allowed_addresses }
+      allowed_address_pairs:
+        - ip_address: "0.0.0.0/0"
   instance_wait_handle:
     type: OS::Heat::WaitConditionHandle
   instance_wait_condition:
