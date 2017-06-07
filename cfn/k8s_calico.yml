@@ -669,6 +669,7 @@ Resources:
     CreationPolicy:
           ResourceSignal:
             Timeout: PT10M
+
   # Compute nodes
   ComputeLaunchConfig:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
@@ -696,7 +697,7 @@ Resources:
               - "chmod +x /tmp/instance_boot.sh"
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
-              - "export aws_resource='ComputeInstance'"
+              - "export aws_resource='ComputesScalingGroup'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -745,6 +746,10 @@ Resources:
       - Ctl01Instance
       - Ctl02Instance
       - Ctl03Instance
+    CreationPolicy:
+      ResourceSignal:
+        Count: !Ref 'CmpNodeCount'
+        Timeout: PT10M
     Properties:
       VPCZoneIdentifier:
         - !Ref Subnet
