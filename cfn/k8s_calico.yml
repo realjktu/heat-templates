@@ -85,7 +85,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.10.0/24
-      MapPublicIpOnLaunch: 'true'
+      MapPublicIpOnLaunch: 'false'
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -319,7 +319,7 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          AssociatePublicIpAddress: 'true'
+          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -411,7 +411,7 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          AssociatePublicIpAddress: 'true'
+          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -500,7 +500,7 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          #AssociatePublicIpAddress: 'true'
+          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -589,7 +589,7 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          #AssociatePublicIpAddress: 'true'
+          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -680,7 +680,7 @@ Resources:
         - image
       InstanceType: !Ref CmpNodeInstanceType
       KeyName: !Ref KeyName
-      AssociatePublicIpAddress: 'true'
+      AssociatePublicIpAddress: 'false'
       SecurityGroups:
         - !Ref InstanceSecurityGroup
       UserData:
@@ -698,6 +698,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='ComputesScalingGroup'"
+              - "export node_hostname=$(curl -s http://169.254.169.254/latest/meta-data/hostname)"
               - !Join
                 - ''
                 - - export aws_region='
@@ -709,12 +710,6 @@ Resources:
                   - !Ref 'AWS::StackName'
                   - "'"
               - "export node_os='xenial'"
-              - !Join
-                - ''
-                - - export node_hostname="
-                  - cmp-
-                  - "${aws_instance_id}"
-                  - "\""
               - !Join
                 - ''
                 - - export node_domain='
@@ -784,3 +779,9 @@ Outputs:
       - DNSName
   ComputesScalingGroup:
     Value: !Ref 'ComputesScalingGroup'
+  Ctl01Instance:
+    Value: !Ref 'Ctl01Instance'
+  Ctl02Instance:
+    Value: !Ref 'Ctl02Instance'
+  Ctl02Instance:
+    Value: !Ref 'Ctl03Instance'
