@@ -25,6 +25,10 @@ parameters:
     type: string
   instance_zone:
     type: string
+  allowed_addresses:
+    type: json
+    default:
+      - ip_address: "0.0.0.0/0"
 
 resources:
   instance_port:
@@ -36,6 +40,7 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
+      allowed_address_pairs: { get_param: allowed_addresses }
   instance_wait_handle:
     type: OS::Heat::WaitConditionHandle
   instance_wait_condition:
