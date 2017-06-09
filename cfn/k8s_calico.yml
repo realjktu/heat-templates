@@ -85,7 +85,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.10.0/24
-      MapPublicIpOnLaunch: 'false'
+      MapPublicIpOnLaunch: 'true'
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -319,7 +319,6 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -411,7 +410,6 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -500,7 +498,6 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -589,7 +586,6 @@ Resources:
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
-          AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
@@ -680,7 +676,6 @@ Resources:
         - image
       InstanceType: !Ref CmpNodeInstanceType
       KeyName: !Ref KeyName
-      AssociatePublicIpAddress: 'false'
       SecurityGroups:
         - !Ref InstanceSecurityGroup
       UserData:
