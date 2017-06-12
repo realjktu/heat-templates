@@ -373,10 +373,8 @@ Resources:
               - !Join
                 - ''
                 - - export node_domain='
-                  - !Ref 'AWS::StackName'
-                  - "-"
-                  - !Ref NodeCluster
-                  - .local
+                  - !Ref "AWS::Region"
+                  - ".compute.internal"
                   - "'"
               - !Join
                 - ''
@@ -465,10 +463,8 @@ Resources:
               - !Join
                 - ''
                 - - export node_domain='
-                  - !Ref 'AWS::StackName'
-                  - "-"
-                  - !Ref NodeCluster
-                  - .local
+                  - !Ref "AWS::Region"
+                  - ".compute.internal"
                   - "'"
               - !Join
                 - ''
@@ -553,10 +549,8 @@ Resources:
               - !Join
                 - ''
                 - - export node_domain='
-                  - !Ref 'AWS::StackName'
-                  - "-"
-                  - !Ref NodeCluster
-                  - .local
+                  - !Ref "AWS::Region"
+                  - ".compute.internal"
                   - "'"
               - !Join
                 - ''
@@ -641,10 +635,8 @@ Resources:
               - !Join
                 - ''
                 - - export node_domain='
-                  - !Ref 'AWS::StackName'
-                  - "-"
-                  - !Ref NodeCluster
-                  - .local
+                  - !Ref "AWS::Region"
+                  - ".compute.internal"
                   - "'"
               - !Join
                 - ''
@@ -708,10 +700,8 @@ Resources:
               - !Join
                 - ''
                 - - export node_domain='
-                  - !Ref 'AWS::StackName'
-                  - "-"
-                  - !Ref NodeCluster
-                  - .local
+                  - !Ref "AWS::Region"
+                  - ".compute.internal"
                   - "'"
               - !Join
                 - ''
