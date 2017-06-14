@@ -169,7 +169,16 @@ Resources:
           CidrIp: 0.0.0.0/0
         - IpProtocol: '-1'
           CidrIp: 0.0.0.0/0
-
+  ControlLoadBalancerSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Enable Kubernetes API, port 443
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Ref SSHLocation
   ControlLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     DependsOn: AttachGateway
@@ -190,6 +199,8 @@ Resources:
         UnhealthyThreshold: '2'
         Interval: '30'
         Timeout: '5'
+      SecurityGroups:
+        - !Ref ControlLoadBalancerSecurityGroup
       Tags:
         - Key: Stack
           Value: !Join
