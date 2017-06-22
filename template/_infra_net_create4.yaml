@@ -86,6 +86,7 @@ resources:
       allocation_pools:
         - start: { get_param: admin_net_pool_start }
           end: { get_param: admin_net_pool_end }
+
   router:
     type: OS::Neutron::Router
     properties:
@@ -122,6 +123,7 @@ resources:
       allocation_pools:
         - start: { get_param: private_net_pool_start }
           end: { get_param: private_net_pool_end }
+      gateway_ip: null
 
   tenant_net:
     type: OS::Neutron::Net
@@ -136,6 +138,7 @@ resources:
       allocation_pools:
         - start: { get_param: tenant_net_pool_start }
           end: { get_param: tenant_net_pool_end }
+      gateway_ip: null
 
   external_net:
     type: OS::Neutron::Net
@@ -150,6 +153,7 @@ resources:
       allocation_pools:
         - start: { get_param: external_net_pool_start }
           end: { get_param: external_net_pool_end }
+      gateway_ip: null
 
 outputs:
   admin_net_name:
