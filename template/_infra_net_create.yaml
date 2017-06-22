@@ -104,6 +104,7 @@ resources:
       allocation_pools:
         - start: { get_param: private_net_pool_start }
           end: { get_param: private_net_pool_end }
+      gateway_ip: null
 
 outputs:
   admin_net_name:
