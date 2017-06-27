@@ -121,7 +121,7 @@ parameters:
     default: ntw01
   ntw_vip_address:
     type: string
-    default: 172.16.10.253
+    default: 172.16.10.252
   ntw01_address:
     type: string
     default: 172.16.10.111
