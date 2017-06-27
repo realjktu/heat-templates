@@ -212,7 +212,7 @@ resources:
             salt-call --no-color pillar.data
             if [[ "${DRYRUN}" == "true" ]]; then
               echo "Dry run mode!"
-              $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+              $wait_condition_notify --data-binary '{"status": "SUCCESS"}' --insecure
               exit 0
             fi
 
@@ -225,7 +225,7 @@ resources:
 
             reclass-salt --top
             salt-call --no-color state.sls salt.minion.cert -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}' --insecure
           params:
             $dryrun_only: { get_param: dryrun_only }
             $node_name: { get_param: ci01_name }
@@ -292,12 +292,12 @@ resources:
             salt-call --no-color pillar.data
             if [[ "${DRYRUN}" == "true" ]]; then
               echo "Dry run mode!"
-              $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+              $wait_condition_notify --data-binary '{"status": "SUCCESS"}' --insecure
               exit 0
             fi
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}' --insecure
           params:
             $dryrun_only: { get_param: dryrun_only }
             $node_name: { get_param: ci02_name }
@@ -361,12 +361,12 @@ resources:
             salt-call --no-color pillar.data
             if [[ "${DRYRUN}" == "true" ]]; then
               echo "Dry run mode!"
-              $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+              $wait_condition_notify --data-binary '{"status": "SUCCESS"}' --insecure
               exit 0
             fi
             echo "Running complete state ..."
             salt-call --no-color state.sls linux,openssh,salt -l info
-            $wait_condition_notify --data-binary '{"status": "SUCCESS"}'
+            $wait_condition_notify --data-binary '{"status": "SUCCESS"}' --insecure
           params:
             $dryrun_only: { get_param: dryrun_only }
             $node_name: { get_param: ci03_name }
