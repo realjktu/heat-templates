@@ -62,7 +62,7 @@ parameters:
 EOF
 
 node_ip=$(ip a | awk -F '[ \t\n]+|/' '($2 == "inet")  {print $3}' | grep -m 1 -v '127.0.0.1')
-cat << 'EOF' > /srv/salt/reclass/classes/cluster/overrides.yml
+cat << EOF > /srv/salt/reclass/classes/cluster/overrides.yml
 parameters:
   _param:
     infra_config_address: $node_ip
