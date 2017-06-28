@@ -116,7 +116,8 @@ echo -e "id: $node_hostname.$node_domain\nmaster: $config_host" > /etc/salt/mini
 service salt-minion restart || wait_condition_send "FAILURE" "Failed to restart salt-minion service."
 
 if [ -z "$aws_instance_id" ]; then
-$instance_cloud_init
+  echo "Running instance cloud-init ..."
+  $instance_cloud_init
 else
   # AWS
   eval "$instance_cloud_init"

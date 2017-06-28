@@ -14,19 +14,19 @@ else
 	# decide on action
 	case "$ACTION" in
 	"validate")
-		openstack stack create --dry-run --environment "${ROOT}/env/${TEMPLATE}/${ENV}.env" --template "${ROOT}/template/${TEMPLATE}.hot" "${STACK}"
+		openstack stack create --insecure --dry-run --environment "${ROOT}/env/${ENV}.env" --template "${ROOT}/template/${TEMPLATE}.hot" "${STACK}"
 		;;
 	"create")
-		openstack stack create --environment "${ROOT}/env/${TEMPLATE}/${ENV}.env" --template "${ROOT}/template/${TEMPLATE}.hot" "$STACK"
+		openstack stack create --insecure --environment "${ROOT}/env/${ENV}.env" --template "${ROOT}/template/${TEMPLATE}.hot" "$STACK"
 		;;
 	"show")
-		openstack stack output show "${STACK}" salt_master_ip
+		openstack stack output show "${STACK}" salt_master_ip --insecure
 		;;
 	"list")
-		openstack stack list
+		openstack stack list --insecure
 		;;
 	"delete")
-		openstack stack delete "${STACK}"
+		openstack stack delete "${STACK}" --insecure
 		;;
 	*)
 		echo "Action \"$ACTION\" is now known. Aborting!"
