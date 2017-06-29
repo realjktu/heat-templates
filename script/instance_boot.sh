@@ -72,6 +72,7 @@ aptget_wrapper() {
 }
 
 echo "Preparing base OS ..."
+
 case "$node_os" in
     trusty)
         which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
@@ -126,7 +127,9 @@ fi
 sleep 1
 
 echo "Classifying node ..."
-node_ip="$(ip a | awk -F '[ \t\n]+|/' '($2 == "inet")  {print $3}' | grep -m 1 -v '127.0.0.1')"
+node_ip="$(ip a | awk -v prefix="^    inet $control_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_tenant_ip="$(ip a | awk -v prefix="^    inet $tenant_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_external_ip="$(ip a | awk -v prefix="^    inet $external_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 
 # find more parameters (every env starting param_)
 more_params=$(env | grep "^param_" | sed -e 's/=/":"/g' -e 's/^/"/g' -e 's/$/",/g' | tr "\n" " " | sed 's/, $//g')
@@ -135,6 +138,6 @@ if [ "$more_params" != "" ]; then
   more_params=", $more_params"
 fi
 
-salt-call event.send "reclass/minion/classify" "{\"node_master_ip\": \"$config_host\", \"node_os\": \"${node_os}\", \"node_ip\": \"${node_ip}\", \"node_domain\": \"$node_domain\", \"node_cluster\": \"$node_cluster\", \"node_hostname\": \"$node_hostname\"${more_params}}"
+salt-call event.send "reclass/minion/classify" "{\"node_master_ip\": \"$config_host\", \"node_os\": \"${node_os}\", \"node_ip\": \"${node_ip}\", \"node_tenant_ip\": \"${node_tenant_ip}\", \"node_external_ip\": \"${node_external_ip}\", \"node_domain\": \"$node_domain\", \"node_cluster\": \"$node_cluster\", \"node_hostname\": \"$node_hostname\"${more_params}}"
 
 wait_condition_send "SUCCESS" "Instance successfuly started."

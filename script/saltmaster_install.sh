@@ -61,7 +61,7 @@ parameters:
       domain: $node_domain
 EOF
 
-node_ip=$(ip a | awk -F '[ \t\n]+|/' '($2 == "inet")  {print $3}' | grep -m 1 -v '127.0.0.1')
+node_ip="$(ip a | awk -v prefix="^    inet $control_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 cat << EOF > /srv/salt/reclass/classes/cluster/overrides.yml
 parameters:
   _param:

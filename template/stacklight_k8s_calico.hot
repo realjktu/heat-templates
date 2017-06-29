@@ -83,6 +83,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
+      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
+      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
+      tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
+      external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
       instance_name: cfg01
       instance_domain:
         list_join:
@@ -119,6 +123,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
+      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
+      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
+      tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
+      external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
       instance01_name: ctl01
       instance02_name: ctl02
       instance03_name: ctl03
@@ -141,6 +149,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
+      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
+      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
+      tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
+      external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
       instance_name: cmp
       instance_count: 1
       instance_domain:
@@ -162,6 +174,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
+      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
+      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
+      tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
+      external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
       instance01_name: mon01
       instance02_name: mon02
       instance03_name: mon03
