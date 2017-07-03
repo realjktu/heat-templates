@@ -128,9 +128,9 @@ sleep 1
 
 echo "Classifying node ..."
 os_codename=$(salt-call grains.item oscodename --out key | awk '/oscodename/ {print $2}')
-node_ip="$(ip a | awk -v prefix="^    inet $control_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
-node_tenant_ip="$(ip a | awk -v prefix="^    inet $tenant_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
-node_external_ip="$(ip a | awk -v prefix="^    inet $external_subnet_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_ip="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_tenant_ip="$(ip a | awk -v prefix="^    inet $network03_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_external_ip="$(ip a | awk -v prefix="^    inet $network04_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 
 # find more parameters (every env starting param_)
 more_params=$(env | grep "^param_" | sed -e 's/=/":"/g' -e 's/^/"/g' -e 's/$/",/g' | tr "\n" " " | sed 's/, $//g')

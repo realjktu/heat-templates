@@ -9,13 +9,13 @@ parameters:
     type: string
   security_group:
     type: string
-  deploy_subnet_prefix:
+  network01_prefix:
     type: string
-  control_subnet_prefix:
+  network02_prefix:
     type: string
-  tenant_subnet_prefix:
+  network03_prefix:
     type: string
-  external_subnet_prefix:
+  network04_prefix:
     type: string
   instance_name:
     type: string
@@ -112,10 +112,10 @@ resources:
             $node_domain: { get_param: instance_domain }
             $node_cluster: { get_param: instance_cluster }
             $config_host: { get_param: config_host }
-            $deploy_subnet_prefix: { get_param: deploy_subnet_prefix }
-            $control_subnet_prefix: { get_param: control_subnet_prefix }
-            $tenant_subnet_prefix: { get_param: tenant_subnet_prefix }
-            $external_subnet_prefix: { get_param: external_subnet_prefix }
+            $network01_prefix: { get_param: network01_prefix }
+            $network02_prefix: { get_param: network02_prefix }
+            $network03_prefix: { get_param: network03_prefix }
+            $network04_prefix: { get_param: network04_prefix }
             $instance_cloud_init: { get_param: instance_cloud_init }
             $wait_condition_notify: { get_attr: [instance_wait_handle, curl_cli] }
 

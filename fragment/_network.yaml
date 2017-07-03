@@ -155,25 +155,25 @@ outputs:
     value: { get_param: stack_name }
   security_group:
     value: { get_param: stack_name }
-  deploy_subnet_prefix:
+  network01_prefix:
     value:
       list_join:
         - '.'
         - - str_split: ['.', { get_param: network01_cidr }, 0]
           - str_split: ['.', { get_param: network01_cidr }, 1]
-  control_subnet_prefix:
+  network02_prefix:
     value:
       list_join:
         - '.'
         - - str_split: ['.', { get_param: network02_cidr }, 0]
           - str_split: ['.', { get_param: network02_cidr }, 1]
-  tenant_subnet_prefix:
+  network03_prefix:
     value:
       list_join:
         - '.'
         - - str_split: ['.', { get_param: network03_cidr }, 0]
           - str_split: ['.', { get_param: network03_cidr }, 1]
-  external_subnet_prefix:
+  network04_prefix:
     value:
       list_join: 
         - '.'
