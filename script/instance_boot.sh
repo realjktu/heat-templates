@@ -13,6 +13,10 @@
 exec > >(tee -i /tmp/cloud-init-bootstrap.log) 2>&1
 set -xe
 
+
+export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
+export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
+
 echo "Environment variables:"
 env
 
@@ -93,6 +97,14 @@ case "$node_os" in
 
         which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
 
+        # SUGGESTED UPDATE:
+        #export MASTER_IP="$config_host" MINION_ID="$node_hostname.$node_domain" SALT_VERSION=$saltversion
+        #source <(curl -qL ${BOOTSTRAP_SCRIPT_URL})
+        ## Update BOOTSTRAP_SALTSTACK_OPTS, as by default they contain "-dX" not to start service
+        #BOOTSTRAP_SALTSTACK_OPTS=" stable $SALT_VERSION "
+        #install_salt_minion_pkg
+
+        # DEPRECATED:
         echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
         wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add - || wait_condition_send "FAILURE" "Failed to add apt-mk key."
 
@@ -111,6 +123,14 @@ case "$node_os" in
 
         which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
 
+        # SUGGESTED UPDATE:
+        #export MASTER_IP="$config_host" MINION_ID="$node_hostname.$node_domain" SALT_VERSION=$saltversion
+        #source <(curl -qL ${BOOTSTRAP_SCRIPT_URL})
+        ## Update BOOTSTRAP_SALTSTACK_OPTS, as by default they contain "-dX" not to start service
+        #BOOTSTRAP_SALTSTACK_OPTS=" stable $SALT_VERSION "
+        #install_salt_minion_pkg
+
+        # DEPRECATED:
         echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
         wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add - || wait_condition_send "FAILURE" "Failed to add apt-mk key."
 
@@ -122,11 +142,12 @@ case "$node_os" in
         aptget_wrapper install -y salt-minion
         ;;
     rhel|centos|centos7|centos7|rhel6|rhel7)
-        curl -L https://bootstrap.saltstack.com -o install_salt.sh
-	if [ -z "$bootstrap_salt_opts" ]; then
-		bootstrap-salt_opts="- stable $saltversion"
-	fi
-        sudo sh install_salt.sh -i "$node_hostname.$node_domain" -A "$config_host" "$bootstrap_saltstack_opts"
+        yum install -y git
+        export MASTER_IP="$config_host" MINION_ID="$node_hostname.$node_domain" SALT_VERSION=$saltversion
+        source <(curl -qL ${BOOTSTRAP_SCRIPT_URL})
+        # Update BOOTSTRAP_SALTSTACK_OPTS, as by default they contain "-dX" not to start service
+        BOOTSTRAP_SALTSTACK_OPTS=" stable $SALT_VERSION "
+        install_salt_minion_pkg
         ;;
     *)
         msg="OS '$node_os' is not supported."
