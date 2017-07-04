@@ -47,7 +47,9 @@ resources:
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net01']] }
       allowed_address_pairs:
-        - ip_address: 192.168.10.0/24
+      - list_join:
+        - '.'
+        - [ { get_param: network01_prefix }, '0/24' ]
       security_groups:
         - default
         - { get_param: security_group }
@@ -56,7 +58,9 @@ resources:
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net02']] }
       allowed_address_pairs:
-        - ip_address: 172.16.10.0/24
+      - list_join:
+        - '.'
+        - [ { get_param: network02_prefix }, '0/24' ]
       security_groups:
         - default
         - { get_param: security_group }
@@ -65,7 +69,9 @@ resources:
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net03']] }
       allowed_address_pairs:
-        - ip_address: 10.1.0.0/24
+      - list_join:
+        - '.'
+        - [ { get_param: network03_prefix }, '0/24' ]
       security_groups:
         - default
         - { get_param: security_group }
@@ -74,7 +80,9 @@ resources:
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net04']] }
       allowed_address_pairs:
-        - ip_address: 10.16.0.0/24
+      - list_join:
+        - '.'
+        - [ { get_param: network04_prefix }, '0/24' ]
       security_groups:
         - default
         - { get_param: security_group }

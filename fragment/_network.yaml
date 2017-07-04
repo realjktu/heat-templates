@@ -161,22 +161,25 @@ outputs:
         - '.'
         - - str_split: ['.', { get_param: network01_cidr }, 0]
           - str_split: ['.', { get_param: network01_cidr }, 1]
+          - str_split: ['.', { get_param: network01_cidr }, 2]
   network02_prefix:
     value:
       list_join:
         - '.'
         - - str_split: ['.', { get_param: network02_cidr }, 0]
           - str_split: ['.', { get_param: network02_cidr }, 1]
+          - str_split: ['.', { get_param: network02_cidr }, 2]
   network03_prefix:
     value:
       list_join:
         - '.'
         - - str_split: ['.', { get_param: network03_cidr }, 0]
           - str_split: ['.', { get_param: network03_cidr }, 1]
+          - str_split: ['.', { get_param: network03_cidr }, 2]
   network04_prefix:
     value:
       list_join: 
         - '.'
         - - str_split: ['.', { get_param: network04_cidr }, 0]
           - str_split: ['.', { get_param: network04_cidr }, 1]
-
+          - str_split: ['.', { get_param: network04_cidr }, 2]
