@@ -61,11 +61,12 @@ parameters:
       domain: $node_domain
 EOF
 
-node_ip="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_ip="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_control_ip="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 cat << EOF > /srv/salt/reclass/classes/cluster/overrides.yml
 parameters:
   _param:
-    infra_config_address: $node_ip
+    infra_config_address: $node_control_ip
     infra_config_deploy_address: $node_ip
 EOF
 
