@@ -64,13 +64,6 @@ resources:
       security_groups:
         - default
         - { get_param: security_group }
-  instance_wait_handle:
-    type: OS::Heat::WaitConditionHandle
-  instance_wait_condition:
-    type: OS::Heat::WaitCondition
-    properties:
-      handle: {get_resource: instance_wait_handle}
-      timeout: 3600
   instance_instance:
     type: OS::Nova::Server
     properties:
@@ -88,17 +81,6 @@ resources:
       - port: { get_resource: instance_port02 }
       - port: { get_resource: instance_port03 }
       - port: { get_resource: instance_port04 }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          template: { get_file: ../script/service_instance_boot.sh }
-          params:
-            $network01_prefix: { get_param: network01_prefix }
-            $network02_prefix: { get_param: network02_prefix }
-            $network03_prefix: { get_param: network03_prefix }
-            $network04_prefix: { get_param: network04_prefix }
-            $instance_cloud_init: { get_param: instance_cloud_init }
-            $wait_condition_notify: { get_attr: [instance_wait_handle, curl_cli] }
 outputs:
   instance_address:
     value: { get_attr: [instance_instance, first_address] }
