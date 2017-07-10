@@ -105,6 +105,10 @@ case "$node_os" in
         aptget_wrapper update
         aptget_wrapper install -y salt-minion
         ;;
+    rhel|centos|centos7|centos7|rhel6|rhel7)
+        curl -L https://bootstrap.saltstack.com -o install_salt.sh
+        sudo sh install_salt.sh -i "$node_hostname.$node_domain" -A "$config_host" "${bootstrap_saltstack_opts:- stable 2016.3}"
+        ;;
     *)
         msg="OS '$node_os' is not supported."
         wait_condition_send "FAILURE" "$msg"
