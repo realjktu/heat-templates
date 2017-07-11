@@ -128,7 +128,13 @@ resources:
             $wait_condition_notify: { get_attr: [instance_wait_handle, curl_cli] }
 outputs:
   instance_address:
-    value: { get_attr: [instance_instance, first_address] }
+    value:
+      get_attr:
+      - instance_instance
+      - addresses
+      - { list_join: ['-', [get_param: network, 'net01']] }
+      - 0
+      - addr
     description: "Instance's private IP address"
   instance:
     value: { get_resource: instance_instance }
