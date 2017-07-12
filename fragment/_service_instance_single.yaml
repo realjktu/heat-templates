@@ -38,6 +38,8 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net01']] }
+      fixed_ips:
+        - ip_address: { list_join: ['.', [get_param: network01_prefix, '131']] }
       security_groups:
         - default
         - { get_param: security_group }
@@ -45,6 +47,8 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net02']] }
+      fixed_ips:
+        - ip_address: { list_join: ['.', [get_param: network02_prefix, '131']] }
       security_groups:
         - default
         - { get_param: security_group }
@@ -52,6 +56,8 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net03']] }
+      fixed_ips:
+        - ip_address: { list_join: ['.', [get_param: network03_prefix, '131']] }
       security_groups:
         - default
         - { get_param: security_group }
@@ -59,6 +65,8 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net04']] }
+      fixed_ips:
+        - ip_address: { list_join: ['.', [get_param: network04_prefix, '131']] }
       security_groups:
         - default
         - { get_param: security_group }
