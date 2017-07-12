@@ -138,7 +138,7 @@ resources:
       instance_cluster: { get_param: cluster_name }
       instance_zone: { get_param: instance_zone }
       instance_os: trusty
-      instance_image: ubuntu-14-04-x64-mcp1.1
+      instance_image: ubuntu-16-04-amd64-cloudimg
       instance_flavor: os_ha_ctl
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
@@ -164,7 +164,7 @@ resources:
       instance_cluster: { get_param: cluster_name }
       instance_zone: { get_param: instance_zone }
       instance_os: xenial
-      instance_image: ubuntu-16-04-amd64-cloudimg
+      instance_image: ubuntu-14-04-x64-mcp1.1
       instance_flavor: oc_aio_medium
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
