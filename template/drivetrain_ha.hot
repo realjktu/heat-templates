@@ -18,6 +18,9 @@ parameters:
   cluster_nameservers:
     type: comma_delimited_list
     description: DNS nameservers to be assigned to nodes
+  cluster_node_count:
+    type: string
+    default: 1
 
   public_net:
     type: string
