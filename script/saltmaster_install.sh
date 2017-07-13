@@ -70,6 +70,10 @@ parameters:
     system:
       name: $node_hostname
       domain: $node_domain
+  reclass:
+    storage:
+      data_source:
+        engine: local
 EOF
 
 node_ip="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
