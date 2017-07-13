@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: virtual-mcp11-drivetrain-ha
+    default: drivetrain_ha
   cluster_domain:
     type: string
   cluster_nameservers:
