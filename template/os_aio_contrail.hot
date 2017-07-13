@@ -213,7 +213,7 @@ resources:
         - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
       instance_cluster: { get_param: cluster_name }
       instance_zone: { get_param: instance_zone }
-      instance_image: vsrx-12.1X46-D20.5
+      instance_image: vsrx-12.1X46-D20.5-new
       instance_flavor: oc_vsrx
       instance_cloud_init: |
         # todo
