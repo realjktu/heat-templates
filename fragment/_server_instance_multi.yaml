@@ -17,6 +17,18 @@ parameters:
     type: string
   network04_prefix:
     type: string
+  network01_vip_address:
+    type: string
+    default: ""
+  network02_vip_address:
+    type: string
+    default: ""
+  network03_vip_address:
+    type: string
+    default: ""
+  network04_vip_address:
+    type: string
+    default: ""
   instance01_name:
     type: string
   instance02_name:
@@ -52,6 +64,10 @@ resources:
       network02_prefix: { get_param: network02_prefix }
       network03_prefix: { get_param: network03_prefix }
       network04_prefix: { get_param: network04_prefix }
+      network01_vip_address: { get_param: network01_vip_address }
+      network02_vip_address: { get_param: network02_vip_address }
+      network03_vip_address: { get_param: network03_vip_address }
+      network04_vip_address: { get_param: network04_vip_address }
       instance_name: { get_param: instance01_name }
       instance_domain: { get_param: instance_domain }
       instance_cluster: { get_param: instance_cluster }
@@ -71,6 +87,10 @@ resources:
       network02_prefix: { get_param: network02_prefix }
       network03_prefix: { get_param: network03_prefix }
       network04_prefix: { get_param: network04_prefix }
+      network01_vip_address: { get_param: network01_vip_address }
+      network02_vip_address: { get_param: network02_vip_address }
+      network03_vip_address: { get_param: network03_vip_address }
+      network04_vip_address: { get_param: network04_vip_address }
       instance_name: { get_param: instance02_name }
       instance_domain: { get_param: instance_domain }
       instance_cluster: { get_param: instance_cluster }
@@ -90,6 +110,10 @@ resources:
       network02_prefix: { get_param: network02_prefix }
       network03_prefix: { get_param: network03_prefix }
       network04_prefix: { get_param: network04_prefix }
+      network01_vip_address: { get_param: network01_vip_address }
+      network02_vip_address: { get_param: network02_vip_address }
+      network03_vip_address: { get_param: network03_vip_address }
+      network04_vip_address: { get_param: network04_vip_address }
       instance_name: { get_param: instance03_name }
       instance_domain: { get_param: instance_domain }
       instance_cluster: { get_param: instance_cluster }

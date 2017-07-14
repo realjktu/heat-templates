@@ -1,4 +1,4 @@
-heat_template_version: 2015-10-15
+heat_template_version: 2016-10-14
 
 description: Single server instance fragment
 
@@ -17,6 +17,18 @@ parameters:
     type: string
   network04_prefix:
     type: string
+  network01_vip_address:
+    type: string
+    default: ""
+  network02_vip_address:
+    type: string
+    default: ""
+  network03_vip_address:
+    type: string
+    default: ""
+  network04_vip_address:
+    type: string
+    default: ""
   instance_name:
     type: string
   instance_domain:
@@ -37,55 +49,77 @@ parameters:
     type: string
     default: ""
 
+conditions:
+  network01_with_vip:
+    not:
+      equals:
+      - get_param: network01_vip_address
+      - ""
+  network02_with_vip:
+    not:
+      equals:
+      - get_param: network02_vip_address
+      - ""
+  network03_with_vip:
+    not:
+      equals:
+      - get_param: network03_vip_address
+      - ""
+  network04_with_vip:
+    not:
+      equals:
+      - get_param: network04_vip_address
+      - ""
+
 resources:
   instance_port01:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net01']] }
       allowed_address_pairs:
-      - ip_address:
-          list_join:
-          - '.'
-          - [ { get_param: network01_prefix }, '0/24' ]
+        if:
+        - 'network01_with_vip'
+        - [ ip_address: { get_param: network01_vip_address } ]
+        - []
       security_groups:
-        - default
-        - { get_param: security_group }
+      - default
+      - { get_param: security_group }
   instance_port02:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net02']] }
       allowed_address_pairs:
-      - ip_address:
-          list_join:
-          - '.'
-          - [ { get_param: network02_prefix }, '0/24' ]
+        if:
+        - 'network02_with_vip'
+        - [ ip_address: { get_param: network02_vip_address } ]
+        - []
       security_groups:
-        - default
-        - { get_param: security_group }
+      - default
+      - { get_param: security_group }
   instance_port03:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net03']] }
       allowed_address_pairs:
-      - ip_address:
-          list_join:
-          - '.'
-          - [ { get_param: network03_prefix }, '0/24' ]
+        if:
+        - 'network03_with_vip'
+        - [ ip_address: { get_param: network03_vip_address } ]
+        - []
       security_groups:
-        - default
-        - { get_param: security_group }
+      - default
+      - { get_param: security_group }
   instance_port04:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net04']] }
       allowed_address_pairs:
-      - ip_address:
-          list_join:
-          - '.'
-          - [ { get_param: network04_prefix }, '0/24' ]
+        if:
+        - 'network04_with_vip'
+        - [ ip_address: { get_param: network04_vip_address } ]
+        - []
       security_groups:
-        - default
-        - { get_param: security_group }
+      - default
+      - { get_param: security_group }
   instance_wait_handle:
     type: OS::Heat::WaitConditionHandle
   instance_wait_condition:
@@ -125,14 +159,14 @@ resources:
             $network03_prefix: { get_param: network03_prefix }
             $network04_prefix: { get_param: network04_prefix }
             $instance_cloud_init: { get_param: instance_cloud_init }
-            $wait_condition_notify: { get_attr: [instance_wait_handle, curl_cli] }
+            $wait_condition_notify: { get_attr: [ instance_wait_handle, curl_cli ] }
 outputs:
   instance_address:
     value:
       get_attr:
       - instance_instance
       - addresses
-      - { list_join: ['-', [get_param: network, 'net01']] }
+      - { list_join: [ '-', [ get_param: network, 'net01'] ] }
       - 0
       - addr
     description: "Instance's private IP address"

@@ -131,6 +131,10 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network02_vip_address:
+        list_join:
+        - '.'
+        - [ { get_attr: [mcp_network, network02_prefix] }, '253' ]
       instance01_name: ctl01
       instance02_name: ctl02
       instance03_name: ctl03
@@ -157,6 +161,10 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network02_vip_address:
+        list_join:
+        - '.'
+        - [ { get_attr: [mcp_network, network02_prefix] }, '252' ]
       instance01_name: ntw01
       instance02_name: ntw02
       instance03_name: ntw03
