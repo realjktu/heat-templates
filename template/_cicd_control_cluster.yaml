@@ -105,6 +105,9 @@ resources:
             # Redirect all outputs
             exec > >(tee -i /tmp/mk-bootstrap.log) 2>&1
             set -x
+            set -eu
+            set -o pipefail
+
             echo "Preparing base OS ..."
             # Fix yaml=>bash uppercase
             export DRYRUN=$(echo $dryrun_only | tr '[:upper:]' '[:lower:]')
@@ -202,6 +205,7 @@ resources:
             pretty_print: True
             output: yaml
             inventory_base_uri: /srv/salt/reclass
+            nodes_uri: /srv/salt/reclass/nodes/cicd
             EOF
 
             echo "Configuring salt minion ..."
