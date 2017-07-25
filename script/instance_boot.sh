@@ -7,6 +7,7 @@
 # node_cluster - clustername (used to classify this node)
 # config_host - IP/hostname of salt-master
 # instance_cloud_init - cloud-init script for instance
+# saltversion - version of salt
 
 # Redirect all outputs
 exec > >(tee -i /tmp/cloud-init-bootstrap.log) 2>&1
@@ -24,6 +25,7 @@ env
 # aws_resource
 # aws_stack
 # aws_region
+
 function wait_condition_send() {
   local status=${1:-SUCCESS}
   local reason=${2:-empty}
@@ -71,6 +73,12 @@ aptget_wrapper() {
   done
 }
 
+# Set default salt version
+if [ -z "$saltversion" ]; then
+	saltversion="2016.3"
+fi
+echo "Using Salt version $saltversion"
+
 echo "Preparing base OS ..."
 
 case "$node_os" in
@@ -88,8 +96,8 @@ case "$node_os" in
         echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
         wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add - || wait_condition_send "FAILURE" "Failed to add apt-mk key."
 
-        echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main" > /etc/apt/sources.list.d/saltstack.list
-        wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add - || wait_condition_send "FAILURE" "Failed to add salt apt key."
+        echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion trusty main" > /etc/apt/sources.list.d/saltstack.list
+        wget -O - "https://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add salt apt key."
 
         aptget_wrapper clean
         aptget_wrapper update
@@ -106,8 +114,8 @@ case "$node_os" in
         echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
         wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add - || wait_condition_send "FAILURE" "Failed to add apt-mk key."
 
-        echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main" > /etc/apt/sources.list.d/saltstack.list
-        wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | apt-key add - || wait_condition_send "FAILURE" "Failed to add saltstack apt key."
+        echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion xenial main" > /etc/apt/sources.list.d/saltstack.list
+        wget -O - "https://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add saltstack apt key."
 
         aptget_wrapper clean
         aptget_wrapper update
@@ -115,7 +123,10 @@ case "$node_os" in
         ;;
     rhel|centos|centos7|centos7|rhel6|rhel7)
         curl -L https://bootstrap.saltstack.com -o install_salt.sh
-        sudo sh install_salt.sh -i "$node_hostname.$node_domain" -A "$config_host" "${bootstrap_saltstack_opts:- stable 2016.3}"
+	if [ -z "$bootstrap_salt_opts" ]; then
+		bootstrap-salt_opts="- stable $saltversion"
+	fi
+        sudo sh install_salt.sh -i "$node_hostname.$node_domain" -A "$config_host" "$bootstrap_saltstack_opts"
         ;;
     *)
         msg="OS '$node_os' is not supported."
