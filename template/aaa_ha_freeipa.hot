@@ -79,10 +79,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
-      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
-      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
-      # tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
-      # external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
+      network01_prefix: { get_attr: [mcp_network, network01_prefix] }
+      network02_prefix: { get_attr: [mcp_network, network02_prefix] }
+      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
+      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       instance_name: cfg01
       instance_domain:
         list_join:
@@ -104,6 +104,10 @@ resources:
               list_join:
               - '.'
               - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
+            $network01_prefix: { get_attr: [mcp_network, network01_prefix] }
+            $network02_prefix: { get_attr: [mcp_network, network02_prefix] }
+            $network03_prefix: { get_attr: [mcp_network, network03_prefix] }
+            $network04_prefix: { get_attr: [mcp_network, network04_prefix] }
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
@@ -119,10 +123,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
-      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
-      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
-      # tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
-      # external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
+      network01_prefix: { get_attr: [mcp_network, network01_prefix] }
+      network02_prefix: { get_attr: [mcp_network, network02_prefix] }
+      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
+      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       instance01_name: idm01
       instance02_name: idm02
       instance03_name: idm03
@@ -148,10 +152,10 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
       security_group: { get_attr: [mcp_network, security_group] }
-      deploy_subnet_prefix: { get_attr: [mcp_network, deploy_subnet_prefix] }
-      control_subnet_prefix: { get_attr: [mcp_network, control_subnet_prefix] }
-      # tenant_subnet_prefix: { get_attr: [mcp_network, tenant_subnet_prefix] }
-      # external_subnet_prefix: { get_attr: [mcp_network, external_subnet_prefix] }
+      network01_prefix: { get_attr: [mcp_network, network01_prefix] }
+      network02_prefix: { get_attr: [mcp_network, network02_prefix] }
+      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
+      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       instance_name: tst
       instance_count: { get_param: cluster_node_count }
       instance_domain:
