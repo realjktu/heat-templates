@@ -102,6 +102,10 @@ aptget_wrapper update
 
 declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "memcached" "horizon" "telegraf" "prometheus" "rabbitmq")
 
+if [[ -f /srv/salt/reclass/classes/cluster/$cluster_name/.env ]]; then
+    source /srv/salt/reclass/classes/cluster/$cluster_name/.env
+fi
+
 echo -e "\nInstalling all required salt formulas\n"
 aptget_wrapper install -y "${formula_services[@]/#/salt-formula-}"
 
@@ -131,10 +135,6 @@ for state in "${run_states[@]}"
 do
   salt-call --no-color state.apply "$state" -l info || wait_condition_send "FAILURE" "Salt state $state run failed."
 done
-
-echo "Running all states ..."
-
-salt-call --no-color state.apply
 
 echo "Showing known models ..."
 reclass-salt --top || wait_condition_send "FAILURE" "Reclass-salt command run failed."
