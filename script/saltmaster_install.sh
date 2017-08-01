@@ -100,12 +100,20 @@ aptget_wrapper update
 
 [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "memcached" "horizon" "telegraf" "prometheus" "rabbitmq")
+declare -a FORMULAS_SALT_MASTER=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "memcached" "horizon" "telegraf" "prometheus" "rabbitmq")
+
+# Source bootstrap_vars for specific cluster if specified.
+for cluster in /srv/salt/reclass/classes/cluster/*/; do
+    if [[ -f "$cluster/bootstrap_vars" ]]; then
+        echo "Sourcing bootstrap_vars for cluster $cluster"
+        source $cluster/bootstrap_vars
+    fi
+done
 
 echo -e "\nInstalling all required salt formulas\n"
-aptget_wrapper install -y "${formula_services[@]/#/salt-formula-}"
+aptget_wrapper install -y "${FORMULAS_SALT_MASTER[@]/#/salt-formula-}"
 
-for formula_service in "${formula_services[@]}"; do
+for formula_service in "${FORMULAS_SALT_MASTER[@]}"; do
     echo -e "\nLink service metadata for formula ${formula_service} ...\n"
     [ ! -L "/srv/salt/reclass/classes/service/${formula_service}" ] && \
         ln -s ${FORMULA_PATH}/reclass/service/${formula_service} /srv/salt/reclass/classes/service/${formula_service}
