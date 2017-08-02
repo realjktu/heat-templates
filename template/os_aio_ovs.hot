@@ -157,7 +157,7 @@ resources:
         - '.'
         - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
       instance_cluster: { get_param: cluster_name }
-      instance_zone: { get_param: instance_zone }
+      instance_zone: { get_param: cluster_zone }
       instance_os: xenial
       instance_image: ubuntu-16-04-amd64-cloudimg
       instance_flavor: cfg_salt_small-1
