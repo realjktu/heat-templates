@@ -1,4 +1,0 @@
-[gerrit]
-host=mcp-ci-gerrit
-port=29418
-project=mk/heat-templates.git
