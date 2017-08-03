@@ -58,7 +58,7 @@ resources:
       private_net: { get_attr: [lab_network, private_net_name] }
       public_net: { get_param: public_net }
       key_pair: { get_param: "OS::stack_name" }
-      reclass_private_key: { get_param: key_private }
+      key_private: { get_param: key_private }
       key_value: { get_param: key_value }
       reclass_address: { get_param: reclass_address }
       reclass_branch: { get_param: reclass_branch }
