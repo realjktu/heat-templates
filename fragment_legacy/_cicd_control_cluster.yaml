@@ -136,7 +136,7 @@ resources:
             chmod 400 /root/.ssh/id_rsa
 
             # Setup the private key for cloning the reclass model (optional)
-            if [[ "$reclass_private_key" != "" ]]; then
+            if [[ "${reclass_private_key:-}" != "" ]]; then
                 cat << 'EOF' > /root/.ssh/reclass_key
             $reclass_private_key
             EOF
