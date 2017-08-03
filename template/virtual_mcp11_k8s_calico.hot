@@ -13,9 +13,9 @@ parameters:
   public_net:
     type: string
     description: ID or name of public network for which floating IP addresses will be allocated
-  instance_zone:
+  cluster_zone:
     type: string
-    default: nova
+    default: empty
 
   dns_nameservers:
     type: comma_delimited_list
@@ -185,7 +185,7 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       key_private: { get_param: key_private }
       security_group: { get_attr: [mcp_network, security_group] }
-      instance_zone:  { get_param: instance_zone }
+      instance_zone:  { get_param: cluster_zone }
       instance_os: { get_param: cfg_os }
       instance_flavor: { get_param: cfg_flavor }
       instance_image: { get_param: cfg_image }
@@ -204,7 +204,7 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
-      instance_zone:  { get_param: instance_zone }
+      instance_zone:  { get_param: cluster_zone }
       instance_os: { get_param: ctl_os }
       instance_flavor: { get_param: ctl_flavor }
       instance_image: { get_param: ctl_image }
@@ -224,7 +224,7 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
-      instance_zone:  { get_param: instance_zone }
+      instance_zone:  { get_param: cluster_zone }
       instance_os: { get_param: prx_os }
       instance_flavor: { get_param: prx_flavor }
       instance_image: { get_param: prx_image }
@@ -239,7 +239,7 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
-      instance_zone:  { get_param: instance_zone }
+      instance_zone:  { get_param: cluster_zone }
       instance_os: { get_param: cmp_os }
       instance_flavor: { get_param: cmp_flavor }
       instance_image: { get_param: cmp_image }
@@ -257,7 +257,7 @@ resources:
       key_pair: { get_param: "OS::stack_name" }
       security_group: { get_attr: [mcp_network, security_group] }
       config_host: { get_attr: [mcp_salt_master, config_host] }
-      instance_zone:  { get_param: instance_zone }
+      instance_zone:  { get_param: cluster_zone }
       instance_os: { get_param: mon_os }
       instance_flavor: { get_param: mon_flavor }
       instance_image: { get_param: mon_image }
