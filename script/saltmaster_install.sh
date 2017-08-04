@@ -114,8 +114,11 @@ if [[ -f /srv/salt/reclass/classes/cluster/$cluster_name/.env ]]; then
     source /srv/salt/reclass/classes/cluster/$cluster_name/.env
 fi
 
+# Patch name of the package for services with _ in name
+FORMULA_PACKAGES=(`echo ${FORMULAS_SALT_MASTER[@]//_/-}`)
+
 echo -e "\nInstalling all required salt formulas\n"
-aptget_wrapper install -y "${FORMULAS_SALT_MASTER[@]/#/salt-formula-}"
+aptget_wrapper install -y "${FORMULA_PACKAGES[@]/#/salt-formula-}"
 
 for formula_service in "${FORMULAS_SALT_MASTER[@]}"; do
     echo -e "\nLink service metadata for formula ${formula_service} ...\n"
