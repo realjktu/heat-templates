@@ -5,7 +5,7 @@ parameters:
   key_value:
     type: string
     default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp0evjOaK8c8SKYK4r2+0BN7g+8YSvQ2n8nFgOURCyvkJqOHi1qPGZmuN0CclYVdVuZiXbWw3VxRbSW3EH736VzgY1U0JmoTiSamzLHaWsXvEIW8VCi7boli539QJP0ikJiBaNAgZILyCrVPN+A6mfqtacs1KXdZ0zlMq1BPtFciR1JTCRcVs5vP2Wwz5QtY2jMIh3aiwkePjMTQPcfmh1TkOlxYu5IbQyZ3G1ahA0mNKI9a0dtF282av/F6pwB/N1R1nEZ/9VtcN2I1mf1NW/tTHEEcTzXYo1R/8K9vlqAN8QvvGLZtZduGviNVNoNWvoxaXxDt8CPv2B2NCdQFZp
-  public_net:
+  cluster_public_net:
     type: string
   cluster_zone:
     type: string
@@ -189,12 +189,12 @@ resources:
     properties:
       stack_name: { get_param: "OS::stack_name" }
       key_value: { get_param: key_value }
-      public_net: { get_param: public_net }
+      public_net: { get_param: cluster_public_net }
   mcp_salt_master:
     type: MCP::SaltMaster
     depends_on: mcp_network
     properties:
-      public_net: { get_param: public_net }
+      public_net: { get_param: cluster_public_net }
       private_net: { get_attr: [mcp_network, private_net_name] }
       admin_net: { get_attr: [mcp_network, admin_net_name] }
       key_pair: { get_param: "OS::stack_name" }
