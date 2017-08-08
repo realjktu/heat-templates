@@ -163,6 +163,6 @@ if [ "$more_params" != "" ]; then
   more_params=", $more_params"
 fi
 
-salt-call event.send "reclass/minion/classify" "{\"node_master_ip\": \"$config_host\", \"node_os\": \"${os_codename}\", \"node_deploy_ip\": \"${node_network01_ip}\", \"node_control_ip\": \"${node_network02_ip}\", \"node_tenant_ip\": \"${node_network03_ip}\", \"node_external_ip\": \"${node_network04_ip}\", \"node_domain\": \"$node_domain\", \"node_cluster\": \"$node_cluster\", \"node_hostname\": \"$node_hostname\"${more_params}}"
+salt-call event.send "reclass/minion/classify" "{\"node_master_ip\": \"$config_host\", \"node_os\": \"${os_codename}\", \"node_deploy_ip\": \"${node_network01_ip}\", \"node_control_ip\": \"${node_network02_ip}\", \"node_tenant_ip\": \"${node_network03_ip}\", \"node_external_ip\": \"${node_network04_ip}\", \"node_domain\": \"$node_domain\", \"node_cluster\": \"$cluster_name\", \"node_hostname\": \"$node_hostname\"${more_params}}"
 
 wait_condition_send "SUCCESS" "Instance successfuly started."
