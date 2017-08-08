@@ -4,7 +4,7 @@
 # nodes_os - operating system (centos7, trusty, xenial)
 # node_hostname - hostname of this node (mynode)
 # node_domain - domainname of this node (mydomain)
-# node_cluster - clustername (used to classify this node)
+# cluster_name - clustername (used to classify this node)
 # config_host - IP/hostname of salt-master
 # instance_cloud_init - cloud-init script for instance
 # saltversion - version of salt
