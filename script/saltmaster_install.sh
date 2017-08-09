@@ -100,7 +100,7 @@ aptget_wrapper update
 
 [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-declare -a FORMULAS_SALT_MASTER=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "memcached" "horizon" "telegraf" "prometheus" "rabbitmq")
+declare -a FORMULAS_SALT_MASTER=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "memcached" "horizon" "telegraf" "prometheus" "rabbitmq" "elasticsearch" "keepalived" "kibana")
 
 # Source bootstrap_vars for specific cluster if specified.
 for cluster in /srv/salt/reclass/classes/cluster/*/; do
