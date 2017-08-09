@@ -278,6 +278,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='SaltMasterInstance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -365,6 +366,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Ctl01Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -451,6 +453,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Ctl02Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -537,6 +540,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Ctl03Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -606,6 +610,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='ComputesScalingGroup'"
+              - "export network01_prefix='10.0.10'"
               - "export node_hostname=$(curl -s http://169.254.169.254/latest/meta-data/hostname)"
               - !Join
                 - ''
@@ -717,6 +722,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Ntw01Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -803,6 +809,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Ntw02Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -889,6 +896,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Ntw03Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -976,6 +984,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Vpn01Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
