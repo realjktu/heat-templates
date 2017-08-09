@@ -31,6 +31,9 @@ parameters:
     type: string
   instance_image:
     type: string
+  instance_boot_timeout:
+    type: number
+    default: 3600
   instance_config_host:
     type: string
   instance_cloud_init:
@@ -95,8 +98,8 @@ resources:
   instance_wait_condition:
     type: OS::Heat::WaitCondition
     properties:
-      handle: {get_resource: instance_wait_handle}
-      timeout: 3600
+      handle: { get_resource: instance_wait_handle }
+      timeout: { get_param: instance_boot_timeout }
   instance_instance:
     type: OS::Nova::Server
     properties:

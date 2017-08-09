@@ -18,6 +18,9 @@ parameters:
   cluster_nameservers:
     type: comma_delimited_list
     description: DNS nameservers to be assigned to nodes
+  cluster_node_count:
+    type: string
+    default: 1
 
 
   cfg_reclass_address:
@@ -91,6 +94,7 @@ resources:
       instance_image: ubuntu-16-04-amd64-cloudimg
       instance_flavor: cfg_salt_small-1
       instance_config_host: 127.0.0.1
+      instance_boot_timeout: 600
       instance_cloud_init:
         str_replace:
           template: { get_file: ../script/saltmaster_install.sh }
@@ -135,12 +139,12 @@ resources:
       instance_zone: { get_param: cluster_zone }
       instance_os: xenial
       instance_image: ubuntu-16-04-amd64-cloudimg
-      instance_flavor: os_ha_ctl
+      instance_flavor: m1.large
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
   mcp_ceph_storage:
-    type: MCP::StaticCluster
+    type: MCP::StaticClusterVolumes
     depends_on: mcp_ceph_monitor
     properties:
       key_pair: { get_param: "OS::stack_name" }
@@ -160,7 +164,7 @@ resources:
       instance_zone: { get_param: cluster_zone }
       instance_os: xenial
       instance_image: ubuntu-16-04-amd64-cloudimg
-      instance_flavor: os_cmp_small
+      instance_flavor: m1.large
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
@@ -184,7 +188,7 @@ resources:
       instance_zone: { get_param: cluster_zone }
       instance_os: xenial
       instance_image: ubuntu-16-04-amd64-cloudimg
-      instance_flavor: k8s_ctl_small
+      instance_flavor: m1.large
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
