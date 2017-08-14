@@ -249,7 +249,7 @@ Resources:
                   - "'"
               - !Join
                 - ''
-                - - export node_cluster='
+                - - export cluster_name='
                   - !Ref NodeCluster
                   - "'"
               - "# Set reclass variables"
@@ -339,7 +339,7 @@ Resources:
                   - "'"
               - !Join
                 - ''
-                - - export node_cluster='
+                - - export cluster_name='
                   - !Ref NodeCluster
                   - "'"
               - "# Set variables"
@@ -425,7 +425,7 @@ Resources:
                   - "'"
               - !Join
                 - ''
-                - - export node_cluster='
+                - - export cluster_name='
                   - !Ref NodeCluster
                   - "'"
               - "# Set variables"
@@ -511,7 +511,7 @@ Resources:
                   - "'"
               - !Join
                 - ''
-                - - export node_cluster='
+                - - export cluster_name='
                   - !Ref NodeCluster
                   - "'"
               - "# Set variables"
@@ -583,7 +583,7 @@ Resources:
                   - "'"
               - !Join
                 - ''
-                - - export node_cluster='
+                - - export cluster_name='
                   - !Ref NodeCluster
                   - "'"
               - "# Set variables"
