@@ -15,7 +15,7 @@ Parameters:
   ReclassBranch:
     Description: Branch or reclass model
     Type: String
-    Default: master
+    Default: aws
   SaltMasterInstanceType:
     Description: SaltMaster EC2 instance type
     Type: String
