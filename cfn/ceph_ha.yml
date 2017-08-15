@@ -542,12 +542,18 @@ Resources:
       SecurityGroups:
         - !Ref InstanceSecurityGroup
       BlockDeviceMappings:
-        - DeviceName: /dev/sda
-          VirtualName: ephemeral0
         - DeviceName: /dev/sdb
-          VirtualName: ephemeral1
+          Ebs:
+            VolumeSize: 20
         - DeviceName: /dev/sdc
-          VirtualName: ephemeral2
+          Ebs:
+            VolumeSize: 20
+        - DeviceName: /dev/sdd
+          Ebs:
+            VolumeSize: 20
+        - DeviceName: /dev/sde
+          Ebs:
+            VolumeSize: 60
       UserData:
         Fn::Base64:
           Fn::Join:
@@ -621,7 +627,7 @@ Resources:
           PropagateAtLaunch: 'true'
           Value: !Join
             - '-'
-            - - compute
+            - - osd
               - !Ref 'AWS::StackName'
               - minion
 
