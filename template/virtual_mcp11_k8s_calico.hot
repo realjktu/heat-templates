@@ -176,7 +176,7 @@ resources:
         # todo
   mcp_k8s_compute:
     type: MCP::StaticCluster
-    depends_on: mcp_oc_control
+    depends_on: mcp_salt_master
     properties:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }

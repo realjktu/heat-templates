@@ -207,7 +207,7 @@ resources:
         # todo
   mcp_os_compute:
     type: MCP::StaticCluster
-    depends_on: mcp_oc_control
+    depends_on: mcp_os_control
     properties:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
