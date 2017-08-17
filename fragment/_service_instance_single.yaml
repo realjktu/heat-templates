@@ -17,6 +17,8 @@ parameters:
     type: string
   network04_prefix:
     type: string
+  network05_prefix:
+    type: string
   instance_name:
     type: string
   instance_domain:
@@ -67,6 +69,15 @@ resources:
       network_id: { list_join: ['-', [get_param: network, 'net04']] }
       fixed_ips:
         - ip_address: { list_join: ['.', [get_param: network04_prefix, '131']] }
+      security_groups:
+        - default
+        - { get_param: security_group }
+  instance_port05:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { list_join: ['-', [get_param: network, 'net05']] }
+      fixed_ips:
+        - ip_address: { list_join: ['.', [get_param: network05_prefix, '131']] }
       security_groups:
         - default
         - { get_param: security_group }

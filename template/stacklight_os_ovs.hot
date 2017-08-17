@@ -83,6 +83,7 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: cfg01
       instance_domain:
         list_join:
@@ -108,6 +109,7 @@ resources:
             $network02_prefix: { get_attr: [mcp_network, network02_prefix] }
             $network03_prefix: { get_attr: [mcp_network, network03_prefix] }
             $network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+            $network05_prefix: { get_attr: [mcp_network, network05_prefix] }
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
@@ -127,6 +129,7 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
         list_join:
         - '.'
@@ -157,6 +160,7 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: gtw01
       instance_domain:
         list_join:
@@ -181,6 +185,7 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: cmp
       instance_count: { get_param: cluster_node_count }
       instance_domain:
@@ -206,6 +211,7 @@ resources:
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
         list_join:
         - '.'

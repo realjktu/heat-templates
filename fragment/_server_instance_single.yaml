@@ -17,6 +17,8 @@ parameters:
     type: string
   network04_prefix:
     type: string
+  network05_prefix:
+    type: string
   network01_vip_address:
     type: string
     default: ""
@@ -27,6 +29,9 @@ parameters:
     type: string
     default: ""
   network04_vip_address:
+    type: string
+    default: ""
+  network05_vip_address:
     type: string
     default: ""
   instance_name:
@@ -72,6 +77,11 @@ conditions:
     not:
       equals:
       - get_param: network04_vip_address
+      - ""
+  network05_with_vip:
+    not:
+      equals:
+      - get_param: network05_vip_address
       - ""
 
 resources:
@@ -123,6 +133,18 @@ resources:
       security_groups:
       - default
       - { get_param: security_group }
+  instance_port05:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { list_join: ['-', [get_param: network, 'net05']] }
+      allowed_address_pairs:
+        if:
+        - 'network05_with_vip'
+        - [ ip_address: { get_param: network05_vip_address } ]
+        - []
+      security_groups:
+      - default
+      - { get_param: security_group }
   instance_wait_handle:
     type: OS::Heat::WaitConditionHandle
   instance_wait_condition:
@@ -161,6 +183,7 @@ resources:
             $network02_prefix: { get_param: network02_prefix }
             $network03_prefix: { get_param: network03_prefix }
             $network04_prefix: { get_param: network04_prefix }
+            $network05_prefix: { get_param: network05_prefix }
             $instance_cloud_init: { get_param: instance_cloud_init }
             $wait_condition_notify: { get_attr: [ instance_wait_handle, curl_cli ] }
 outputs:
