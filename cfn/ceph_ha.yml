@@ -44,7 +44,7 @@ Parameters:
       - t2.small
       - t2.medium
     ConstraintDescription: must be a valid EC2 instance type.
-  OsdNodeCount:
+  CmpNodeCount:
     Description: Number of Kubernetes compute nodes
     Type: String
     Default: 3
@@ -228,6 +228,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='SaltMasterInstance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -315,6 +316,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Cmn01Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -401,6 +403,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Cmn02Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -487,6 +490,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='Cmn03Instance'"
+              - "export network01_prefix='10.0.10'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -569,7 +573,9 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='ComputesScalingGroup'"
+              - "export network01_prefix='10.0.10'"
               - "export node_hostname=$(curl -s http://169.254.169.254/latest/meta-data/hostname)"
+              - "export param_ceph_host_id=$(ip a show dev eth0 | grep 'inet ' | awk '{print $2}' | sed 's,/24,,' | awk -F'.' '{print $4}')"
               - !Join
                 - ''
                 - - export aws_region='
@@ -609,7 +615,7 @@ Resources:
       - SaltMasterInstance
     CreationPolicy:
       ResourceSignal:
-        Count: !Ref 'OsdNodeCount'
+        Count: !Ref 'CmpNodeCount'
         Timeout: PT10M
     Properties:
       VPCZoneIdentifier:
@@ -618,7 +624,7 @@ Resources:
         Ref: ComputeLaunchConfig
       MinSize: '0'
       MaxSize: '100'
-      DesiredCapacity: !Ref 'OsdNodeCount'
+      DesiredCapacity: !Ref 'CmpNodeCount'
       Tags:
         - Key: Application
           PropagateAtLaunch: 'true'
