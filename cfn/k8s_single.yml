@@ -5,9 +5,9 @@ Parameters:
   NodeCluster:
     Description: Reclass model to use
     Type: String
-    Default: virtual-mcp11-k8s-calico-aws
+    Default: k8s-single
     AllowedValues:
-      - virtual-mcp11-k8s-calico-aws
+      - k8s-single
   ReclassAddress:
     Description: Git repository with reclass
     Type: String
@@ -15,24 +15,15 @@ Parameters:
   ReclassBranch:
     Description: Branch or reclass model
     Type: String
-    Default: master
+    Default: single
   SaltMasterInstanceType:
     Description: SaltMaster EC2 instance type
     Type: String
-    Default: t2.medium
+    Default: t2.large
     AllowedValues:
       - t2.small
       - t2.medium
-    ConstraintDescription: must be a valid EC2 instance type.
-  CtlNodeInstanceType:
-    Description: Kubernetes control node EC2 instance type
-    Type: String
-    Default: t2.small
-    AllowedValues:
-      - t2.nano
-      - t2.micro
-      - t2.small
-      - t2.medium
+      - t2.large
     ConstraintDescription: must be a valid EC2 instance type.
   CmpNodeInstanceType:
     Description: Kubernetes compute node EC2 instance type
@@ -72,7 +63,7 @@ Resources:
   VPC:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: 10.0.0.0/16
+      CidrBlock: 192.168.0.0/16
       EnableDnsSupport: 'true'
       EnableDnsHostnames: 'true'
       Tags:
@@ -84,7 +75,7 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.10.0/24
+      CidrBlock: 192.168.0.0/24
       MapPublicIpOnLaunch: 'true'
       Tags:
         - Key: Application
@@ -169,44 +160,6 @@ Resources:
           CidrIp: 0.0.0.0/0
         - IpProtocol: '-1'
           CidrIp: 0.0.0.0/0
-  ControlLoadBalancerSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: Enable Kubernetes API, port 443
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: !Ref SSHLocation
-  ControlLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
-    DependsOn: AttachGateway
-    Properties:
-      Subnets:
-        - !Ref Subnet
-      Instances:
-        - Ref: Ctl01Instance
-        - Ref: Ctl02Instance
-        - Ref: Ctl03Instance
-      Listeners:
-      - LoadBalancerPort: '443'
-        InstancePort: '443'
-        Protocol: TCP
-      HealthCheck:
-        Target: 'TCP:443'
-        HealthyThreshold: '10'
-        UnhealthyThreshold: '2'
-        Interval: '30'
-        Timeout: '5'
-      SecurityGroups:
-        - !Ref ControlLoadBalancerSecurityGroup
-      Tags:
-        - Key: Stack
-          Value: !Join
-            - '-'
-            - - ctl
-              - !Ref 'AWS::StackName'
 
   # SaltMaster
   SaltMasterEIP:
@@ -231,7 +184,7 @@ Resources:
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
-          PrivateIpAddress: 10.0.10.10
+          PrivateIpAddress: 192.168.0.10
       ImageId: !FindInMap
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
@@ -266,7 +219,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='SaltMasterInstance'"
-              - "export network01_prefix='10.0.10'"
+              - "export network01_prefix='192.168.0'"
               - !Join
                 - ''
                 - - export aws_region='
@@ -307,269 +260,8 @@ Resources:
               - "env"
               - "/tmp/instance_boot.sh"
     CreationPolicy:
-          ResourceSignal:
-            Timeout: PT60M
-  # Ctl01
-  Ctl01Instance:
-    Type: 'AWS::EC2::Instance'
-    DependsOn: AttachGateway
-    Properties:
-      SourceDestCheck: 'false'
-      NetworkInterfaces:
-        - GroupSet:
-            - !Ref InstanceSecurityGroup
-          DeviceIndex: '0'
-          DeleteOnTermination: 'true'
-          SubnetId: !Ref Subnet
-          PrivateIpAddress: 10.0.10.11
-      ImageId: !FindInMap
-        - AWSRegion2AMI
-        - !Ref 'AWS::Region'
-        - image
-      InstanceType: !Ref CtlNodeInstanceType
-      KeyName: !Ref KeyName
-      Tags:
-        - Key: Application
-          Value: !Ref 'AWS::StackId'
-        - Key: Name
-          Value: !Join
-            - '.'
-            - - 'ctl01'
-              - !Join
-                - '-'
-                - - !Ref 'AWS::StackName'
-                  - !Ref NodeCluster
-      UserData:
-        Fn::Base64:
-          Fn::Join:
-            - "\n"
-            - - "#!/bin/bash -xe"
-              - "# Install cfn-signal"
-              - "apt-get update"
-              - "apt-get install -y python-pip"
-              - "pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz"
-              - "# Download Heat templates"
-              - "wget -O /tmp/instance_boot.sh https://github.com/tomkukral/heat-fragments/raw/aws/script/instance_boot.sh"
-              - "chmod +x /tmp/instance_boot.sh"
-              - "# Set AWS variables"
-              - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
-              - "export aws_resource='Ctl01Instance'"
-              - "export network01_prefix='10.0.10'"
-              - !Join
-                - ''
-                - - export aws_region='
-                  - !Ref 'AWS::Region'
-                  - "'"
-              - !Join
-                - ''
-                - - export aws_stack='
-                  - !Ref 'AWS::StackName'
-                  - "'"
-              - "export node_os='xenial'"
-              - !Join
-                - ''
-                - - export node_hostname="
-                  - ctl01
-                  - "\""
-              - !Join
-                - ''
-                - - export node_domain='
-                  - !Ref "AWS::Region"
-                  - ".compute.internal"
-                  - "'"
-              - !Join
-                - ''
-                - - export cluster_name='
-                  - !Ref NodeCluster
-                  - "'"
-              - "# Set variables"
-              - !Join
-                - ''
-                - - export config_host='
-                  - !GetAtt
-                    - SaltMasterInstance
-                    - PrivateIp
-                  - "'"
-              - export instance_cloud_init="date"
-              - "env"
-              - "/tmp/instance_boot.sh"
-    CreationPolicy:
-          ResourceSignal:
-            Timeout: PT10M
-  # Ctl02
-  Ctl02Instance:
-    Type: 'AWS::EC2::Instance'
-    DependsOn: AttachGateway
-    Properties:
-      SourceDestCheck: 'false'
-      NetworkInterfaces:
-        - GroupSet:
-            - !Ref InstanceSecurityGroup
-          DeviceIndex: '0'
-          DeleteOnTermination: 'true'
-          SubnetId: !Ref Subnet
-          PrivateIpAddress: 10.0.10.12
-      ImageId: !FindInMap
-        - AWSRegion2AMI
-        - !Ref 'AWS::Region'
-        - image
-      InstanceType: !Ref CtlNodeInstanceType
-      KeyName: !Ref KeyName
-      Tags:
-        - Key: Application
-          Value: !Ref 'AWS::StackId'
-        - Key: Name
-          Value: !Join
-            - '.'
-            - - 'ctl02'
-              - !Join
-                - '-'
-                - - !Ref 'AWS::StackName'
-                  - !Ref NodeCluster
-      UserData:
-        Fn::Base64:
-          Fn::Join:
-            - "\n"
-            - - "#!/bin/bash -xe"
-              - "# Install cfn-signal"
-              - "apt-get update"
-              - "apt-get install -y python-pip"
-              - "pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz"
-              - "# Download Heat templates"
-              - "wget -O /tmp/instance_boot.sh https://github.com/tomkukral/heat-fragments/raw/aws/script/instance_boot.sh"
-              - "chmod +x /tmp/instance_boot.sh"
-              - "# Set AWS variables"
-              - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
-              - "export aws_resource='Ctl02Instance'"
-              - "export network01_prefix='10.0.10'"
-              - !Join
-                - ''
-                - - export aws_region='
-                  - !Ref 'AWS::Region'
-                  - "'"
-              - !Join
-                - ''
-                - - export aws_stack='
-                  - !Ref 'AWS::StackName'
-                  - "'"
-              - "export node_os='xenial'"
-              - !Join
-                - ''
-                - - export node_hostname="
-                  - ctl02
-                  - "\""
-              - !Join
-                - ''
-                - - export node_domain='
-                  - !Ref "AWS::Region"
-                  - ".compute.internal"
-                  - "'"
-              - !Join
-                - ''
-                - - export cluster_name='
-                  - !Ref NodeCluster
-                  - "'"
-              - "# Set variables"
-              - !Join
-                - ''
-                - - export config_host='
-                  - !GetAtt
-                    - SaltMasterInstance
-                    - PrivateIp
-                  - "'"
-              - export instance_cloud_init="date"
-              - "env"
-              - "/tmp/instance_boot.sh"
-    CreationPolicy:
-          ResourceSignal:
-            Timeout: PT10M
-  # Ctl03
-  Ctl03Instance:
-    Type: 'AWS::EC2::Instance'
-    DependsOn: AttachGateway
-    Properties:
-      SourceDestCheck: 'false'
-      NetworkInterfaces:
-        - GroupSet:
-            - !Ref InstanceSecurityGroup
-          DeviceIndex: '0'
-          DeleteOnTermination: 'true'
-          SubnetId: !Ref Subnet
-          PrivateIpAddress: 10.0.10.13
-      ImageId: !FindInMap
-        - AWSRegion2AMI
-        - !Ref 'AWS::Region'
-        - image
-      InstanceType: !Ref CtlNodeInstanceType
-      KeyName: !Ref KeyName
-      Tags:
-        - Key: Application
-          Value: !Ref 'AWS::StackId'
-        - Key: Name
-          Value: !Join
-            - '.'
-            - - 'ctl03'
-              - !Join
-                - '-'
-                - - !Ref 'AWS::StackName'
-                  - !Ref NodeCluster
-      UserData:
-        Fn::Base64:
-          Fn::Join:
-            - "\n"
-            - - "#!/bin/bash -xe"
-              - "# Install cfn-signal"
-              - "apt-get update"
-              - "apt-get install -y python-pip"
-              - "pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz"
-              - "# Download Heat templates"
-              - "wget -O /tmp/instance_boot.sh https://github.com/tomkukral/heat-fragments/raw/aws/script/instance_boot.sh"
-              - "chmod +x /tmp/instance_boot.sh"
-              - "# Set AWS variables"
-              - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
-              - "export aws_resource='Ctl03Instance'"
-              - "export network01_prefix='10.0.10'"
-              - !Join
-                - ''
-                - - export aws_region='
-                  - !Ref 'AWS::Region'
-                  - "'"
-              - !Join
-                - ''
-                - - export aws_stack='
-                  - !Ref 'AWS::StackName'
-                  - "'"
-              - "export node_os='xenial'"
-              - !Join
-                - ''
-                - - export node_hostname="
-                  - ctl03
-                  - "\""
-              - !Join
-                - ''
-                - - export node_domain='
-                  - !Ref "AWS::Region"
-                  - ".compute.internal"
-                  - "'"
-              - !Join
-                - ''
-                - - export cluster_name='
-                  - !Ref NodeCluster
-                  - "'"
-              - "# Set variables"
-              - !Join
-                - ''
-                - - export config_host='
-                  - !GetAtt
-                    - SaltMasterInstance
-                    - PrivateIp
-                  - "'"
-              - export instance_cloud_init="date"
-              - "env"
-              - "/tmp/instance_boot.sh"
-    CreationPolicy:
-          ResourceSignal:
-            Timeout: PT10M
+      ResourceSignal:
+        Timeout: PT60M
 
   # Compute nodes
   ComputeLaunchConfig:
@@ -598,7 +290,7 @@ Resources:
               - "# Set AWS variables"
               - "export aws_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | sed 's/i-//g' | cut -c 1-8)"
               - "export aws_resource='ComputesScalingGroup'"
-              - "export network01_prefix='10.0.10'"
+              - "export network01_prefix='192.168.0'"
               - "export node_hostname=$(curl -s http://169.254.169.254/latest/meta-data/hostname)"
               - !Join
                 - ''
@@ -633,13 +325,11 @@ Resources:
               - export instance_cloud_init="date"
               - "env"
               - "/tmp/instance_boot.sh"
+
   ComputesScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     DependsOn:
       - SaltMasterInstance
-      - Ctl01Instance
-      - Ctl02Instance
-      - Ctl03Instance
     CreationPolicy:
       ResourceSignal:
         Count: !Ref 'CmpNodeCount'
@@ -672,15 +362,6 @@ Outputs:
     Value: !GetAtt
       - SaltMasterInstance
       - PrivateIp
-  ControlLoadBalancer:
-    Value: !GetAtt
-      - ControlLoadBalancer
-      - DNSName
   ComputesScalingGroup:
     Value: !Ref 'ComputesScalingGroup'
-  Ctl01Instance:
-    Value: !Ref 'Ctl01Instance'
-  Ctl02Instance:
-    Value: !Ref 'Ctl02Instance'
-  Ctl03Instance:
-    Value: !Ref 'Ctl03Instance'
+
