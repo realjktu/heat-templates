@@ -206,7 +206,7 @@ resources:
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
-  mcp_os_dashboard_single:
+  mcp_sl_proxy_single:
     type: MCP::SingleInstance
     depends_on: mcp_salt_master
     properties:
@@ -228,7 +228,7 @@ resources:
       instance_os: xenial
       instance_image: ubuntu-16-04-amd64-cloudimg
       instance_flavor: m1.large20
-      instance_config_host: 172.16.10.121
+      instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
   mcp_sl_monitor:
