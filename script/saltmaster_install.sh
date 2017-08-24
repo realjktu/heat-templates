@@ -150,4 +150,4 @@ done
 salt-call saltutil.sync_all
 
 echo "Showing known models ..."
-reclass-salt --top || wait_condition_send "FAILURE" "Reclass-salt command run failed."
+reclass-salt --top > /var/log/reclass-salt-result.log 2>&1 || wait_condition_send "FAILURE" "Reclass-salt command run failed. Output: '$(cat /var/log/reclass-salt-result.log)'"
