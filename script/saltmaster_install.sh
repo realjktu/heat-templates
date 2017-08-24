@@ -100,7 +100,75 @@ aptget_wrapper update
 
 [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-declare -a FORMULAS_SALT_MASTER=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "haproxy" "rsyslog" "memcached" "horizon" "telegraf" "prometheus" "rabbitmq" "elasticsearch" "keepalived" "kibana" "java" "influxdb" "glusterfs" "docker" "aptly")
+declare -a FORMULAS_SALT_MASTER=("aptcacher" \
+"aptly" \
+"artifactory" \
+"avinetworks" \
+"backupninja" \
+"bind" \
+"bird" \
+"cadf" \
+"chrony" \
+"collectd" \
+"devops-portal" \
+"docker" \
+"dovecot" \
+"elasticsearch" \
+"galera" \
+"gerrit" \
+"git" \
+"gitlab" \
+"glusterfs" \
+"grafana" \
+"haproxy" \
+"heka" \
+"horizon" \
+"influxdb" \
+"iptables" \
+"isc-dhcp" \
+"java" \
+"jenkins" \
+"kedb" \
+"keepalived" \
+"keystone" \
+"kibana" \
+"letsencrypt" \
+"libvirt" \
+"linux" \
+"lldp" \
+"memcached" \
+"logrotate" \
+"mongodb" \
+"mysql" \
+"network" \
+"nfs" \
+"nginx" \
+"nodejs" \
+"ntp" \
+"openldap" \
+"openssh" \
+"openvpn" \
+"postfix" \
+"postgresql" \
+"powerdns" \
+"prometheus" \
+"python" \
+"rabbitmq" \
+"reclass" \
+"rsync" \
+"rsyslog" \
+"rundeck" \
+"salt" \
+"sensu" \
+"sentry" \
+"sphinx" \
+"statsd" \
+"supervisor" \
+"taiga" \
+"telegraf" \
+"tftpd-hpa" \
+"varnish" \
+"xtrabackup")
 
 # Source bootstrap_vars for specific cluster if specified.
 for cluster in /srv/salt/reclass/classes/cluster/*/; do
