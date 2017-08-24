@@ -157,6 +157,13 @@ node_network03_ip="$(ip a | awk -v prefix="^    inet $network03_prefix[.]" '$0 ~
 node_network04_ip="$(ip a | awk -v prefix="^    inet $network04_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 node_network05_ip="$(ip a | awk -v prefix="^    inet $network05_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 
+node_network01_iface="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
+node_network02_iface="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
+node_network03_iface="$(ip a | awk -v prefix="^    inet $network03_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
+node_network04_iface="$(ip a | awk -v prefix="^    inet $network04_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
+node_network05_iface="$(ip a | awk -v prefix="^    inet $network05_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
+
+
 
 # find more parameters (every env starting param_)
 more_params=$(env | grep "^param_" | sed -e 's/=/":"/g' -e 's/^/"/g' -e 's/$/",/g' | tr "\n" " " | sed 's/, $//g')
@@ -165,6 +172,6 @@ if [ "$more_params" != "" ]; then
   more_params=", $more_params"
 fi
 
-salt-call event.send "reclass/minion/classify" "{\"node_master_ip\": \"$config_host\", \"node_os\": \"${os_codename}\", \"node_deploy_ip\": \"${node_network01_ip}\", \"node_control_ip\": \"${node_network02_ip}\", \"node_tenant_ip\": \"${node_network03_ip}\", \"node_external_ip\": \"${node_network04_ip}\", \"node_baremetal_ip\": \"${node_network05_ip}\", \"node_domain\": \"$node_domain\", \"node_cluster\": \"$cluster_name\", \"node_hostname\": \"$node_hostname\"${more_params}}"
+salt-call event.send "reclass/minion/classify" "{\"node_master_ip\": \"$config_host\", \"node_os\": \"${os_codename}\", \"node_deploy_ip\": \"${node_network01_ip}\", \"node_deploy_iface\": \"${node_network01_iface}\", \"node_control_ip\": \"${node_network02_ip}\", \"node_control_iface\": \"${node_network02_iface}\", \"node_tenant_ip\": \"${node_network03_ip}\", \"node_tenant_iface\": \"${node_network03_iface}\", \"node_external_ip\": \"${node_network04_ip}\",  \"node_external_iface\": \"${node_network04_iface}\", \"node_baremetal_ip\": \"${node_network05_ip}\", \"node_baremetal_iface\": \"${node_network05_iface}\", \"node_domain\": \"$node_domain\", \"node_cluster\": \"$cluster_name\", \"node_hostname\": \"$node_hostname\"${more_params}}"
 
 wait_condition_send "SUCCESS" "Instance successfuly started."
