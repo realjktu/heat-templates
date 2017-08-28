@@ -186,7 +186,7 @@ Resources:
       Subnets:
         - !Ref Subnet
       Instances:
-        - Ref: Ctl01Instance
+        - Ref: SaltMasterInstance
         - Ref: Ctl02Instance
         - Ref: Ctl03Instance
       Listeners:
@@ -637,7 +637,7 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     DependsOn:
       - SaltMasterInstance
-      - Ctl01Instance
+#      - Ctl01Instance
       - Ctl02Instance
       - Ctl03Instance
     CreationPolicy:
@@ -678,8 +678,8 @@ Outputs:
       - DNSName
   ComputesScalingGroup:
     Value: !Ref 'ComputesScalingGroup'
-  Ctl01Instance:
-    Value: !Ref 'Ctl01Instance'
+#  Ctl01Instance:
+#    Value: !Ref 'Ctl01Instance'
   Ctl02Instance:
     Value: !Ref 'Ctl02Instance'
   Ctl03Instance:
