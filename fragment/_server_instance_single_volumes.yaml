@@ -1,4 +1,4 @@
-heat_template_version: 2016-10-14
+heat_template_version: 2015-10-15
 
 description: Single server instance fragment with volumes
 
@@ -20,20 +20,20 @@ parameters:
   network05_prefix:
     type: string
   network01_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network02_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network03_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network04_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network05_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   instance_name:
     type: string
   instance_domain:
