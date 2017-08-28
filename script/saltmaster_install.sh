@@ -37,6 +37,9 @@ ext_pillar:
 master_tops:
   reclass: *reclass
 EOF
+#FIXME: remove after SSL cert fix
+export GIT_SSL_NO_VERIFY=true
+
 
 echo "Configuring reclass ..."
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts || wait_condition_send "FAILURE" "Failed to scan github.com key."
