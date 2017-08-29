@@ -148,6 +148,7 @@ declare -a FORMULAS_SALT_MASTER=("aptcacher" \
 "nginx" \
 "nodejs" \
 "ntp" \
+"opencontrail" \
 "openldap" \
 "openssh" \
 "openvpn" \
