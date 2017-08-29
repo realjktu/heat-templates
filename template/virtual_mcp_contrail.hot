@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: virtual-mcp05-dvr
+    default: virtual-mcp-contrail
   cluster_domain:
     type: string
   cluster_nameservers:
@@ -145,8 +145,8 @@ resources:
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
-  mcp_os_gateway:
-    type: MCP::SingleInstance
+  mcp_oc_control:
+    type: MCP::MultipleInstances
     depends_on: mcp_os_control
     properties:
       key_pair: { get_param: "OS::stack_name" }
@@ -157,16 +157,23 @@ resources:
       network03_prefix: { get_attr: [mcp_network, network03_prefix] }
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       network05_prefix: { get_attr: [mcp_network, network05_prefix] }
-      instance_name: gtw01
+      network02_vip_address:
+        - ip_address:
+            list_join:
+            - '.'
+            - [ { get_attr: [mcp_network, network02_prefix] }, '252' ]
+      instance01_name: ntw01
+      instance02_name: ntw02
+      instance03_name: ntw03
       instance_domain:
         list_join:
         - '.'
         - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
       instance_cluster: { get_param: cluster_name }
       instance_zone: { get_param: cluster_zone }
-      instance_os: xenial
-      instance_image: ubuntu-16-04-amd64-cloudimg
-      instance_flavor: cfg_salt_small-1
+      instance_os: trusty
+      instance_image: ubuntu-14-04-x64-mcp1.1
+      instance_flavor: oc_aio_medium
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
@@ -253,9 +260,30 @@ resources:
       instance_config_host: { get_attr: [mcp_salt_master, instance_address] }
       instance_cloud_init: |
         # todo
-
+  mcp_opencontrail_gateway:
+    type: MCP::ServiceInstance
+    depends_on: mcp_network
+    properties:
+      key_pair: { get_param: "OS::stack_name" }
+      network: { get_attr: [mcp_network, network] }
+      security_group: { get_attr: [mcp_network, security_group] }
+      network01_prefix: { get_attr: [mcp_network, network01_prefix] }
+      network02_prefix: { get_attr: [mcp_network, network02_prefix] }
+      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
+      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
+      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
+      instance_name: vmx01
+      instance_domain:
+        list_join:
+        - '.'
+        - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
+      instance_cluster: { get_param: cluster_name }
+      instance_zone: { get_param: cluster_zone }
+      instance_image: vsrx-12.1X46-D20.5-new
+      instance_flavor: oc_vsrx
+      instance_cloud_init: |
+        # todo
 outputs:
   salt_master_ip:
     value: { get_attr: [mcp_salt_master, instance_public_address] }
     description: "Public IP address of the Salt master node"
-
