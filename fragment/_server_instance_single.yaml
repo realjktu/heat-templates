@@ -1,4 +1,4 @@
-heat_template_version: 2016-10-14
+heat_template_version: 2015-10-15
 
 description: Single server instance fragment
 
@@ -20,20 +20,20 @@ parameters:
   network05_prefix:
     type: string
   network01_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network02_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network03_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network04_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   network05_vip_address:
-    type: string
-    default: ""
+    type: json
+    default: []
   instance_name:
     type: string
   instance_domain:
@@ -57,43 +57,12 @@ parameters:
     type: string
     default: ""
 
-conditions:
-  network01_with_vip:
-    not:
-      equals:
-      - get_param: network01_vip_address
-      - ""
-  network02_with_vip:
-    not:
-      equals:
-      - get_param: network02_vip_address
-      - ""
-  network03_with_vip:
-    not:
-      equals:
-      - get_param: network03_vip_address
-      - ""
-  network04_with_vip:
-    not:
-      equals:
-      - get_param: network04_vip_address
-      - ""
-  network05_with_vip:
-    not:
-      equals:
-      - get_param: network05_vip_address
-      - ""
-
 resources:
   instance_port01:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net01']] }
-      allowed_address_pairs:
-        if:
-        - 'network01_with_vip'
-        - [ ip_address: { get_param: network01_vip_address } ]
-        - []
+      allowed_address_pairs: { get_param: network01_vip_address }
       security_groups:
       - default
       - { get_param: security_group }
@@ -101,11 +70,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net02']] }
-      allowed_address_pairs:
-        if:
-        - 'network02_with_vip'
-        - [ ip_address: { get_param: network02_vip_address } ]
-        - []
+      allowed_address_pairs: { get_param: network02_vip_address }
       security_groups:
       - default
       - { get_param: security_group }
@@ -113,11 +78,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net03']] }
-      allowed_address_pairs:
-        if:
-        - 'network03_with_vip'
-        - [ ip_address: { get_param: network03_vip_address } ]
-        - []
+      allowed_address_pairs: { get_param: network03_vip_address }
       security_groups:
       - default
       - { get_param: security_group }
@@ -125,11 +86,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net04']] }
-      allowed_address_pairs:
-        if:
-        - 'network04_with_vip'
-        - [ ip_address: { get_param: network04_vip_address } ]
-        - []
+      allowed_address_pairs: { get_param: network04_vip_address }
       security_groups:
       - default
       - { get_param: security_group }
@@ -137,11 +94,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network_id: { list_join: ['-', [get_param: network, 'net05']] }
-      allowed_address_pairs:
-        if:
-        - 'network05_with_vip'
-        - [ ip_address: { get_param: network05_vip_address } ]
-        - []
+      allowed_address_pairs: { get_param: network05_vip_address }
       security_groups:
       - default
       - { get_param: security_group }

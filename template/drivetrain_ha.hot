@@ -85,9 +85,10 @@ resources:
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
-        list_join:
-        - '.'
-        - [ { get_attr: [mcp_network, network02_prefix] }, '254' ]
+        - ip_address:
+            list_join:
+            - '.'
+            - [ { get_attr: [mcp_network, network02_prefix] }, '254' ]
       instance_name: cid01
       instance_domain:
         list_join:
@@ -135,9 +136,10 @@ resources:
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
-        list_join:
-        - '.'
-        - [ { get_attr: [mcp_network, network02_prefix] }, '254' ]
+        - ip_address:
+            list_join:
+            - '.'
+            - [ { get_attr: [mcp_network, network02_prefix] }, '254' ]
       instance_name: cid02
       instance_domain:
         list_join:
@@ -164,9 +166,10 @@ resources:
       network04_prefix: { get_attr: [mcp_network, network04_prefix] }
       network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
-        list_join:
-        - '.'
-        - [ { get_attr: [mcp_network, network02_prefix] }, '254' ]
+        - ip_address:
+            list_join:
+            - '.'
+            - [ { get_attr: [mcp_network, network02_prefix] }, '254' ]
       instance_name: cid03
       instance_domain:
         list_join:
