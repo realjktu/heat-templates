@@ -232,6 +232,7 @@ Resources:
           DeleteOnTermination: 'true'
           SubnetId: !Ref Subnet
           PrivateIpAddress: 10.0.10.10
+      SourceDestCheck: 'false'
       ImageId: !FindInMap
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
