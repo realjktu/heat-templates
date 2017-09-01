@@ -48,6 +48,9 @@ parameters:
     type: string
   instance_image:
     type: string
+  instance_public_net:
+    type: string
+    default: public
   instance_boot_timeout:
     type: number
     default: 3600
@@ -140,6 +143,15 @@ resources:
             $network05_prefix: { get_param: network05_prefix }
             $instance_cloud_init: { get_param: instance_cloud_init }
             $wait_condition_notify: { get_attr: [ instance_wait_handle, curl_cli ] }
+  floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: { get_param: instance_public_net }
+  floating_ip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: floating_ip }
+      server_id: { get_resource: instance_instance }
 outputs:
   instance_address:
     value:
@@ -150,6 +162,10 @@ outputs:
       - 0
       - addr
     description: "Instance's private IP address"
+  instance_public_address: 
+    value: { get_attr: [floating_ip, ip] }
+    description: "Instance's public IP address"
   instance:
     value: { get_resource: instance_instance }
     description: "Instance"
+
