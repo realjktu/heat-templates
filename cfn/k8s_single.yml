@@ -363,6 +363,8 @@ Outputs:
     Value: !GetAtt
       - SaltMasterInstance
       - PrivateIp
+  ControlLoadBalancer:
+    Value: !Ref SaltMasterEIP
   ComputesScalingGroup:
     Value: !Ref 'ComputesScalingGroup'
 
