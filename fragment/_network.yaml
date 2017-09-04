@@ -154,17 +154,6 @@ resources:
       allocation_pools:
         - start: { get_param: network05_pool_start }
           end: { get_param: network05_pool_end }
-  router:
-    type: OS::Neutron::Router
-    properties:
-      name: { list_join: ['-', [get_param: stack_name, 'router']] }
-      external_gateway_info:
-        network: { get_param: public_net }
-  router_interface:
-    type: OS::Neutron::RouterInterface
-    properties:
-      router: { get_resource: router }
-      subnet: { get_resource: subnet01 }
   security_group:
     type: OS::Neutron::SecurityGroup
     properties:

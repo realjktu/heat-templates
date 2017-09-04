@@ -113,11 +113,6 @@ resources:
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
-  mcp_salt_master_ip:
-    type: MCP::FloatingIp
-    properties:
-      public_net: { get_param: cluster_public_net }
-      instance: { get_attr: [mcp_salt_master, instance] }
   mcp_os_control:
     type: MCP::MultipleInstances
     depends_on: mcp_salt_master
@@ -228,6 +223,6 @@ resources:
 
 outputs:
   salt_master_ip:
-    value: { get_attr: [mcp_salt_master_ip, floating_ip] }
+    value: { get_attr: [mcp_salt_master, instance_public_address] }
     description: "Public IP address of the Salt master node"
 
