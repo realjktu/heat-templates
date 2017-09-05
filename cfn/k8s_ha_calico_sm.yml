@@ -69,7 +69,42 @@ Mappings:
     us-west-2:
       image: ami-efd0428f
 Resources:
-# IAM policies
+# IAM policies, roles, profiles
+  KubernetesRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service:
+                - 'ec2.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: 'root'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action: ['ec2:*']
+                Resource: ['*']
+              - Effect: 'Allow'
+                Action: ['elasticloadbalancing:*']
+                Resource: ['*']
+              - Effect: 'Allow'
+                Action: ['route53:*']
+                Resource: ['*']
+              - Effect: 'Allow'
+                Action: ['ecr:*']
+                Resource: ['*']
+  KubernetesInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      InstanceProfileName: KubernetesInstanceProfile
+      Roles:
+        - Ref: 'KubernetesRole'
 
 # Infrastructure
   VPC:
@@ -239,6 +274,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
     Properties:
+      IamInstanceProfile: KubernetesInstanceProfile
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
@@ -418,6 +454,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
     Properties:
+      IamInstanceProfile: KubernetesInstanceProfile
       SourceDestCheck: 'false'
       NetworkInterfaces:
         - GroupSet:
@@ -507,6 +544,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
     Properties:
+      IamInstanceProfile: KubernetesInstanceProfile
       SourceDestCheck: 'false'
       NetworkInterfaces:
         - GroupSet:
@@ -596,6 +634,7 @@ Resources:
   ComputeLaunchConfig:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     Properties:
+      IamInstanceProfile: KubernetesInstanceProfile
       ImageId: !FindInMap
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
