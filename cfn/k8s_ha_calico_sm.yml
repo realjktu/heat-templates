@@ -69,6 +69,9 @@ Mappings:
     us-west-2:
       image: ami-efd0428f
 Resources:
+# IAM policies
+
+# Infrastructure
   VPC:
     Type: 'AWS::EC2::VPC'
     Properties:
@@ -80,6 +83,8 @@ Resources:
           Value: !Ref 'AWS::StackId'
         - Key: Name
           Value: !Ref 'AWS::StackName'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
   Subnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -89,12 +94,16 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
   InternetGateway:
     Type: 'AWS::EC2::InternetGateway'
     Properties:
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
   AttachGateway:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
@@ -107,6 +116,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
   Route:
     Type: 'AWS::EC2::Route'
     DependsOn: AttachGateway
@@ -169,6 +180,9 @@ Resources:
           CidrIp: 0.0.0.0/0
         - IpProtocol: '-1'
           CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
   ControlLoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -190,9 +204,9 @@ Resources:
         - Ref: Ctl02Instance
         - Ref: Ctl03Instance
       Listeners:
-      - LoadBalancerPort: '443'
-        InstancePort: '443'
-        Protocol: TCP
+        - LoadBalancerPort: '443'
+          InstancePort: '443'
+          Protocol: TCP
       HealthCheck:
         Target: 'TCP:443'
         HealthyThreshold: '10'
@@ -242,6 +256,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
         - Key: Name
           Value: !Join
             - '.'
@@ -419,6 +435,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
         - Key: Name
           Value: !Join
             - '.'
@@ -506,6 +524,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          Value: !Ref 'AWS::StackName'
         - Key: Name
           Value: !Join
             - '.'
@@ -657,6 +677,9 @@ Resources:
         - Key: Application
           PropagateAtLaunch: 'true'
           Value: !Ref 'AWS::StackId'
+        - Key: KubernetesCluster
+          PropagateAtLaunch: 'true'
+          Value: !Ref 'AWS::StackName'
         - Key: Name
           PropagateAtLaunch: 'true'
           Value: !Join
