@@ -186,6 +186,6 @@ resources:
 
 outputs:
   salt_master_ip:
-    value: { get_attr: [mcp_cicd_node01_ip, floating_ip] }
+    value: { get_attr: [mcp_cicd_node01, instance_public_address] }
     description: "Public IP address of the Salt master node"
 
