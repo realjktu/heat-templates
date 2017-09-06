@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: model_manager
+    default: model-manager
   cluster_domain:
     type: string
   cluster_nameservers:

@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: drivetrain_ha
+    default: drivetrain-ha
   cluster_domain:
     type: string
   cluster_nameservers:

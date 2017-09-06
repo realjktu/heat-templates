@@ -12,13 +12,13 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: drivetrain_ha_clusters
+    default: drivetrain-ha-clusters
   cluster01_name:
     type: string
-    default: k8s_ha_calico_syndic
+    default: k8s-ha-calico-syndic
   cluster02_name:
     type: string
-    default: os_ha_ovs_syndic
+    default: os-ha-ovs-syndic
   cluster_domain:
     type: string
   cluster_nameservers:

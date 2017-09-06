@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: aaa_ha_freeipa
+    default: aaa-ha-freeipa
   cluster_domain:
     type: string
   cluster_nameservers:

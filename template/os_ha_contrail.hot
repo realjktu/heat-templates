@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: os_ha_contrail
+    default: os-ha-contrail
   cluster_domain:
     type: string
   cluster_nameservers:

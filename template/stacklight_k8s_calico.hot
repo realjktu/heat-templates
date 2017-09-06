@@ -12,7 +12,7 @@ parameters:
     default: nova
   cluster_name:
     type: string
-    default: sl_k8s_calico
+    default: sl-k8s-calico
   cluster_domain:
     type: string
   cluster_nameservers:
