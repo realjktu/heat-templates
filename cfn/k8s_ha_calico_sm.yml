@@ -102,7 +102,7 @@ Resources:
   KubernetesInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
-      InstanceProfileName: KubernetesInstanceProfile
+      InstanceProfileName: !Ref 'AWS::StackName'
       Roles:
         - Ref: 'KubernetesRole'
 
@@ -274,7 +274,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
     Properties:
-      IamInstanceProfile: KubernetesInstanceProfile
+      IamInstanceProfile: !Ref 'AWS::StackName'
       NetworkInterfaces:
         - GroupSet:
             - !Ref InstanceSecurityGroup
@@ -454,7 +454,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
     Properties:
-      IamInstanceProfile: KubernetesInstanceProfile
+      IamInstanceProfile: !Ref 'AWS::StackName'
       SourceDestCheck: 'false'
       NetworkInterfaces:
         - GroupSet:
@@ -544,7 +544,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
     Properties:
-      IamInstanceProfile: KubernetesInstanceProfile
+      IamInstanceProfile: !Ref 'AWS::StackName'
       SourceDestCheck: 'false'
       NetworkInterfaces:
         - GroupSet:
@@ -634,7 +634,7 @@ Resources:
   ComputeLaunchConfig:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     Properties:
-      IamInstanceProfile: KubernetesInstanceProfile
+      IamInstanceProfile: !Ref 'AWS::StackName'
       ImageId: !FindInMap
         - AWSRegion2AMI
         - !Ref 'AWS::Region'
