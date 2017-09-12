@@ -171,6 +171,8 @@ outputs:
     value: { get_param: stack_name }
   security_group:
     value: { get_param: stack_name }
+  network01_subnet:
+    value: { get_resource: subnet01 }
   network01_prefix:
     value:
       list_join:
