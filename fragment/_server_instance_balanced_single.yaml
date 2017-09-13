@@ -61,7 +61,7 @@ parameters:
     default: ""
   pool:
     type: string
-  vip_listener_port:
+  vip_host_port:
     type: string
     default: 6443
   network01_subnet:
@@ -164,7 +164,7 @@ resources:
     properties:
       pool: { get_param: pool }
       address: { get_attr: [instance_instance, addresses, { list_join: [ '-', [ get_param: network, 'net01'] ] }, 0 , addr] }
-      protocol_port: { get_param: vip_listener_port }
+      protocol_port: { get_param: vip_host_port }
       subnet: { get_param:  network01_subnet }
 outputs:
   instance_address:

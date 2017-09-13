@@ -62,11 +62,13 @@ parameters:
     default: ""
   public_vip_name:
     type: string
-  vip_port:
-    default: "443"
+  vip_host_port:
+    description: "Instance host port to connect to"
+    default: "6443"
     type: string
   vip_listener_port:
-    default: "6443"
+    description: "Port that the LBaaS LB should listen on"
+    default: "443"
     type: string
   network01_subnet:
     type: string
@@ -102,7 +104,7 @@ resources:
       instance_config_host: { get_param: instance_config_host }
       instance_cloud_init: { get_param: instance_cloud_init }
       pool: { get_resource: pool }
-      vip_listener_port: { get_param: vip_listener_port }
+      vip_host_port: { get_param: vip_host_port }
       network01_subnet: { get_param: network01_subnet }
   instance02:
     type: MCP::SingleBalancedInstance
@@ -131,7 +133,7 @@ resources:
       instance_config_host: { get_param: instance_config_host }
       instance_cloud_init: { get_param: instance_cloud_init }
       pool: { get_resource: pool }
-      vip_listener_port: { get_param: vip_listener_port }
+      vip_host_port: { get_param: vip_host_port }
       network01_subnet: { get_param: network01_subnet }
   instance03:
     type: MCP::SingleBalancedInstance
@@ -160,7 +162,7 @@ resources:
       instance_config_host: { get_param: instance_config_host }
       instance_cloud_init: { get_param: instance_cloud_init }
       pool: { get_resource: pool }
-      vip_listener_port: { get_param: vip_listener_port }
+      vip_host_port: { get_param: vip_host_port }
       network01_subnet: { get_param: network01_subnet }
   pool:
     type: OS::Neutron::LBaaS::Pool
@@ -202,5 +204,5 @@ outputs:
         template: https://IP_ADDRESS:PORT
         params:
           IP_ADDRESS: { get_attr: [ floating_ip, floating_ip_address ] }
-          PORT: { get_param: vip_port }
+          PORT: { get_param: vip_listener_port }
     description: "Public IP address of Kubernetes VIP"
