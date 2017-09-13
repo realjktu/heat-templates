@@ -9,12 +9,30 @@
 # reclass_address - address of reclass model (https://github.com/user/repo.git)
 # reclass_branch - branch of reclass model (master)
 
-echo "Installing salt master ..."
-aptget_wrapper install -y reclass git
-aptget_wrapper install -y salt-master
 
+export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
+export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
+
+# inherit heat variables
+export RECLASS_ADDRESS=$reclass_address
+export RECLASS_BRANCH=$reclass_branch
+export RECLASS_ROOT=$reclass_root
+export CLUSTER_NAME=$cluster_name
+export HOSTNAME=$node_hostname
+export DOMAIN=$node_domain
+
+# set with default's if not provided at all
+export RECLASS_BRANCH=${RECLASS_BRANCH:-master}
+export RECLASS_ROOT=${RECLASS_ROOT:-/srv/salt/reclass}
+#export DEBUG=${DEBUG:-1}
+
+# get Master IP addresses
+node_ip="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+node_control_ip="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
+export MASTER_IP=$node_control_ip
+
+# setup private key
 [ ! -d /root/.ssh ] && mkdir -p /root/.ssh
-
 if [ "$private_key" != "" ]; then
 cat << 'EOF' > /root/.ssh/id_rsa
 $private_key
@@ -22,196 +40,31 @@ EOF
 chmod 400 /root/.ssh/id_rsa
 fi
 
-[ ! -d /etc/salt/master.d ] && mkdir -p /etc/salt/master.d
-cat << 'EOF' > /etc/salt/master.d/master.conf
-file_roots:
-  base:
-  - /usr/share/salt-formulas/env
-pillar_opts: False
-open_mode: True
-reclass: &reclass
-  storage_type: yaml_fs
-  inventory_base_uri: /srv/salt/reclass
-ext_pillar:
-  - reclass: *reclass
-master_tops:
-  reclass: *reclass
-EOF
-#FIXME: remove after SSL cert fix
-export GIT_SSL_NO_VERIFY=true
+mkdir -p /srv/salt/scripts
+curl -q ${BOOTSTRAP_SCRIPT_URL} -o /srv/salt/scripts/bootstrap.sh
+chmod u+x /srv/salt/scripts/bootstrap.sh
+source /srv/salt/scripts/bootstrap.sh
 
+system_config_master
 
-echo "Configuring reclass ..."
-ssh-keyscan -H github.com >> ~/.ssh/known_hosts || wait_condition_send "FAILURE" "Failed to scan github.com key."
-set -e
-if echo $reclass_branch | egrep -q "^refs"; then
-    git clone $reclass_address /srv/salt/reclass
-    cd /srv/salt/reclass
-    git fetch $reclass_address $reclass_branch && git checkout FETCH_HEAD
-    git submodule init
-    git submodule update --recursive
-    cd -
-else
-    git clone -b $reclass_branch --recurse-submodules $reclass_address /srv/salt/reclass
-fi
-set +e
-mkdir -p /srv/salt/reclass/classes/service
+clone_reclass || exit 1
 
-mkdir -p /srv/salt/reclass/nodes/_generated
+source_local_envs
 
-cat << 'EOF' > /srv/salt/reclass/nodes/_generated/$node_hostname.$node_domain.yml
-classes:
-- cluster.$cluster_name.infra.config
-parameters:
-  _param:
-    linux_system_codename: xenial
-    reclass_data_revision: $reclass_branch
-    reclass_data_repository: $reclass_address
-    cluster_name: $cluster_name
-    cluster_domain: $node_domain
-  linux:
-    system:
-      name: $node_hostname
-      domain: $node_domain
-  reclass:
-    storage:
-      data_source:
-        engine: local
-EOF
-
-node_ip="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
-node_control_ip="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
-cat << EOF > /srv/salt/reclass/classes/cluster/overrides.yml
+# reclass overrides
+mkdir -p ${RECLASS_ROOT}/classes/cluster
+cat << EOF > ${RECLASS_ROOT}/classes/cluster/overrides.yml
 parameters:
   _param:
     infra_config_address: $node_control_ip
     infra_config_deploy_address: $node_ip
 EOF
 
-FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
-FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt-mk.mirantis.com/xenial testing salt}
-FORMULA_GPG=${FORMULA_GPG:-http://apt-mk.mirantis.com/public.gpg}
+#bootstrap
+cd /srv/salt/scripts
+MASTER_HOSTNAME=$node_hostname.$node_domain ./bootstrap.sh 2>&1 |tee /var/log/bootstrap-salt-result.log
 
-echo "Configuring salt master formulas ..."
-which wget > /dev/null || (aptget_wrapper update; aptget_wrapper install -y wget)
-
-echo "${FORMULA_REPOSITORY}" > /etc/apt/sources.list.d/mcp_salt.list
-wget -O - "${FORMULA_GPG}" | apt-key add - || wait_condition_send "FAILURE" "Failed to add formula key."
-
-aptget_wrapper clean
-aptget_wrapper update
-
-[ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
-
-declare -a FORMULAS_SALT_MASTER=("aptcacher" \
-"aptly" \
-"artifactory" \
-"avinetworks" \
-"backupninja" \
-"bind" \
-"bird" \
-"cadf" \
-"chrony" \
-"collectd" \
-"devops-portal" \
-"docker" \
-"dovecot" \
-"elasticsearch" \
-"galera" \
-"gerrit" \
-"git" \
-"gitlab" \
-"glusterfs" \
-"grafana" \
-"haproxy" \
-"heka" \
-"horizon" \
-"influxdb" \
-"iptables" \
-"isc-dhcp" \
-"java" \
-"jenkins" \
-"kedb" \
-"keepalived" \
-"keystone" \
-"kibana" \
-"letsencrypt" \
-"libvirt" \
-"linux" \
-"lldp" \
-"memcached" \
-"logrotate" \
-"mongodb" \
-"mysql" \
-"network" \
-"nfs" \
-"nginx" \
-"nodejs" \
-"ntp" \
-"opencontrail" \
-"openldap" \
-"openssh" \
-"openvpn" \
-"postfix" \
-"postgresql" \
-"powerdns" \
-"prometheus" \
-"python" \
-"rabbitmq" \
-"reclass" \
-"rsync" \
-"rsyslog" \
-"rundeck" \
-"salt" \
-"sensu" \
-"sentry" \
-"sphinx" \
-"statsd" \
-"supervisor" \
-"taiga" \
-"telegraf" \
-"tftpd-hpa" \
-"varnish" \
-"xtrabackup")
-
-# Source bootstrap_vars for specific cluster if specified.
-for cluster in /srv/salt/reclass/classes/cluster/*/; do
-    if [[ -f "$cluster/bootstrap_vars" ]]; then
-        echo "Sourcing bootstrap_vars for cluster $cluster"
-        source $cluster/bootstrap_vars
-    fi
-done
-
-if [[ -f /srv/salt/reclass/classes/cluster/$cluster_name/.env ]]; then
-    source /srv/salt/reclass/classes/cluster/$cluster_name/.env
-fi
-
-# Patch name of the package for services with _ in name
-FORMULA_PACKAGES=(`echo ${FORMULAS_SALT_MASTER[@]//_/-}`)
-
-echo -e "\nInstalling all required salt formulas\n"
-aptget_wrapper install -y "${FORMULA_PACKAGES[@]/#/salt-formula-}"
-
-for formula_service in "${FORMULAS_SALT_MASTER[@]}"; do
-    echo -e "\nLink service metadata for formula ${formula_service} ...\n"
-    [ ! -L "/srv/salt/reclass/classes/service/${formula_service}" ] && \
-        ln -s ${FORMULA_PATH}/reclass/service/${formula_service} /srv/salt/reclass/classes/service/${formula_service}
-done
-
-[ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env
-[ ! -L /srv/salt/env/prd ] && ln -s ${FORMULA_PATH}/env /srv/salt/env/prd
-
-[ ! -d /etc/reclass ] && mkdir /etc/reclass
-cat << 'EOF' > /etc/reclass/reclass-config.yml
-storage_type: yaml_fs
-pretty_print: True
-output: yaml
-inventory_base_uri: /srv/salt/reclass
-EOF
-
-echo "Restarting salt-master service ..."
-systemctl restart salt-master || wait_condition_send "FAILURE" "Failed to restart salt-master service."
-
+# states
 echo "Running salt master states ..."
 run_states=("linux,openssh" "reclass" "salt.master.service" "salt")
 for state in "${run_states[@]}"
@@ -222,4 +75,4 @@ done
 salt-call saltutil.sync_all
 
 echo "Showing known models ..."
-reclass-salt --top > /var/log/reclass-salt-result.log 2>&1 || wait_condition_send "FAILURE" "Reclass-salt command run failed. Output: '$(cat /var/log/reclass-salt-result.log)'"
+reclass-salt --top > /var/log/reclass-salt-result.log 2>&1 || wait_condition_send "FAILURE" "Reclass-salt command run failed. Output: '$(cat /var/log/*-salt-result.log)'"
