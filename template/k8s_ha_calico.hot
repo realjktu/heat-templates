@@ -90,7 +90,7 @@ resources:
       instance_name: cfg01
       instance_domain:
         list_join:
-        - '-'
+        - '.'
         - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
 
       instance_cluster: { get_param: cluster_name }
