@@ -184,7 +184,9 @@ node_network03_iface="$(ip a | awk -v prefix="^    inet $network03_prefix[.]" '$
 node_network04_iface="$(ip a | awk -v prefix="^    inet $network04_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
 node_network05_iface="$(ip a | awk -v prefix="^    inet $network05_prefix[.]" '$0 ~ prefix {split($7, a, "/"); print a[1]}')"
 
-node_network05_hwaddress="$(cat /sys/class/net/$node_network05_iface/address)"
+if [ "$node_network05_iface" != "" ]; then
+  node_network05_hwaddress="$(cat /sys/class/net/$node_network05_iface/address)"
+fi
 
 
 # find more parameters (every env starting param_)
