@@ -159,6 +159,10 @@ echo "Configuring Salt minion ..."
 echo -e "id: $node_hostname.$node_domain\nmaster: $config_host" > /etc/salt/minion.d/minion.conf
 
 service salt-minion restart || wait_condition_send "FAILURE" "Failed to restart salt-minion service."
+sleep 5
+salt-call saltutil.sync_all
+salt-call mine.flush
+salt-call mine.update
 
 if [ -z "$aws_instance_id" ]; then
   echo "Running instance cloud-init ..."
