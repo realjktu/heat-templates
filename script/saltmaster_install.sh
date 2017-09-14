@@ -29,7 +29,7 @@ export RECLASS_ROOT=${RECLASS_ROOT:-/srv/salt/reclass}
 # get Master IP addresses
 node_ip="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
 node_control_ip="$(ip a | awk -v prefix="^    inet $network02_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
-export MASTER_IP=$node_control_ip
+export MASTER_IP=$node_ip
 
 # setup private key
 [ ! -d /root/.ssh ] && mkdir -p /root/.ssh
