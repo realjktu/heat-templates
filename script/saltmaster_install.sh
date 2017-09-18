@@ -62,7 +62,11 @@ EOF
 
 #bootstrap
 cd /srv/salt/scripts
-MASTER_HOSTNAME=$node_hostname.$node_domain ./bootstrap.sh 2>&1 |tee /var/log/bootstrap-salt-result.log
+set -o pipefail
+MASTER_HOSTNAME=$node_hostname.$node_domain ./bootstrap.sh 2>&1 | tee /var/log/bootstrap-salt-result.log
+if [ ${PIPESTATUS[0]} != 0 ]; then
+  wait_condition_send "FAILURE" "Command \"MASTER_HOSTNAME=$node_hostname.$node_domain /srv/salt/scripts/bootstrap.sh\" failed. Output: '$(cat /var/log/bootstrap-salt-result.log)'"
+fi
 
 # states
 echo "Running salt master states ..."
@@ -74,5 +78,3 @@ done
 
 salt-call saltutil.sync_all
 
-echo "Showing known models ..."
-reclass-salt --top > /var/log/reclass-salt-result.log 2>&1 || wait_condition_send "FAILURE" "Reclass-salt command run failed. Output: '$(cat /var/log/*-salt-result.log)'"
