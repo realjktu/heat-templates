@@ -127,8 +127,8 @@ resources:
         list_join:
            - '-'
            - [ { get_param: public_vip_prefix }, { get_param: "OS::stack_name"  } ]
-      vip_port: 443
-      vip_listener_port: 6443
+      vip_host_port: 6443
+      vip_listener_port: 443
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network01_subnet: { get_attr: [mcp_network, network01_subnet] }
