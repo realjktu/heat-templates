@@ -16,6 +16,8 @@ set -xe
 
 export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
 export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
+export DISTRIB_REVISION=$formula_pkg_revision
+export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
 
 echo "Environment variables:"
 env
@@ -105,7 +107,7 @@ case "$node_os" in
         #install_salt_minion_pkg
 
         # DEPRECATED:
-        echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
+        echo "deb [arch=amd64] http://apt-mk.mirantis.com/trusty ${DISTRIB_REVISION} salt extra" > /etc/apt/sources.list.d/mcp_salt.list
         wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add - || wait_condition_send "FAILURE" "Failed to add apt-mk key."
 
         echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion trusty main" > /etc/apt/sources.list.d/saltstack.list
@@ -131,7 +133,7 @@ case "$node_os" in
         #install_salt_minion_pkg
 
         # DEPRECATED:
-        echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt extra" > /etc/apt/sources.list.d/mcp_salt.list
+        echo "deb [arch=amd64] http://apt-mk.mirantis.com/xenial ${DISTRIB_REVISION} salt extra" > /etc/apt/sources.list.d/mcp_salt.list
         wget -O - http://apt-mk.mirantis.com/public.gpg | apt-key add - || wait_condition_send "FAILURE" "Failed to add apt-mk key."
 
         echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion xenial main" > /etc/apt/sources.list.d/saltstack.list
