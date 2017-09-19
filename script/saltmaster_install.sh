@@ -62,11 +62,8 @@ EOF
 
 #bootstrap
 cd /srv/salt/scripts
-set -o pipefail
-MASTER_HOSTNAME=$node_hostname.$node_domain ./bootstrap.sh 2>&1 | tee /var/log/bootstrap-salt-result.log
-if [ ${PIPESTATUS[0]} != 0 ]; then
+(set -o pipefail && MASTER_HOSTNAME=$node_hostname.$node_domain ./bootstrap.sh 2>&1 | tee /var/log/bootstrap-salt-result.log) ||\
   wait_condition_send "FAILURE" "Command \"MASTER_HOSTNAME=$node_hostname.$node_domain /srv/salt/scripts/bootstrap.sh\" failed. Output: '$(cat /var/log/bootstrap-salt-result.log)'"
-fi
 
 # states
 echo "Running salt master states ..."
