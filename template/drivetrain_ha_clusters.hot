@@ -68,6 +68,9 @@ parameters:
   cfg_formula_branch:
     type: string
     default: master
+  cfg_formula_pkg_revision:
+    type: string
+    default: testing
 
 resources:
   mcp_network:
@@ -118,6 +121,7 @@ resources:
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
+            $formula_pkg_revision: { get_param: cfg_formula_pkg_revision }
   mcp_cicd_control:
     type: MCP::MultipleInstances
     depends_on: mcp_salt_master
@@ -191,6 +195,7 @@ resources:
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
+            $formula_pkg_revision: { get_param: cfg_formula_pkg_revision }
             $syndic_master_address: { get_attr: [mcp_salt_master, instance_address] }
   mcp_k8s_salt_master_ip:
     type: MCP::FloatingIp

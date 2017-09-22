@@ -9,6 +9,9 @@
 # reclass_address - address of reclass model (https://github.com/user/repo.git)
 # reclass_branch - branch of reclass model (master)
 
+DISTRIB_REVISION=$formula_pkg_revision
+DISTRIB_REVISION=${DISTRIB_REVISION:-testing}
+
 echo "Installing salt master ..."
 aptget_wrapper install -y reclass git
 aptget_wrapper install -y salt-master
@@ -87,7 +90,7 @@ parameters:
 EOF
 
 FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
-FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt-mk.mirantis.com/xenial testing salt}
+FORMULA_REPOSITORY=${FORMULA_REPOSITORY:-deb [arch=amd64] http://apt-mk.mirantis.com/xenial $DISTRIB_REVISION salt}
 FORMULA_GPG=${FORMULA_GPG:-http://apt-mk.mirantis.com/public.gpg}
 
 echo "Configuring salt master formulas ..."
