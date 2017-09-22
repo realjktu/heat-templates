@@ -20,10 +20,12 @@ export RECLASS_ROOT=$reclass_root
 export CLUSTER_NAME=$cluster_name
 export HOSTNAME=$node_hostname
 export DOMAIN=$node_domain
+export DISTRIB_REVISION=$formula_pkg_revision
 
 # set with default's if not provided at all
 export RECLASS_BRANCH=${RECLASS_BRANCH:-master}
 export RECLASS_ROOT=${RECLASS_ROOT:-/srv/salt/reclass}
+export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
 #export DEBUG=${DEBUG:-1}
 
 # get Master IP addresses
