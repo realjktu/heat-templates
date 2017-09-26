@@ -155,7 +155,7 @@ resources:
         # todo
   mcp_cicd_node03:
     type: MCP::SingleInstance
-    depends_on: mcp_cicd_node01
+    depends_on: mcp_cicd_node02
     properties:
       key_pair: { get_param: "OS::stack_name" }
       network: { get_attr: [mcp_network, network] }
