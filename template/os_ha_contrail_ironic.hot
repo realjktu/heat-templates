@@ -89,9 +89,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: cfg01
       instance_domain:
         list_join:
@@ -115,9 +112,6 @@ resources:
               - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
             $network01_prefix: { get_attr: [mcp_network, network01_prefix] }
             $network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-            $network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-            $network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-            $network05_prefix: { get_attr: [mcp_network, network05_prefix] }
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
@@ -131,9 +125,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
         - ip_address:
             list_join:
@@ -163,9 +154,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
         - ip_address:
             list_join:
@@ -195,9 +183,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: cmp
       instance_count: { get_param: cluster_node_count }
       instance_domain:
@@ -221,9 +206,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: tsn
       instance_count: 2
       instance_domain:
@@ -247,9 +229,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: bmt
       instance_domain:
         list_join:
@@ -272,9 +251,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: vmx01
       instance_domain:
         list_join:

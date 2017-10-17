@@ -21,8 +21,6 @@ parameters:
   cluster_node_count:
     type: string
     default: 1
-
-
   cfg_reclass_address:
     type: string
     default: https://gerrit.mcp.mirantis.net/salt-models/mcp-virtual-lab
@@ -87,15 +85,11 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: cfg01
       instance_domain:
         list_join:
         - '.'
         - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
-
       instance_cluster: { get_param: cluster_name }
       instance_zone: { get_param: cluster_zone }
       instance_os: xenial
@@ -114,9 +108,6 @@ resources:
               - [ { get_param: "OS::stack_name" }, { get_param: cluster_domain } ]
             $network01_prefix: { get_attr: [mcp_network, network01_prefix] }
             $network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-            $network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-            $network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-            $network05_prefix: { get_attr: [mcp_network, network05_prefix] }
             $private_key: { get_param: cfg_reclass_key }
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
@@ -137,9 +128,6 @@ resources:
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network01_subnet: { get_attr: [mcp_network, network01_subnet] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       network02_vip_address:
         - ip_address:
             list_join:
@@ -169,9 +157,6 @@ resources:
       security_group: { get_attr: [mcp_network, security_group] }
       network01_prefix: { get_attr: [mcp_network, network01_prefix] }
       network02_prefix: { get_attr: [mcp_network, network02_prefix] }
-      network03_prefix: { get_attr: [mcp_network, network03_prefix] }
-      network04_prefix: { get_attr: [mcp_network, network04_prefix] }
-      network05_prefix: { get_attr: [mcp_network, network05_prefix] }
       instance_name: cmp
       instance_count: { get_param: cluster_node_count }
       instance_domain:

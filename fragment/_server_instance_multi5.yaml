@@ -63,7 +63,7 @@ parameters:
 
 resources:
   instance01:
-    type: MCP::SingleInstance
+    type: MCP::SingleInstance5
     properties:
       key_pair: { get_param: key_pair }
       network: { get_param: network }
@@ -89,7 +89,7 @@ resources:
       instance_config_host: { get_param: instance_config_host }
       instance_cloud_init: { get_param: instance_cloud_init }
   instance02:
-    type: MCP::SingleInstance
+    type: MCP::SingleInstance5
     properties:
       key_pair: { get_param: key_pair }
       network: { get_param: network }
@@ -115,7 +115,7 @@ resources:
       instance_config_host: { get_param: instance_config_host }
       instance_cloud_init: { get_param: instance_cloud_init }
   instance03:
-    type: MCP::SingleInstance
+    type: MCP::SingleInstance5
     properties:
       key_pair: { get_param: key_pair }
       network: { get_param: network }

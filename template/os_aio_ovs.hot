@@ -69,14 +69,14 @@ parameters:
 
 resources:
   mcp_network:
-    type: MCP::Network
+    type: MCP::Network5
     properties:
       stack_name: { get_param: "OS::stack_name" }
       key_value: { get_param: cluster_public_key }
       public_net: { get_param: cluster_public_net }
       nameservers: { get_param: cluster_nameservers }
   mcp_salt_master:
-    type: MCP::SingleInstance
+    type: MCP::SingleInstance5
     depends_on: mcp_network
     properties:
       key_pair: { get_param: "OS::stack_name" }
@@ -118,7 +118,7 @@ resources:
             $reclass_branch: { get_param: cfg_reclass_branch }
             $formula_pkg_revision: { get_param: cfg_formula_pkg_revision }
   mcp_os_control:
-    type: MCP::SingleInstance
+    type: MCP::SingleInstance5
     depends_on: mcp_salt_master
     properties:
       key_pair: { get_param: "OS::stack_name" }
@@ -143,7 +143,7 @@ resources:
       instance_cloud_init: |
         salt-call event.send 'salt/system/orchestrate'
   mcp_os_gateway:
-    type: MCP::SingleInstance
+    type: MCP::SingleInstance5
     depends_on: mcp_os_control
     properties:
       key_pair: { get_param: "OS::stack_name" }
@@ -168,7 +168,7 @@ resources:
       instance_cloud_init: |
         # todo
   mcp_os_compute:
-    type: MCP::StaticCluster
+    type: MCP::StaticCluster5
     depends_on: mcp_os_gateway
     properties:
       key_pair: { get_param: "OS::stack_name" }

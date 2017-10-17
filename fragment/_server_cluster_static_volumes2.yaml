@@ -1,6 +1,6 @@
 heat_template_version: 2015-10-15
 
-description: Static server cluster (N nodes) fragment
+description: Static server cluster (N nodes) fragment with volumes
 
 parameters:
   key_pair:
@@ -13,12 +13,7 @@ parameters:
     type: string
   network02_prefix:
     type: string
-  network03_prefix:
-    type: string
-  network04_prefix:
-    type: string
-  network05_prefix:
-    type: string
+
   instance_count:
     type: string
   instance_name:
@@ -50,16 +45,14 @@ resources:
     properties:
       count: { get_param: instance_count }
       resource_def:
-        type: MCP::StaticClusterMember
+        type: MCP::StaticClusterMemberVolumes
         properties:
           key_pair: { get_param: key_pair }
           network: { get_param: network }
           security_group: { get_param: security_group }
           network01_prefix: { get_param: network01_prefix }
           network02_prefix: { get_param: network02_prefix }
-          network03_prefix: { get_param: network03_prefix }
-          network04_prefix: { get_param: network04_prefix }
-          network05_prefix: { get_param: network05_prefix }
+
           instance_name: { list_join: ['', [
             { get_param: instance_name },
             "%index%"
