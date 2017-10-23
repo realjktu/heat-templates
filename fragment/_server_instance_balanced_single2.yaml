@@ -95,7 +95,6 @@ resources:
       - port: { get_resource: instance_port01 }
       - port: { get_resource: instance_port02 }
 
-      - port: { get_resource: instance_port05 }
       user_data_format: RAW
       user_data:
         str_replace:
