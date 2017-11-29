@@ -66,6 +66,12 @@ parameters:
   cfg_formula_pkg_revision:
     type: string
     default: nightly
+  cfg_bootstrap_extra_repo:
+    type: string
+  cfg_bootstrap_extra_repo_priority:
+    type: string
+  cfg_bootstrap_extra_repo_pin:
+    type: string
 
 resources:
   mcp_network:
