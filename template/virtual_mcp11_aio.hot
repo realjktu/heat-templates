@@ -117,6 +117,10 @@ resources:
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
             $formula_pkg_revision: { get_param: cfg_formula_pkg_revision }
+            $bootstrap_extra_repo: { get_param: cfg_bootstrap_extra_repo }
+            $bootstrap_extra_repo_priority: { get_param: cfg_bootstrap_extra_repo_priority }
+            $bootstrap_extra_repo_pin: { get_param: cfg_bootstrap_extra_repo_pin }
+
 
 outputs:
   salt_master_ip:

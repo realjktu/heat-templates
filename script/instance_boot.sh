@@ -18,9 +18,9 @@ export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
 export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
 export DISTRIB_REVISION=$formula_pkg_revision
 export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
-export BOOTSTRAP_EXTRA_REPO=${BOOTSTRAP_EXTRA_REPO:-deb [ arch=amd64 trusted=yes ] http://172.17.49.50:8081 oiurchenko-oiurchenko_build_pkg_test-52 main}
-export BOOTSTRAP_EXTRA_REPO_PRIORITY=${BOOTSTRAP_EXTRA_REPO_PRIORITY:-1200}
-export BOOTSTRAP_EXTRA_REPO_PIN=${BOOTSTRAP_EXTRA_REPO_PIN:-origin 172.17.49.50}
+export BOOTSTRAP_EXTRA_REPO=$bootstrap_extra_repo
+export BOOTSTRAP_EXTRA_REPO_PRIORITY=$bootstrap_extra_repo_priority
+export BOOTSTRAP_EXTRA_REPO_PIN=$bootstrap_extra_repo_pin
 
 echo "Environment variables:"
 env
@@ -83,15 +83,13 @@ aptget_wrapper() {
 }
 
 add_extra_repo() {
+  if [ "$BOOTSTRAP_EXTRA_REPO" == "" ]; then
+    return
+  fi
   echo $BOOTSTRAP_EXTRA_REPO > /etc/apt/sources.list.d/bootstrap_extra_repo.list
-  cat << EOF > /etc/apt/preferences.d/bootstrap_extra_repo
-
-Package: *
-Pin: $BOOTSTRAP_EXTRA_REPO_PIN
-Pin-Priority: $BOOTSTRAP_EXTRA_REPO_PRIORITY
-
-EOF
-
+  if [ "$BOOTSTRAP_EXTRA_REPO_PRIORITY" != "" ] && [ "$BOOTSTRAP_EXTRA_REPO_PIN" != "" ]; then
+    echo -e "\nPackage: *\nPin: ${BOOTSTRAP_EXTRA_REPO_PIN}\nPin-Priority: ${BOOTSTRAP_EXTRA_REPO_PRIORITY}\n" > /etc/apt/preferences.d/bootstrap_extra_repo
+  fi
 }
 
 # Set default salt version
