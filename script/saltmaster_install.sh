@@ -42,6 +42,8 @@ EOF
 chmod 400 /root/.ssh/id_rsa
 fi
 
+echo "Test saltmater_install.sh AAAAAAAAAAAAAAAAAAAAAAA"
+
 mkdir -p /srv/salt/scripts
 curl -q ${BOOTSTRAP_SCRIPT_URL} -o /srv/salt/scripts/bootstrap.sh
 chmod u+x /srv/salt/scripts/bootstrap.sh
