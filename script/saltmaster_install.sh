@@ -27,9 +27,9 @@ export RECLASS_BRANCH=${RECLASS_BRANCH:-master}
 export RECLASS_ROOT=${RECLASS_ROOT:-/srv/salt/reclass}
 export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
 #export DEBUG=${DEBUG:-1}
-export BOOTSTRAP_EXTRA_REPO=$bootstrap_extra_repo
-export BOOTSTRAP_EXTRA_REPO_PRIORITY=$bootstrap_extra_repo_priority
-export BOOTSTRAP_EXTRA_REPO_PIN=$bootstrap_extra_repo_pin
+export BOOTSTRAP_EXTRA_REPO="$bootstrap_extra_repo"
+export BOOTSTRAP_EXTRA_REPO_PRIORITY="$bootstrap_extra_repo_priority"
+export BOOTSTRAP_EXTRA_REPO_PIN="$bootstrap_extra_repo_pin"
 
 add_extra_repo() {
   if [ "$BOOTSTRAP_EXTRA_REPO" == "" ]; then
@@ -57,7 +57,6 @@ EOF
 chmod 400 /root/.ssh/id_rsa
 fi
 
-echo "Test saltmater_install.sh AAAAAAAAAAAAAAAAAAAAAAA"
 
 mkdir -p /srv/salt/scripts
 curl -q ${BOOTSTRAP_SCRIPT_URL} -o /srv/salt/scripts/bootstrap.sh
