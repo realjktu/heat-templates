@@ -18,9 +18,6 @@ export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
 export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
 export DISTRIB_REVISION=$formula_pkg_revision
 export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
-export BOOTSTRAP_EXTRA_REPO=$bootstrap_extra_repo
-export BOOTSTRAP_EXTRA_REPO_PRIORITY=$bootstrap_extra_repo_priority
-export BOOTSTRAP_EXTRA_REPO_PIN=$bootstrap_extra_repo_pin
 
 echo "Environment variables:"
 env
@@ -82,15 +79,6 @@ aptget_wrapper() {
   done
 }
 
-add_extra_repo() {
-  if [ "$BOOTSTRAP_EXTRA_REPO" == "" ]; then
-    return
-  fi
-  echo $BOOTSTRAP_EXTRA_REPO > /etc/apt/sources.list.d/bootstrap_extra_repo.list
-  if [ "$BOOTSTRAP_EXTRA_REPO_PRIORITY" != "" ] && [ "$BOOTSTRAP_EXTRA_REPO_PIN" != "" ]; then
-    echo -e "\nPackage: *\nPin: ${BOOTSTRAP_EXTRA_REPO_PIN}\nPin-Priority: ${BOOTSTRAP_EXTRA_REPO_PRIORITY}\n" > /etc/apt/preferences.d/bootstrap_extra_repo
-  fi
-}
 
 # Set default salt version
 if [ -z "$saltversion" ]; then
@@ -126,7 +114,6 @@ case "$node_os" in
         echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion trusty main" > /etc/apt/sources.list.d/saltstack.list
         wget -O - "https://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add salt apt key."
 
-        add_extra_repo
         aptget_wrapper clean
         aptget_wrapper update
         aptget_wrapper install -y salt-common
@@ -153,7 +140,6 @@ case "$node_os" in
         echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion xenial main" > /etc/apt/sources.list.d/saltstack.list
         wget -O - "https://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add saltstack apt key."
 
-        add_extra_repo
         aptget_wrapper clean
         aptget_wrapper update
         aptget_wrapper install -y salt-minion
