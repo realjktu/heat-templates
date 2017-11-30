@@ -59,12 +59,6 @@ parameters:
   instance_cloud_init:
     type: string
     default: ""
-  cfg_bootstrap_extra_repo:
-    type: string
-  cfg_bootstrap_extra_repo_priority:
-    type: string
-  cfg_bootstrap_extra_repo_pin:
-    type: string
 
 resources:
   instance_port01:
@@ -149,9 +143,6 @@ resources:
             $network05_prefix: { get_param: network05_prefix }
             $instance_cloud_init: { get_param: instance_cloud_init }
             $wait_condition_notify: { get_attr: [ instance_wait_handle, curl_cli ] }
-            $bootstrap_extra_repo: { get_param: cfg_bootstrap_extra_repo }
-            $bootstrap_extra_repo_priority: { get_param: cfg_bootstrap_extra_repo_priority }
-            $bootstrap_extra_repo_pin: { get_param: cfg_bootstrap_extra_repo_pin }
 
   floating_ip:
     type: OS::Nova::FloatingIP
