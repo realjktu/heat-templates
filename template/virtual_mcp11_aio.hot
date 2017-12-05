@@ -66,12 +66,9 @@ parameters:
   cfg_formula_pkg_revision:
     type: string
     default: nightly
-  cfg_bootstrap_extra_repo:
+  cfg_bootstrap_extra_repo_params:
     type: string
-  cfg_bootstrap_extra_repo_priority:
-    type: string
-  cfg_bootstrap_extra_repo_pin:
-    type: string
+    default: ''
 
 resources:
   mcp_network:
@@ -104,6 +101,7 @@ resources:
       instance_image: ubuntu-16-04-amd64-cloudimg
       instance_flavor: oc_aio_large
       instance_config_host: 127.0.0.1
+      cfg_bootstrap_extra_repo_params: { get_param: cfg_bootstrap_extra_repo_params }
       instance_cloud_init:
         str_replace:
           template: { get_file: ../script/saltmaster_install.sh }
@@ -123,9 +121,6 @@ resources:
             $reclass_address: { get_param: cfg_reclass_address }
             $reclass_branch: { get_param: cfg_reclass_branch }
             $formula_pkg_revision: { get_param: cfg_formula_pkg_revision }
-            $bootstrap_extra_repo: { get_param: cfg_bootstrap_extra_repo }
-            $bootstrap_extra_repo_priority: { get_param: cfg_bootstrap_extra_repo_priority }
-            $bootstrap_extra_repo_pin: { get_param: cfg_bootstrap_extra_repo_pin }
 
 
 outputs:
