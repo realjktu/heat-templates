@@ -18,6 +18,7 @@ export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
 export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
 export DISTRIB_REVISION=$formula_pkg_revision
 export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
+export BOOTSTRAP_EXTRA_REPO_PARAMS="$bootstrap_extra_repo_params"
 
 echo "Environment variables:"
 env

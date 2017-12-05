@@ -62,6 +62,9 @@ parameters:
   volume_size:
     type: number
     default: 10
+  cfg_bootstrap_extra_repo_params:
+    type: string
+    default: ''
 
 resources:
   instance_port01:
@@ -179,6 +182,7 @@ resources:
             $network05_prefix: { get_param: network05_prefix }
             $instance_cloud_init: { get_param: instance_cloud_init }
             $wait_condition_notify: { get_attr: [ instance_wait_handle, curl_cli ] }
+            $bootstrap_extra_repo_params: { get_param: cfg_bootstrap_extra_repo_params }
   floating_ip:
     type: OS::Nova::FloatingIP
     properties:
