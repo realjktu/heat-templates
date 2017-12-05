@@ -84,7 +84,7 @@ aptget_wrapper() {
 }
 
 add_extra_repo() {
-  local bootstap_params=$0
+  local bootstap_params=$1
   local IFS=';'
   local param_str
   local repo_counter=0
