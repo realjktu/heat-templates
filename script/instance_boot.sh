@@ -118,7 +118,7 @@ add_extra_repo_rhel() {
     if [ "${repo}" == '' ]; then
       contunue
     fi
-    echo -e "[bootstrap_extra_repo_${repo_counter}]\nname = bootstrap_extra_repo_${repo_counter}\nbaseurl = $repo\nenabled = 1\ngpgcheck = 0\nsslverify = 1" > /etc/yum.repos.d/bootstrap_extra_repo_${repo_counter}.repo
+    echo -e "[bootstrap_extra_repo_${repo_counter}]\nname = bootstrap_extra_repo_${repo_counter}\nbaseurl = $repo\nenabled = 1\ngpgcheck = 0\nsslverify = 0" > /etc/yum.repos.d/bootstrap_extra_repo_${repo_counter}.repo
     if [ "$prio" != "" ]; then
       echo "priority=${prio}" >> /etc/yum.repos.d/bootstrap_extra_repo_${repo_counter}.repo
     fi
@@ -187,8 +187,6 @@ case "$node_os" in
         echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion xenial main" > /etc/apt/sources.list.d/saltstack.list
         wget -O - "https://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add saltstack apt key."
         add_extra_repo_deb "${BOOTSTRAP_EXTRA_REPO_PARAMS}"
-        mkdir /etc/yum.repos.d/
-        add_extra_repo_rhel "${BOOTSTRAP_EXTRA_REPO_PARAMS}"
         aptget_wrapper clean
         aptget_wrapper update
         aptget_wrapper install -y salt-minion
