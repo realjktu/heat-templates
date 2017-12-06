@@ -27,21 +27,7 @@ export RECLASS_BRANCH=${RECLASS_BRANCH:-master}
 export RECLASS_ROOT=${RECLASS_ROOT:-/srv/salt/reclass}
 export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
 #export DEBUG=${DEBUG:-1}
-export BOOTSTRAP_EXTRA_REPO="$bootstrap_extra_repo"
-export BOOTSTRAP_EXTRA_REPO_PRIORITY="$bootstrap_extra_repo_priority"
-export BOOTSTRAP_EXTRA_REPO_PIN="$bootstrap_extra_repo_pin"
 
-add_extra_repo() {
-  if [ "$BOOTSTRAP_EXTRA_REPO" == "" ]; then
-    return
-  fi
-  echo $BOOTSTRAP_EXTRA_REPO > /etc/apt/sources.list.d/bootstrap_extra_repo.list
-  if [ "$BOOTSTRAP_EXTRA_REPO_PRIORITY" != "" ] && [ "$BOOTSTRAP_EXTRA_REPO_PIN" != "" ]; then
-    echo -e "\nPackage: *\nPin: ${BOOTSTRAP_EXTRA_REPO_PIN}\nPin-Priority: ${BOOTSTRAP_EXTRA_REPO_PRIORITY}\n" > /etc/apt/preferences.d/bootstrap_extra_repo
-  fi
-}
-
-add_extra_repo
 
 # get Master IP addresses
 node_ip="$(ip a | awk -v prefix="^    inet $network01_prefix[.]" '$0 ~ prefix {split($2, a, "/"); print a[1]}')"
