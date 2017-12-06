@@ -9,7 +9,6 @@
 # instance_cloud_init - cloud-init script for instance
 # saltversion - version of salt
 
-
 # Redirect all outputs
 exec > >(tee -i /tmp/cloud-init-bootstrap.log) 2>&1
 set -xe
@@ -19,9 +18,6 @@ export BOOTSTRAP_SCRIPT_URL=$bootstrap_script_url
 export BOOTSTRAP_SCRIPT_URL=${BOOTSTRAP_SCRIPT_URL:-https://raw.githubusercontent.com/salt-formulas/salt-formulas-scripts/master/bootstrap.sh}
 export DISTRIB_REVISION=$formula_pkg_revision
 export DISTRIB_REVISION=${DISTRIB_REVISION:-nightly}
-# BOOTSTRAP_EXTRA_REPO_PARAMS variable - list of exatra repos with parameters which have to be added.
-# Format: repo 1, repo priority 1, repo pin 1; repo 2, repo priority 2, repo pin 2;
-export BOOTSTRAP_EXTRA_REPO_PARAMS="$bootstrap_extra_repo_params"
 
 echo "Environment variables:"
 env
@@ -83,26 +79,6 @@ aptget_wrapper() {
   done
 }
 
-add_extra_repo() {
-  local bootstap_params=$1
-  local IFS=';'
-  local param_str
-  local repo_counter=0
-  for param_str in $bootstap_params; do
-    IFS=','
-    local repo_param=($param_str)
-    local repo=${repo_param[0]}
-    local prio=${repo_param[1]}
-    local pin=${repo_param[2]}
-    echo $repo > /etc/apt/sources.list.d/bootstrap_extra_repo_${repo_counter}.list
-    if [ "$prio" != "" ] && [ "$pin" != "" ]; then
-      echo -e "\nPackage: *\nPin: ${pin}\nPin-Priority: ${prio}\n" > /etc/apt/preferences.d/bootstrap_extra_repo_${repo_counter}
-    fi
-    repo_counter=`expr $repo_counter + 1`
-  done
-}
-
-
 # Set default salt version
 if [ -z "$saltversion" ]; then
     saltversion="2016.3"
@@ -136,7 +112,7 @@ case "$node_os" in
 
         echo "deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion trusty main" > /etc/apt/sources.list.d/saltstack.list
         wget -O - "https://repo.saltstack.com/apt/ubuntu/14.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add salt apt key."
-        add_extra_repo "${BOOTSTRAP_EXTRA_REPO_PARAMS}"
+
         aptget_wrapper clean
         aptget_wrapper update
         aptget_wrapper install -y salt-common
@@ -162,7 +138,7 @@ case "$node_os" in
 
         echo "deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion xenial main" > /etc/apt/sources.list.d/saltstack.list
         wget -O - "https://repo.saltstack.com/apt/ubuntu/16.04/amd64/$saltversion/SALTSTACK-GPG-KEY.pub" | apt-key add - || wait_condition_send "FAILURE" "Failed to add saltstack apt key."
-        add_extra_repo "${BOOTSTRAP_EXTRA_REPO_PARAMS}"
+
         aptget_wrapper clean
         aptget_wrapper update
         aptget_wrapper install -y salt-minion

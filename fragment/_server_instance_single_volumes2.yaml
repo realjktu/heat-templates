@@ -21,6 +21,9 @@ parameters:
     type: json
     default: []
 
+  instance_public_net:
+    type: string
+    default: public
   instance_name:
     type: string
   instance_domain:
@@ -48,10 +51,7 @@ parameters:
     default: ""
   volume_size:
     type: number
-    default: 5
-  cfg_bootstrap_extra_repo_params:
-    type: string
-    default: ''
+    default: 2
 
 resources:
   instance_port01:
@@ -143,7 +143,6 @@ resources:
 
             $instance_cloud_init: { get_param: instance_cloud_init }
             $wait_condition_notify: { get_attr: [ instance_wait_handle, curl_cli ] }
-            $bootstrap_extra_repo_params: { get_param: cfg_bootstrap_extra_repo_params }
   floating_ip:
     type: OS::Nova::FloatingIP
     properties:
@@ -169,4 +168,5 @@ outputs:
   instance:
     value: { get_resource: instance_instance }
     description: "Instance"
+
 
